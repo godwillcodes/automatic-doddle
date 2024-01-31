@@ -10,7 +10,7 @@ import {
   LinkedInIcon,
   TwitterIcon,
 } from '@/components/SocialIcons'
-import portraitImage from '@/images/portrait.jpg'
+import portraitImage from '@/images/photos/image-3.jpg'
 
 function SocialLink({
   className,
@@ -50,7 +50,7 @@ function MailIcon(props: React.ComponentPropsWithoutRef<'svg'>) {
 export const metadata: Metadata = {
   title: 'About',
   description:
-    'I’m Godwill Barasa. I live in Nairobi, where I design the future.',
+    'Godwill Barasa is Crafting Immersive Digital Experiences, One Line of Code at a Time!',
 }
 
 export default function About() {
@@ -69,58 +69,43 @@ export default function About() {
         </div>
         <div className="lg:order-first lg:row-span-2">
           <h1 className="text-4xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-5xl">
-            I’m Godwill Barasa. I live in Nairobi, where I design the
-            future.
+            Crafting Immersive Digital Experiences, One Line of Code at a Time!
           </h1>
           <div className="mt-6 space-y-7 text-base text-zinc-600 dark:text-zinc-400">
             <p>
-              I’ve loved making things for as long as I can remember, and wrote
-              my first program when I was 6 years old, just two weeks after my
-              mom brought home the brand new Macintosh LC 550 that I taught
-              myself to type on.
+            At the ripe age of 26, I, Godwill, proudly wear the mantle of a seasoned Lead Web Developer, tracing my journey back to the dawn of the digital age. Picture this: a sprightly 6-year-old version of myself, armed with nothing but curiosity and a newfound Macintosh LC 550, diving headfirst into the enigmatic world of coding. Ah, the memories!
             </p>
             <p>
-              The only thing I loved more than computers as a kid was space.
-              When I was 8, I climbed the 40-foot oak tree at the back of our
-              yard while wearing my older sister’s motorcycle helmet, counted
-              down from three, and jumped — hoping the tree was tall enough that
-              with just a bit of momentum I’d be able to get to orbit.
+              The only thing I loved more than computers as a kid was automotive engineering, I decided to upgrade my dad's trusty old lawnmower. Armed with nothing but a toolbox and boundless enthusiasm, I set out to give it a turbo boost. Let's just say, the end result wasn't quite what I expected. Instead of mowing the lawn, it performed a thrilling sprint down the driveway, leaving a trail of freshly cut grass in its wake. Needless to say, my dad wasn't too thrilled with the "improvement," but hey, it was worth a shot!
             </p>
             <p>
-              I spent the next few summers indoors working on a rocket design,
-              while I recovered from the multiple surgeries it took to fix my
-              badly broken legs. It took nine iterations, but when I was 15 I
-              sent my dad’s Blackberry into orbit and was able to transmit a
-              photo back down to our family computer from space.
+            From intern to innovator, my journey through the tech landscape has been nothing short of an adventure. It all began at Procter & Gamble, where I cut my teeth as an IT intern from 2018 to 2019, diving headfirst into the world of tech with ambition and a knack for problem-solving. Next, at Legibra Solutions from 2019 to 2021, I embraced the challenges of the digital frontier as a Web Developer, transforming pixels into possibilities one line of code at a time. And now, at Belva Digital, I've risen to the ranks of Software Engineer, where amidst the whirlwind of innovation and creativity, I continue to push the boundaries of what's possible in the digital realm. My journey is a testament to the power of perseverance and a sprinkle of wit along the way.
             </p>
             <p>
-              Today, I’m the founder of Planetaria, where we’re working on
-              civilian space suits and manned shuttle kits you can assemble at
-              home so that the next generation of kids really <em>can</em> make
-              it to orbit — from the comfort of their own backyards.
+              I’m also Founder of Nestbella, a real estate AI company on a mission to give 10,000 Kenyans their dream homes. Talk about reaching for the stars while keeping your feet firmly planted on the ground!
             </p>
           </div>
         </div>
         <div className="lg:pl-20">
           <ul role="list">
-            <SocialLink href="#" icon={TwitterIcon}>
+            <SocialLink href="https://twitter.com/godwill_codes" icon={TwitterIcon}>
               Follow on Twitter
             </SocialLink>
-            <SocialLink href="#" icon={InstagramIcon} className="mt-4">
+            <SocialLink href="https://instagram.com/godwillcodes" icon={InstagramIcon} className="mt-4">
               Follow on Instagram
             </SocialLink>
-            <SocialLink href="#" icon={GitHubIcon} className="mt-4">
+            <SocialLink href="https://github.com/godwillcodes/" icon={GitHubIcon} className="mt-4">
               Follow on GitHub
             </SocialLink>
-            <SocialLink href="#" icon={LinkedInIcon} className="mt-4">
+            <SocialLink href="https://www.linkedin.com/in/godwillcodes/" icon={LinkedInIcon} className="mt-4">
               Follow on LinkedIn
             </SocialLink>
             <SocialLink
-              href="mailto:spencer@planetaria.tech"
+              href="mailto:godwill.codes@gmail.com"
               icon={MailIcon}
               className="mt-8 border-t border-zinc-100 pt-8 dark:border-zinc-700/40"
             >
-              spencer@planetaria.tech
+              godwill.codes@gmail.com
             </SocialLink>
           </ul>
         </div>
