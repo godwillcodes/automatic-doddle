@@ -48,34 +48,43 @@ export default function Uses() {
       <div className="space-y-20">
         <ToolsSection title="Workstation">
           <Tool title="13” MacBook Pro, i5, 8GB RAM (2016)">
-            I was using an Intel-based 13” MacBook Pro prior to this and the
-            difference is night and day. I’ve never heard the fans turn on a
-            single time, even under the incredibly heavy loads I put it through
-            with our various launch simulations.
+            As a 2016 13” MacBook Pro owner, it's been a mixed bag of charm and
+            struggle. The sleek design and vibrant display still impress, but
+            the i5 processor and 8GB RAM sometimes feel like they're running a
+            marathon with ankle weights. While it's great for everyday tasks,
+            anything too demanding makes it break a sweat. It's like having a
+            reliable but slightly aging friend – they're there for you, but you
+            might need to give them a little extra TLC.
           </Tool>
-          <Tool title="Apple Pro Display XDR (Standard Glass)">
-            The only display on the market if you want something HiDPI and
-            bigger than 27”. When you’re working at planetary scale, every pixel
-            you can get counts.
-          </Tool>
+
           <Tool title="oraimo Smart Office Slim Wireless Keyboard Mouse Kit">
-          This keyboard? It's like the ninja of keyboards—small, stealthy, and always ready to accompany you on your adventures. With its compact 79 keys, including those handy arrow and Fn keys, it's like having a secret weapon in your pocket. And let's talk comfort—thanks to its scissor key structure, typing feels like a dream. So whether you're conquering spreadsheets or slaying emails, this keyboard has your back, ninja-style.
+            This keyboard? It's like the ninja of keyboards—small, stealthy, and
+            always ready to accompany you on your adventures. With its compact
+            79 keys, including those handy arrow and Fn keys, it's like having a
+            secret weapon in your pocket. And let's talk comfort—thanks to its
+            scissor key structure, typing feels like a dream. So whether you're
+            conquering spreadsheets or slaying emails, this keyboard has your
+            back, ninja-style.
           </Tool>
-        
-          <Tool title="Herman Miller Aeron Chair">
-            If I’m going to slouch in the worst ergonomic position imaginable
-            all day, I might as well do it in an expensive chair.
+
+          <Tool title="Lama Orthopedic Chair">
+            This is an exclusive release from <a href="">Dignity Furniture</a>.
+            Adjustable height, adjustable armrest, adjustable backrest,
+            adjustable headrest, adjustable lumbar support, adjustable seat
+            depth, adjustable seat tilt, adjustable seat height, adjustable
+            backrest tilt, adjustable armrest height, adjustable armrest width,
+            adjustable armrest angle, adjustable armrest depth, adjustable
+            armrest pivot, adjustable armrest rotation
           </Tool>
         </ToolsSection>
         <ToolsSection title="Development tools">
-          <Tool title="Sublime Text 4">
-            I don’t care if it’s missing all of the fancy IDE features everyone
-            else relies on, Sublime Text is still the best text editor ever
-            made.
+          <Tool title="Visual Studio Code">
+            Efficient, versatile, and user-friendly; Visual Studio Code
+            streamlines coding with its robust features.
           </Tool>
-          <Tool title="iTerm2">
-            I’m honestly not even sure what features I get with this that aren’t
-            just part of the macOS Terminal but it’s what I use.
+          <Tool title="Postman">
+            Streamlines API testing; intuitive interface, collaboration tools,
+            simplifies workflows for developers.
           </Tool>
           <Tool title="TablePlus">
             Great software for working with databases. Has saved me from

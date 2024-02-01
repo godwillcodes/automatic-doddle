@@ -11,40 +11,48 @@ import logoPlanetaria from '@/images/logos/planetaria.svg'
 
 const projects = [
   {
-    name: 'Planetaria',
-    description:
-      'Creating technology to empower civilians to explore space on their own terms.',
-    link: { href: 'http://planetaria.tech', label: 'planetaria.tech' },
-    logo: logoPlanetaria,
+    name: 'Co-operative Bank',
+    description: 'Personal & Business Banking in Kenya ',
+    role: 'Frontend Developer',
+    link: { href: 'https://www.co-opbank.co.ke/', label: 'co-opbank.co.ke' },
+    stack: ['WordPress', 'PHP', 'Tailwind', 'Alpine'],
   },
   {
-    name: 'Animaginary',
-    description:
-      'High performance web animation library, hand-written in optimized WASM.',
-    link: { href: '#', label: 'github.com' },
-    logo: logoAnimaginary,
+    name: 'Axis',
+    description: 'Multichannel Unified Communication',
+    role: 'Reporting and Analytics, Laravel Nova',
+    link: { href: 'https://app.axis.africa/auth/login', label: 'app.axis.africa' },
+    stack: ['WordPress', 'PHP', 'Tailwind', 'Alpine'],
   },
   {
-    name: 'HelioStream',
-    description:
-      'Real-time video streaming library, optimized for interstellar transmission.',
-    link: { href: '#', label: 'github.com' },
-    logo: logoHelioStream,
+    name: 'StartUp',
+    description: 'Ultimate Gig Marketplace ',
+    role: 'Frontend Developer',
+    link: { href: 'https://dev.joinstartup.africa/', label: 'joinstartup.africa' },
+    stack: ['WordPress', 'PHP', 'Tailwind', 'Alpine'],
   },
   {
-    name: 'cosmOS',
-    description:
-      'The operating system that powers our Planetaria space shuttles.',
-    link: { href: '#', label: 'github.com' },
-    logo: logoCosmos,
+    name: 'IndigoHomes Kenya',
+    description: 'Real Estate by IndigoHomes Kenya',
+    role: 'Lead Developer',
+    link: { href: 'https://kenya.indigohomes.com/', label: 'kenya.indigohomes.com' },
+    stack: ['WordPress', 'PHP', 'Tailwind', 'Alpine'],
   },
   {
-    name: 'OpenShuttle',
-    description:
-      'The schematics for the first rocket I designed that successfully made it to orbit.',
-    link: { href: '#', label: 'github.com' },
-    logo: logoOpenShuttle,
+    name: 'TalentGurus254',
+    description: 'Coaching and Mentorship Platform',
+    role: 'Lead Developer',
+    link: { href: 'http://talentgurus254.com/', label: 'talentgurus254.com' },
+    stack: ['WordPress', 'PHP', 'Tailwind', 'Alpine'],
   },
+  {
+    name: 'Inuka World Kenya',
+    description: 'Donations and Charity Platform',
+    role: 'Frontend Developer',
+    link: { href: 'https://iaf.worldvision.or.ke/', label: 'iaf.worldvision.or.ke' },
+    stack: ['WordPress', 'PHP', 'Tailwind', 'Alpine'],
+  },
+
 ]
 
 function LinkIcon(props: React.ComponentPropsWithoutRef<'svg'>) {
@@ -80,6 +88,7 @@ export default function Projects() {
               <Card.Link href={project.link.href}>{project.name}</Card.Link>
             </h2>
             <Card.Description>{project.description}</Card.Description>
+            <p className="text-teal-400 my-2 text-xs">{project.role}</p>
             <p className="relative z-10 mt-6 flex text-sm font-medium text-zinc-400 transition group-hover:text-teal-500 dark:text-zinc-200">
               <LinkIcon className="h-6 w-6 flex-none" />
               <span className="ml-2">{project.link.label}</span>
