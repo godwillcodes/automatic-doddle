@@ -2,3 +2,18 @@
 @import 'tailwindcss/components';
 @import './prism.css';
 @import 'tailwindcss/utilities';
+@import url('https://fonts.googleapis.com/css2?family=Poor+Story&family=Unbounded:wght@500&display=swap');
+
+/* Apply Unbounded font to headers */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Unbounded', sans-serif;
+}
+
+.unbounded {
+  font-family: 'Unbounded', sans-serif !important;
+}
+
+/* Apply Poor Story font to paragraphs, links, and spans */
+p, a, span,dd {
+    font-family: 'Work Sans', sans-serif;
+}
