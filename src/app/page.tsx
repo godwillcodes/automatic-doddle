@@ -263,13 +263,25 @@ export default async function Home() {
   return (
     <>
       <Container className="mt-9">
-        <div className="max-w-2xl">
-          <h1 className="text-3xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-5xl">
-          Software Engineer, Founder, & Web Consultant based in Nairobi.
+        <div className="max-w-3xl">
+        <h2 className="text-base my-4 font-semibold leading-7 text-teal-500">GODWILL BARASA</h2>
+          <h1 className="text-3xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-4xl">
+          Software Engineer at <a href="https://belvadigital.com/" target="_blank" className="underline text-teal-500">Belva Digital</a>, Web Consultant and Founder of <a href="https://nestbella.com" target="_blank" className="underline text-teal-500">NestBella AI</a>
           </h1>
           <p className="mt-6 text-base text-zinc-600 dark:text-zinc-400">
-          Introducing Godwill Barasa, Nairobi's digital wizard! Founder at NestBella and web consultant extraordinaire, he's the maestro behind crafting immersive digital experiences, one line of code at a time. From Nairobi, he conjures digital magic, turning websites into virtual marvels. Join him on a digital safari through cyberspace! 🚀🌍
-          </p>
+          Introducing Godwill Barasa: a seasoned tech enthusiast with five years of software engineering expertise. As an Associate Software Engineer at Belva Digital, he's the creative force behind groundbreaking web wonders, leveraging his breadth of knowledge in web and cloud consultation to drive innovation. But that's not all – Godwill is also the mastermind behind NestBella AI, showcasing his knack for pioneering solutions. 
+
+
+
+
+</p>
+
+<p className="mt-6 text-base text-zinc-600 dark:text-zinc-400">
+When he's not immersed in software engineering, you'll find him fueling his passion for cars or dominating the digital streets of GTA. From crafting code to cruising, Godwill Barasa embodies the art of driving innovation with flair and finesse.
+
+
+
+</p>
           <div className="mt-6 flex gap-6">
             <SocialLink
               href="https://twitter.com/godwill_codes"
