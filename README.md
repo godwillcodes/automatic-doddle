@@ -22,8 +22,9 @@ Finally, open [http://localhost:3000](http://localhost:3000) in your browser to 
 
 ## Customizing
 
-You can start editing this template by modifying the files in the `/src` folder. The site will auto-update as you edit these files.
+[![Netlify Status](https://api.netlify.com/api/v1/badges/38ff7057-2bb7-478f-9178-c19144b2fa51/deploy-status)](https://app.netlify.com/sites/subtle-sprinkles-9fe3ca/deploys)
 
+You can start editing this template by modifying the files in the `/src` folder. The site will auto-update as you edit these files.
 
 ## Learn more
 
