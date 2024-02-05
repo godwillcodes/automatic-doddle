@@ -106,7 +106,7 @@ function SocialLink({
 }) {
   return (
     <Link className="group -m-1 p-1" {...props}>
-      <Icon className="h-6 w-6 fill-zinc-500 transition group-hover:fill-zinc-600 dark:fill-zinc-400 dark:group-hover:fill-zinc-300" />
+      <Icon className="h-8 w-8 fill-zinc-500 transition group-hover:fill-teal-600 dark:fill-zinc-400 dark:group-hover:fill-teal-300" />
     </Link>
   )
 }
@@ -204,7 +204,7 @@ function Resume() {
     },
     {
       company: 'Procter & Gamble',
-      title: 'Intern - IT',
+      title: 'Web R & D Intern',
       logo: logoFacebook,
       start: '2018',
       end: '2019',
@@ -263,8 +263,8 @@ export default async function Home() {
   return (
     <>
       <Container className="mt-9">
-        <div className="max-w-3xl">
-        <h2 className="text-base my-4 font-semibold leading-7 text-teal-500">GODWILL BARASA</h2>
+        <div className="max-w-5xl">
+        <h2 className="text-base my-4 font-semibold leading-11 text-teal-500">GODWILL BARASA</h2>
           <h1 className="text-3xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-4xl">
           Software Engineer at <a href="https://belvadigital.com/" target="_blank" className="underline text-3xl unbounded text-teal-500">Belva Digital</a>, Web Consultant and Founder of <a href="https://nestbella.com" target="_blank" className="underline unbounded text-teal-500">NestBella AI</a>
           </h1>
@@ -273,6 +273,7 @@ export default async function Home() {
 
           <div className="mt-6 flex gap-6">
             <SocialLink
+              target="_blank"
               href="https://twitter.com/godwill_codes"
               aria-label="Follow on Twitter"
               icon={TwitterIcon}
