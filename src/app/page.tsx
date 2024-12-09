@@ -159,7 +159,7 @@ function Role({ role }: { role: Role }) {
 
   return (
     <li className="flex gap-4">
-      
+
       <dl className="flex flex-auto flex-wrap gap-x-2">
         <dt className="sr-only">Company</dt>
         <dd className="w-full flex-none text-sm font-medium text-zinc-900 dark:text-zinc-100">
@@ -264,12 +264,29 @@ export default async function Home() {
     <>
       <Container className="mt-9">
         <div className="max-w-5xl">
-        <h2 className="text-base my-4 font-semibold leading-11 text-teal-500">GODWILL BARASA</h2>
           <h1 className="text-3xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-4xl">
-          Software Engineer at <a href="https://belvadigital.com/" target="_blank" className="underline text-3xl unbounded text-teal-500">Safaricom Studio</a>, Web Consultant and Founder of <a href="https://nestbella.com" target="_blank" className="underline unbounded text-teal-500">NestBella AI</a>
+            Meet <span className="text-teal-500 unbounded font-bold">Godwill Barasa</span> <br></br><br></br> Software Engineer at
+            <a href="https://belvadigital.com/" target="_blank" className="underline text-3xl unbounded text-teal-500"> Safaricom Studio</a>,
+            Web Consultant, and Founder of
+            <a href="https://nestbella.com" target="_blank" className="underline unbounded text-teal-500"> NestBella AI</a>.
           </h1>
-          <p className="mt-6 text-base text-zinc-600 dark:text-zinc-400">Introducing Godwill Barasa: a seasoned tech enthusiast with five years of software engineering expertise. As an Associate Software Engineer at Belva Digital, he's the creative force behind groundbreaking web wonders, leveraging his breadth of knowledge in web and cloud consultation to drive innovation. But that's not all – Godwill is also the mastermind behind NestBella AI, showcasing his knack for pioneering solutions. </p>
-          <p className="mt-6 text-base text-zinc-600 dark:text-zinc-400">When he's not immersed in software engineering, you'll find him fueling his passion for cars or dominating the digital streets of GTA. From crafting code to cruising, Godwill Barasa embodies the art of driving innovation with flair and finesse.</p>
+          <p className="mt-6 text-base text-zinc-600 dark:text-zinc-400">
+            Passionate Front-End Engineer with over five years of expertise in building scalable, high-performance web and mobile applications.
+            Godwill specializes in crafting user-centric designs and delivering seamless digital experiences through technologies like
+            React, Vue, Next.js, and Ruby on Rails.
+          </p>
+          <p className="mt-4 text-base text-zinc-600 dark:text-zinc-400">
+            At <span className="text-teal-500">Safaricom Studio</span>, Godwill leads frontend innovations, optimizing performance for
+            transformative products like M-Pesa Go, while championing accessibility and WCAG standards. As a founder, he leverages AI-driven
+            solutions with NestBella to push the boundaries of web technology.
+          </p>
+          <p className="mt-4 text-base text-zinc-600 dark:text-zinc-400">
+            Notably, Godwill has collaborated with global clients such as Kenya Power, Cooperative Bank, Safaricom and Proctor & Gamble,
+            building resilient systems and intuitive user experiences. When not coding, he actively contributes to open-source projects,
+            including the Nova Activity Log, and mentors junior developers to foster a culture of growth and learning.
+          </p>
+        
+
 
           <div className="mt-6 flex gap-6">
             <SocialLink
