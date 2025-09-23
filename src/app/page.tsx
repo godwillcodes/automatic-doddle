@@ -22,7 +22,7 @@ import image4 from '@/images/photos/image-4.jpg'
 import image5 from '@/images/photos/image-5.jpg'
 import { type ArticleWithSlug, getAllArticles } from '@/lib/articles'
 import { formatDate } from '@/lib/formatDate'
-import { useState } from 'react'
+import React from 'react'
 
 function MailIcon(props: React.ComponentPropsWithoutRef<'svg'>) {
   return (
@@ -64,6 +64,29 @@ function BriefcaseIcon(props: React.ComponentPropsWithoutRef<'svg'>) {
       />
       <path
         d="M3 14.25h6.249c.484 0 .952-.002 1.316.319l.777.682a.996.996 0 0 0 1.316 0l.777-.682c.364-.32.832-.319 1.316-.319H21M8.75 6.5V4.75a2 2 0 0 1 2-2h2.5a2 2 0 0 1 2 2V6.5"
+        className="stroke-zinc-400 dark:stroke-zinc-500"
+      />
+    </svg>
+  )
+}
+
+function CodeBracketIcon(props: React.ComponentPropsWithoutRef<'svg'>) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      {...props}
+    >
+      <path
+        d="M8.25 4.5l7.5 7.5-7.5 7.5"
+        className="stroke-zinc-400 dark:stroke-zinc-500"
+      />
+      <path
+        d="M15.75 4.5l-7.5 7.5 7.5 7.5"
         className="stroke-zinc-400 dark:stroke-zinc-500"
       />
     </svg>
@@ -186,28 +209,42 @@ function Role({ role }: { role: Role }) {
 function Resume() {
   let resume: Array<Role> = [
     {
-      company: 'Belva Digital',
-      title: 'Software Engineer',
+      company: 'Piedmont Global Language Solutions (PGLS)',
+      title: 'Product Engineering Lead',
       logo: logoPlanetaria,
-      start: '2021',
+      start: '2025',
       end: {
         label: 'Present',
         dateTime: new Date().getFullYear().toString(),
       },
     },
     {
-      company: 'Legibra Solutions',
-      title: 'Web Developer',
+      company: 'Ogilvy Africa Kenya',
+      title: 'Engineering Team Lead',
       logo: logoAirbnb,
+      start: '2024',
+      end: '2025',
+    },
+    {
+      company: 'Belva Digital Agency',
+      title: 'Technical Account Manager',
+      logo: logoFacebook,
+      start: '2021',
+      end: '2024',
+    },
+    {
+      company: 'Legibra Agency',
+      title: 'Software Engineer – Product (Fullstack)',
+      logo: logoStarbucks,
       start: '2019',
       end: '2021',
     },
     {
       company: 'Procter & Gamble',
-      title: 'Web R & D Intern',
+      title: 'Customer Success Engineer (Intern)',
       logo: logoFacebook,
       start: '2018',
-      end: '2019',
+      end: '2018',
     },
   ]
 
@@ -226,6 +263,43 @@ function Resume() {
         Download CV
         <ArrowDownIcon className="h-4 w-4 stroke-zinc-400 transition group-active:stroke-zinc-600 dark:group-hover:stroke-zinc-50 dark:group-active:stroke-zinc-50" />
       </Button>
+    </div>
+  )
+}
+
+function Skills() {
+  let skills = [
+    'Product Lifecycle & Roadmap Ownership',
+    'User Research & UX Optimization',
+    'Experimentation & Data-Driven Iteration',
+    'Internal & Ops Tooling',
+    'Cross-Functional Team Leadership',
+    'Technical Recruiting & Talent Pipeline Management',
+    'ATS Tools (Greenhouse)',
+    'Process Optimization & Workflow Improvement',
+    'Stakeholder Management & Executive Communication',
+    'Mentorship & Team Development',
+    'Fintech & Mobile Money Solutions (Mpesa)',
+    'Remote & Multicultural Collaboration',
+    'Candidate Experience & Diversity Engagement',
+    'React, TypeScript, GraphQL',
+    'GCP, CI/CD, Monitoring & Observability',
+    'Full-Stack Architecture & Scalable Systems'
+  ]
+
+  return (
+    <div className="rounded-2xl border border-zinc-100 p-6 dark:border-zinc-700/40">
+      <h2 className="flex text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+        <CodeBracketIcon className="h-6 w-6 flex-none" />
+        <span className="ml-3">Core Expertise</span>
+      </h2>
+      <div className="mt-6 grid grid-cols-1 gap-2">
+        {skills.map((skill, skillIndex) => (
+          <div key={skillIndex} className="text-sm text-zinc-600 dark:text-zinc-400">
+            • {skill}
+          </div>
+        ))}
+      </div>
     </div>
   )
 }
@@ -265,25 +339,23 @@ export default async function Home() {
       <Container className="mt-9">
         <div className="max-w-5xl">
           <h1 className="text-3xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-4xl">
-            Meet <span className="text-teal-500 unbounded font-bold">Godwill Barasa</span> <br></br><br></br> Software Engineer at
-            <a href="https://belvadigital.com/" target="_blank" className="underline text-3xl unbounded text-teal-500"> Safaricom Studio</a>,
-            Web Consultant, and Founder of
-            <a href="https://nestbella.com" target="_blank" className="underline unbounded text-teal-500"> NestBella AI</a>.
+            Meet <span className="text-teal-500 unbounded font-bold">Godwill Barasa</span> <br></br><br></br> Technical Lead at
+            <a href="https://pgls.com/" target="_blank" className="underline text-3xl unbounded text-teal-500"> Piedmont Global Language Solutions</a>,
+            Product Engineering Leader, and Fintech Innovation Expert.
           </h1>
           <p className="mt-6 text-base text-zinc-600 dark:text-zinc-400">
-            Passionate Front-End Engineer with over five years of expertise in building scalable, high-performance web and mobile applications.
-            Godwill specializes in crafting user-centric designs and delivering seamless digital experiences through technologies like
-            React, Vue, Next.js, and Ruby on Rails.
+            Technical Lead with 7+ years delivering scalable, user-centered products, leading cross-functional teams, and building high-performing engineering talent. 
+            Skilled in full product lifecycle, user research, design documentation, impact-driven prioritization, experimentation, and internal tooling.
           </p>
           <p className="mt-4 text-base text-zinc-600 dark:text-zinc-400">
-            At <span className="text-teal-500">Safaricom Studio</span>, Godwill leads frontend innovations, optimizing performance for
-            transformative products like M-Pesa Go, while championing accessibility and WCAG standards. As a founder, he leverages AI-driven
-            solutions with NestBella to push the boundaries of web technology.
+            At <span className="text-teal-500">Piedmont Global Language Solutions</span>, I define roadmaps, prioritize features, and lead cross-functional, 
+            distributed teams across multiple time zones to deliver scalable, user-centered language operation products, increasing adoption by 25% and 
+            reducing customer drop-off by 15%.
           </p>
           <p className="mt-4 text-base text-zinc-600 dark:text-zinc-400">
-            Notably, Godwill has collaborated with global clients such as Kenya Power, Cooperative Bank, Safaricom and Proctor & Gamble,
-            building resilient systems and intuitive user experiences. When not coding, he actively contributes to open-source projects,
-            including the Nova Activity Log, and mentors junior developers to foster a culture of growth and learning.
+            Previously at <span className="text-teal-500">Ogilvy Africa Kenya</span>, I delivered enterprise-grade digital solutions for Safaricom and M-Pesa, 
+            including a full redesign of the agent onboarding portal and mobile dashboard for microloan tracking. I've built and owned fintech products 
+            across Sub-Saharan Africa, managing ambiguous projects and collaborating across multicultural, remote teams.
           </p>
         
 
@@ -324,6 +396,7 @@ export default async function Home() {
           <div className="space-y-10 lg:pl-16 xl:pl-24">
             <Newsletter />
             <Resume />
+            <Skills />
           </div>
         </div>
       </Container>

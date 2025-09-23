@@ -11,46 +11,46 @@ import logoPlanetaria from '@/images/logos/planetaria.svg'
 
 const projects = [
   {
-    name: 'Co-operative Bank',
-    description: 'Personal & Business Banking in Kenya ',
-    role: 'Frontend Developer',
-    link: { href: 'https://www.co-opbank.co.ke/', label: 'co-opbank.co.ke' },
-    stack: ['WordPress', 'PHP', 'Tailwind', 'Alpine'],
+    name: 'M-Pesa Agent Portal Redesign',
+    description: 'Complete redesign of agent onboarding portal for Safaricom M-Pesa, reducing onboarding friction by 30% and achieving 20-25% adoption growth among active users.',
+    role: 'Engineering Team Lead',
+    link: { href: 'https://www.safaricom.co.ke/', label: 'safaricom.co.ke' },
+    stack: ['React', 'TypeScript', 'GraphQL', 'GCP'],
   },
   {
-    name: 'Axis',
-    description: 'Multichannel Unified Communication',
-    role: 'Reporting and Analytics, Laravel Nova',
-    link: { href: 'https://app.axis.africa/auth/login', label: 'app.axis.africa' },
-    stack: ['WordPress', 'PHP', 'Tailwind', 'Alpine'],
+    name: 'Microloan Tracking Dashboard',
+    description: 'Mobile dashboard for microloan tracking and management, delivering enterprise-grade digital solutions for financial services across Sub-Saharan Africa.',
+    role: 'Engineering Team Lead',
+    link: { href: 'https://www.safaricom.co.ke/', label: 'safaricom.co.ke' },
+    stack: ['React', 'TypeScript', 'GraphQL', 'Mobile'],
   },
   {
-    name: 'StartUp',
-    description: 'Ultimate Gig Marketplace ',
-    role: 'Frontend Developer',
-    link: { href: 'https://dev.joinstartup.africa/', label: 'joinstartup.africa' },
-    stack: ['WordPress', 'PHP', 'Tailwind', 'Alpine'],
+    name: 'Language Operations Platform',
+    description: 'Scalable, user-centered language operation products with internal dashboards and automated deployment pipelines, increasing adoption by 25% and reducing customer drop-off by 15%.',
+    role: 'Product Engineering Lead',
+    link: { href: 'https://pgls.com/', label: 'pgls.com' },
+    stack: ['React', 'TypeScript', 'CI/CD', 'Monitoring'],
   },
   {
-    name: 'IndigoHomes Kenya',
-    description: 'Real Estate by IndigoHomes Kenya',
-    role: 'Lead Developer',
-    link: { href: 'https://kenya.indigohomes.com/', label: 'kenya.indigohomes.com' },
-    stack: ['WordPress', 'PHP', 'Tailwind', 'Alpine'],
+    name: 'Technical Recruiting Pipeline',
+    description: 'End-to-end technical recruiting system using Greenhouse ATS, reducing time-to-hire by 35% and growing engineering capacity from 10 to 25 engineers in 12 months.',
+    role: 'Technical Lead',
+    link: { href: 'https://pgls.com/', label: 'pgls.com' },
+    stack: ['Greenhouse ATS', 'Process Optimization', 'Data Analytics'],
   },
   {
-    name: 'TalentGurus254',
-    description: 'Coaching and Mentorship Platform',
-    role: 'Lead Developer',
-    link: { href: 'http://talentgurus254.com/', label: 'talentgurus254.com' },
-    stack: ['WordPress', 'PHP', 'Tailwind', 'Alpine'],
+    name: 'Internal Tooling & Automation',
+    description: 'Workflow tools and automated deployment pipelines that improved team efficiency by 30%, reduced rollout errors by 40%, and cut release cycle times from 4 weeks to 2.5 weeks.',
+    role: 'Product Engineering Lead',
+    link: { href: 'https://pgls.com/', label: 'pgls.com' },
+    stack: ['Automation', 'DevOps', 'Monitoring', 'Observability'],
   },
   {
-    name: 'Inuka World Kenya',
-    description: 'Donations and Charity Platform',
-    role: 'Frontend Developer',
-    link: { href: 'https://iaf.worldvision.or.ke/', label: 'iaf.worldvision.or.ke' },
-    stack: ['WordPress', 'PHP', 'Tailwind', 'Alpine'],
+    name: 'Cross-Functional Team Leadership',
+    description: 'Led distributed teams across multiple time zones, managing ambiguous projects and collaborating across multicultural, remote teams to deliver scalable products.',
+    role: 'Technical Lead',
+    link: { href: 'https://pgls.com/', label: 'pgls.com' },
+    stack: ['Team Leadership', 'Remote Collaboration', 'Product Strategy'],
   },
 
 ]
@@ -68,14 +68,14 @@ function LinkIcon(props: React.ComponentPropsWithoutRef<'svg'>) {
 
 export const metadata: Metadata = {
   title: 'Projects',
-  description: 'Things I’ve made trying to put my dent in the universe.',
+  description: 'Technical leadership and product engineering achievements across fintech and language solutions.',
 }
 
 export default function Projects() {
   return (
     <SimpleLayout
-      title="Things I’ve made trying to put my dent in the universe."
-      intro="I’ve worked on tons of little projects over the years but these are the ones that I’m most proud of. Many of them are open-source, so if you see something that piques your interest, check out the code and contribute if you have ideas for how it can be improved."
+      title="Leading Product Engineering Teams and Delivering Impact at Scale"
+      intro="As a Technical Lead with 7+ years of experience, I've delivered scalable, user-centered products across fintech and language solutions. These projects showcase my expertise in full product lifecycle management, cross-functional team leadership, and building high-performing engineering talent."
     >
       <ul
         role="list"
