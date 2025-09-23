@@ -37,7 +37,40 @@ function Article({ article }: { article: ArticleWithSlug }) {
 export const metadata: Metadata = {
   title: 'Articles',
   description:
-    'All of my long-form thoughts on programming, leadership, product design, and more, collected in chronological order.',
+    'All of my long-form thoughts on programming, leadership, product design, fintech, and engineering team management, collected in chronological order.',
+  keywords: [
+    'software engineering articles',
+    'technical leadership',
+    'product management',
+    'fintech insights',
+    'engineering team building',
+    'M-Pesa case study',
+    'multicultural product development',
+    'impact-driven prioritization',
+    'Godwill Barasa articles'
+  ],
+  openGraph: {
+    title: 'Articles - Godwill Barasa',
+    description: 'Long-form thoughts on programming, leadership, product design, fintech, and engineering team management.',
+    type: 'website',
+    images: [
+      {
+        url: '/images/portrait.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'Godwill Barasa Articles',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Articles - Godwill Barasa',
+    description: 'Long-form thoughts on programming, leadership, product design, fintech, and engineering team management.',
+    images: ['/images/portrait.jpg'],
+  },
+  alternates: {
+    canonical: '/articles',
+  },
 }
 
 export default async function ArticlesIndex() {

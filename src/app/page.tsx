@@ -320,7 +320,7 @@ function Photos() {
           >
             <Image
               src={image}
-              alt=""
+              alt={`Professional photo of Godwill Barasa - Software Engineer and Technical Lead`}
               sizes="(min-width: 640px) 18rem, 11rem"
               className="absolute inset-0 h-full w-full object-cover"
             />

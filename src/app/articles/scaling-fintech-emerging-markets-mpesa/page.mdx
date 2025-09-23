@@ -11,6 +11,42 @@ export const article = {
 export const metadata = {
   title: article.title,
   description: article.description,
+  keywords: [
+    'M-Pesa',
+    'fintech',
+    'mobile money',
+    'emerging markets',
+    'financial inclusion',
+    'Kenya',
+    'Africa',
+    'digital payments',
+    'banking innovation',
+    'financial technology'
+  ],
+  openGraph: {
+    title: article.title,
+    description: article.description,
+    type: 'article',
+    publishedTime: article.date,
+    authors: [article.author],
+    images: [
+      {
+        url: '/images/portrait.jpg',
+        width: 1200,
+        height: 630,
+        alt: article.title,
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: article.title,
+    description: article.description,
+    images: ['/images/portrait.jpg'],
+  },
+  alternates: {
+    canonical: `/articles/${article.slug}`,
+  },
 }
 
 export default (props) => <ArticleLayout article={article} {...props} />

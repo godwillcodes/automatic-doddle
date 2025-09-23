@@ -47,6 +47,43 @@ export function ArticleLayout({
             </button>
           )}
           <article>
+            <script
+              type="application/ld+json"
+              dangerouslySetInnerHTML={{
+                __html: JSON.stringify({
+                  "@context": "https://schema.org",
+                  "@type": "BlogPosting",
+                  "headline": article.title,
+                  "description": article.description,
+                  "author": {
+                    "@type": "Person",
+                    "name": article.author,
+                    "url": "https://godwillbarasa.com"
+                  },
+                  "publisher": {
+                    "@type": "Person",
+                    "name": "Godwill Barasa",
+                    "url": "https://godwillbarasa.com"
+                  },
+                  "datePublished": article.date,
+                  "dateModified": article.date,
+                  "url": `https://godwillbarasa.com/articles/${article.slug}`,
+                  "mainEntityOfPage": {
+                    "@type": "WebPage",
+                    "@id": `https://godwillbarasa.com/articles/${article.slug}`
+                  },
+                  "image": "https://godwillbarasa.com/images/portrait.jpg",
+                  "articleSection": "Technology",
+                  "keywords": [
+                    "software engineering",
+                    "technical leadership",
+                    "product management",
+                    "fintech",
+                    "engineering teams"
+                  ]
+                })
+              }}
+            />
             <header className="flex flex-col">
               <h1 className="mt-6 text-4xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-5xl">
                 {article.title}
