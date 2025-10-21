@@ -210,7 +210,7 @@ function Resume() {
   let resume: Array<Role> = [
     {
       company: 'Piedmont Global Language Solutions (PGLS)',
-      title: 'Product Engineering Lead',
+      title: 'Senior Frontend Engineer',
       logo: logoPlanetaria,
       start: '2025',
       end: {
@@ -220,28 +220,28 @@ function Resume() {
     },
     {
       company: 'Ogilvy Africa Kenya',
-      title: 'Engineering Team Lead',
+      title: 'Software Engineer',
       logo: logoAirbnb,
       start: '2024',
       end: '2025',
     },
     {
       company: 'Belva Digital Agency',
-      title: 'Technical Account Manager',
+      title: 'Senior Web Platform Engineer',
       logo: logoFacebook,
-      start: '2021',
+      start: '2020',
       end: '2024',
     },
     {
       company: 'Legibra Agency',
-      title: 'Software Engineer – Product (Fullstack)',
+      title: 'Mobile Platform Engineer (Fullstack)',
       logo: logoStarbucks,
       start: '2019',
-      end: '2021',
+      end: '2020',
     },
     {
       company: 'Procter & Gamble',
-      title: 'Customer Success Engineer (Intern)',
+      title: 'Web Engineer (Intern)',
       logo: logoFacebook,
       start: '2018',
       end: '2018',
@@ -269,22 +269,22 @@ function Resume() {
 
 function Skills() {
   let skills = [
-    'Product Lifecycle & Roadmap Ownership',
-    'User Research & UX Optimization',
-    'Experimentation & Data-Driven Iteration',
-    'Internal & Ops Tooling',
-    'Cross-Functional Team Leadership',
-    'Technical Recruiting & Talent Pipeline Management',
-    'ATS Tools (Greenhouse)',
-    'Process Optimization & Workflow Improvement',
-    'Stakeholder Management & Executive Communication',
-    'Mentorship & Team Development',
-    'Fintech & Mobile Money Solutions (Mpesa)',
-    'Remote & Multicultural Collaboration',
-    'Candidate Experience & Diversity Engagement',
-    'React, TypeScript, GraphQL',
-    'GCP, CI/CD, Monitoring & Observability',
-    'Full-Stack Architecture & Scalable Systems'
+    'Frontend Development (React, Vue.js, TypeScript)',
+    'Backend Development (Ruby on Rails, Node.js, PHP)',
+    'Accessibility & WCAG 2.1 Compliance',
+    'Core Web Vitals Optimization',
+    'Responsive Design & Mobile-First Development',
+    'API Integration (REST, GraphQL)',
+    'Testing (Jest, Cypress, Unit & Integration)',
+    'CI/CD Automation & DevOps',
+    'Docker & Kubernetes Orchestration',
+    'Database Design & Optimization (PostgreSQL)',
+    'Performance Monitoring & Analytics',
+    'Design Systems & Component Libraries',
+    'Internationalization (i18n) & Localization',
+    'Cross-Browser Compatibility',
+    'Security Best Practices & OAuth2 Flows',
+    'Agile Development & Team Mentorship'
   ]
 
   return (
@@ -339,23 +339,22 @@ export default async function Home() {
       <Container className="mt-9">
         <div className="max-w-5xl">
           <h1 className="text-3xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-4xl">
-            Meet <span className="text-teal-500 unbounded font-bold">Godwill Barasa</span> <br></br><br></br> Technical Lead at
+            Meet <span className="text-teal-500 unbounded font-bold">Godwill Barasa</span> <br></br><br></br> Senior Frontend Engineer at
             <a href="https://pgls.com/" target="_blank" className="underline text-3xl unbounded text-teal-500"> Piedmont Global Language Solutions</a>,
-            Product Engineering Leader, and Fintech Innovation Expert.
+            passionate about building fast, accessible, and human-centered web experiences.
           </h1>
           <p className="mt-6 text-base text-zinc-600 dark:text-zinc-400">
-            Technical Lead with 7+ years delivering scalable, user-centered products, leading cross-functional teams, and building high-performing engineering talent. 
-            Skilled in full product lifecycle, user research, design documentation, impact-driven prioritization, experimentation, and internal tooling.
+            Frontend Engineer with 5+ years of experience building performant, accessible web applications that empower creators and small businesses. 
+            I thrive in early-stage product environments, specializing in rapid prototyping, iterative development, and shipping applications that deliver real value.
           </p>
           <p className="mt-4 text-base text-zinc-600 dark:text-zinc-400">
-            At <span className="text-teal-500">Piedmont Global Language Solutions</span>, I define roadmaps, prioritize features, and lead cross-functional, 
-            distributed teams across multiple time zones to deliver scalable, user-centered language operation products, increasing adoption by 25% and 
-            reducing customer drop-off by 15%.
+            At <span className="text-teal-500">Piedmont Global Language Solutions</span>, I lead technical delivery of scalable, business-critical front-end platforms 
+            using React, Next.js, Tailwind, and TypeScript. I've successfully handled 40% traffic surges while maintaining performance, resilience, and 
+            cross-environment compatibility.
           </p>
           <p className="mt-4 text-base text-zinc-600 dark:text-zinc-400">
-            Previously at <span className="text-teal-500">Ogilvy Africa Kenya</span>, I delivered enterprise-grade digital solutions for Safaricom and M-Pesa, 
-            including a full redesign of the agent onboarding portal and mobile dashboard for microloan tracking. I've built and owned fintech products 
-            across Sub-Saharan Africa, managing ambiguous projects and collaborating across multicultural, remote teams.
+            Previously at <span className="text-teal-500">Ogilvy Africa Kenya</span>, I engineered data-heavy UIs and complex workflows using Vue.js, TypeScript, and Node.js. 
+            I built containerized cloud environments with Docker and Kubernetes, reducing deployment duration by 50% and production failures by 30%.
           </p>
         
 

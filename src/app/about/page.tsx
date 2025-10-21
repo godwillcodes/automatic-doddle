@@ -65,7 +65,7 @@ function PhoneIcon(props: React.ComponentPropsWithoutRef<'svg'>) {
 export const metadata: Metadata = {
   title: 'About',
   description:
-    'Godwill Barasa - Technical Lead with 7+ years delivering scalable, user-centered products and leading cross-functional teams across Sub-Saharan Africa.',
+    'Godwill Barasa - Senior Frontend Engineer with 5+ years building fast, accessible, and human-centered web experiences. Expert in React, Vue.js, TypeScript, and Ruby on Rails.',
 }
 
 export default function About() {
@@ -77,7 +77,7 @@ export default function About() {
             
             <Image
               src={portraitImage2}
-              alt=""
+              alt="Godwill Barasa - Senior Frontend Engineer and Software Developer"
               sizes="(min-width: 1024px) 32rem, 20rem"
               className="aspect-square rotate-2 mt-10 rounded-2xl bg-zinc-100 object-cover dark:bg-zinc-800"
             />
@@ -85,23 +85,26 @@ export default function About() {
         </div>
         <div className="lg:order-first lg:row-span-2">
           <h1 className="text-3xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-4xl">
-            Leading Product Engineering Teams Across Sub-Saharan Africa
+            Building Fast, Accessible, and Human-Centered Web Experiences
           </h1>
           <div className="mt-6 space-y-7 text-base text-zinc-600 dark:text-zinc-400">
             <p>
-              As a Technical Lead with 7+ years of experience, I specialize in delivering scalable, user-centered products while leading cross-functional teams and building high-performing engineering talent. My expertise spans the full product lifecycle, from user research and design documentation to impact-driven prioritization and experimentation.
+              As a Senior Frontend Engineer with 5+ years of experience, I'm passionate about building fast, accessible, and human-centered web experiences that empower creators and small businesses. I thrive in early-stage product environments, specializing in rapid prototyping, iterative development, and shipping performant applications that deliver real value.
             </p>
             <p>
-              Currently at Piedmont Global Language Solutions, I define roadmaps, prioritize features, and lead distributed teams across multiple time zones. I've increased product adoption by 25%, reduced customer drop-off by 15%, and accelerated feature rollout timelines by 20%. My work includes designing internal dashboards, automated deployment pipelines, and workflow tools that improved team efficiency by 30% and reduced rollout errors by 40%.
+              Currently at Piedmont Global Language Solutions, I lead technical delivery of scalable, business-critical front-end platforms using React, Next.js, Tailwind, and TypeScript. I've successfully handled 40% traffic surges while maintaining performance, resilience, and cross-environment compatibility. I've established robust test discipline by developing comprehensive unit and component test suites with Jest, improving code reliability and reducing production defects.
             </p>
             <p>
-              Previously at Ogilvy Africa Kenya, I delivered enterprise-grade digital solutions for Safaricom and M-Pesa, including a complete redesign of the agent onboarding portal and mobile dashboard for microloan tracking. I achieved 20-25% adoption growth among active users and reduced agent onboarding friction by 30%. My experience spans building and owning fintech products across Sub-Saharan Africa, managing ambiguous projects, and collaborating across multicultural, remote teams.
+              Previously at Ogilvy Africa Kenya, I engineered data-heavy UIs, including complex tables and reconciliation workflows, on scalable web platforms using Vue.js, TypeScript, and Node.js. I integrated headless CMSs like Contentful via GraphQL to deliver dynamic, high-concurrency content while maintaining 99.9% uptime. I built containerized cloud environments with Docker and orchestrated deployments via Kubernetes, halving deployment duration from 40 to 20 minutes and lowering production failures by 30%.
             </p>
             <p>
-              Beyond technical leadership, I excel in end-to-end technical recruiting, leveraging Greenhouse ATS and structured evaluation rubrics to reduce time-to-hire by 35% and improve candidate quality. I've successfully grown engineering teams from 10 to 25 engineers in 12 months while maintaining a 90% senior hire acceptance rate. I'm passionate about mentorship, team development, and creating inclusive talent pipelines that drive diversity and innovation.
+              At Belva Digital Agency, I architected and migrated high-traffic platforms to Ruby on Rails backends with GraphQL and REST APIs, integrating real-time updates via Turbo Streams and Hotwire. I deployed on AWS and orchestrated with Kubernetes, achieving 99.95% uptime and supporting 1.2M+ monthly users. I led accessibility and internationalization efforts, extending platform usability across 15+ languages and boosting engagement by 32%.
             </p>
             <p>
-              Based in Nairobi, Kenya, I'm fluent in English and have elementary proficiency in French. I'm open to travel across Sub-Saharan Africa and thrive in fast-paced, high-ownership environments where I can make a meaningful impact on both technology and people.
+              My technical expertise spans React, Vue.js, TypeScript, Ruby on Rails, Node.js, and PHP, with a strong foundation in accessibility (WCAG 2.1), Core Web Vitals optimization, and thoughtful UX. I'm experienced in driving end-to-end delivery—design systems, API integration, CI/CD automation—and mentoring teams toward rapid, reliable delivery. I'm passionate about creating inclusive digital experiences that work for everyone, regardless of their abilities or the technologies they use.
+            </p>
+            <p>
+              Based in Nairobi, Kenya, I'm fluent in English and have elementary proficiency in French. I'm open to travel and thrive in fast-paced, high-ownership environments where I can make a meaningful impact on both technology and people.
             </p>
           </div>
         </div>

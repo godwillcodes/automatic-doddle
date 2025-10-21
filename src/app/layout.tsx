@@ -9,27 +9,27 @@ export const metadata: Metadata = {
   title: {
     template: '%s - Godwill Barasa',
     default:
-      'Godwill Barasa - Software Engineer, Founder at NestBella and Web Consultant based in Nairobi, Kenya',
+      'Godwill Barasa - Senior Frontend Engineer at Piedmont Global Language Solutions',
   },
   description:
-    'Godwill Barasa: Crafting Immersive Digital Experiences, One Line of Code at a Time! Technical Lead with 7+ years delivering scalable, user-centered products and leading cross-functional teams.',
+    'Godwill Barasa: Senior Frontend Engineer passionate about building fast, accessible, and human-centered web experiences. 5+ years of experience with React, Vue.js, TypeScript, and Ruby on Rails.',
   keywords: [
     'Godwill Barasa',
+    'Frontend Engineer',
     'Software Engineer',
-    'Technical Lead',
-    'Product Engineering',
-    'Nairobi Kenya',
-    'Fintech',
-    'M-Pesa',
-    'React',
+    'React Developer',
+    'Vue.js Developer',
     'TypeScript',
+    'Ruby on Rails',
+    'Accessibility',
+    'WCAG 2.1',
+    'Core Web Vitals',
     'Full Stack Developer',
-    'Engineering Leadership',
-    'Product Management',
-    'NestBella',
     'Piedmont Global Language Solutions',
     'Ogilvy Africa',
-    'Belva Digital'
+    'Belva Digital',
+    'Web Development',
+    'JavaScript'
   ],
   authors: [{ name: 'Godwill Barasa', url: 'https://godwillbarasa.com' }],
   creator: 'Godwill Barasa',
@@ -51,8 +51,8 @@ export const metadata: Metadata = {
     locale: 'en_US',
     url: process.env.NEXT_PUBLIC_SITE_URL || 'https://godwillbarasa.com',
     siteName: 'Godwill Barasa',
-    title: 'Godwill Barasa - Software Engineer, Technical Lead & Product Engineering Expert',
-    description: 'Technical Lead with 7+ years delivering scalable, user-centered products and leading cross-functional teams. Based in Nairobi, Kenya.',
+    title: 'Godwill Barasa - Senior Frontend Engineer & Full Stack Developer',
+    description: 'Senior Frontend Engineer with 5+ years building fast, accessible, and human-centered web experiences. Expert in React, Vue.js, TypeScript, and Ruby on Rails.',
     images: [
       {
         url: '/images/portrait.jpg',
@@ -66,8 +66,8 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     site: '@godwill_codes',
     creator: '@godwill_codes',
-    title: 'Godwill Barasa - Software Engineer, Technical Lead & Product Engineering Expert',
-    description: 'Technical Lead with 7+ years delivering scalable, user-centered products and leading cross-functional teams. Based in Nairobi, Kenya.',
+    title: 'Godwill Barasa - Senior Frontend Engineer & Full Stack Developer',
+    description: 'Senior Frontend Engineer with 5+ years building fast, accessible, and human-centered web experiences. Expert in React, Vue.js, TypeScript, and Ruby on Rails.',
     images: ['/images/portrait.jpg'],
   },
   robots: {
@@ -108,8 +108,8 @@ export default function RootLayout({
               "name": "Godwill Barasa",
               "url": "https://godwillbarasa.com",
               "image": "https://godwillbarasa.com/images/portrait.jpg",
-              "description": "Software Engineer, Technical Lead & Product Engineering Expert with 7+ years experience delivering scalable, user-centered products and leading cross-functional teams.",
-              "jobTitle": "Technical Lead",
+              "description": "Senior Frontend Engineer with 5+ years experience building fast, accessible, and human-centered web experiences. Expert in React, Vue.js, TypeScript, and Ruby on Rails.",
+              "jobTitle": "Senior Frontend Engineer",
               "worksFor": {
                 "@type": "Organization",
                 "name": "Piedmont Global Language Solutions"
@@ -126,14 +126,19 @@ export default function RootLayout({
                 "https://www.instagram.com/godwill.codes"
               ],
               "knowsAbout": [
-                "Software Engineering",
-                "Product Management",
-                "Technical Leadership",
-                "Fintech",
+                "Frontend Development",
                 "React",
+                "Vue.js",
                 "TypeScript",
+                "Ruby on Rails",
+                "Accessibility",
+                "WCAG 2.1",
+                "Core Web Vitals",
                 "Full Stack Development",
-                "Engineering Team Management"
+                "JavaScript",
+                "Node.js",
+                "Docker",
+                "Kubernetes"
               ],
               "alumniOf": "University of Nairobi"
             })

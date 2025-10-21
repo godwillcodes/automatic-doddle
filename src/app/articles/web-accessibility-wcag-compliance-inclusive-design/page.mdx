@@ -1,0 +1,811 @@
+import { ArticleLayout } from '@/components/ArticleLayout'
+
+export const article = {
+  author: 'Godwill Barasa',
+  date: '2024-12-14',
+  title: 'Web Accessibility and WCAG Compliance: Building Inclusive Digital Experiences',
+  description:
+    'How to build web applications that work for everyone. A practical guide to WCAG 2.1 compliance, accessibility testing, and creating truly inclusive digital experiences.',
+}
+
+export const metadata = {
+  title: article.title,
+  description: article.description,
+  keywords: [
+    'web accessibility',
+    'WCAG 2.1',
+    'inclusive design',
+    'accessibility testing',
+    'ARIA',
+    'screen readers',
+    'keyboard navigation',
+    'color contrast',
+    'accessible web development',
+    'inclusive UX'
+  ],
+  openGraph: {
+    title: article.title,
+    description: article.description,
+    type: 'article',
+    publishedTime: article.date,
+    authors: [article.author],
+    images: [
+      {
+        url: '/images/portrait.jpg',
+        width: 1200,
+        height: 630,
+        alt: article.title,
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: article.title,
+    description: article.description,
+    images: ['/images/portrait.jpg'],
+  },
+  alternates: {
+    canonical: `/articles/${article.slug}`,
+  },
+}
+
+export default (props) => <ArticleLayout article={article} {...props} />
+
+It's 3 PM on a Tuesday, and I'm watching a user navigate my beautifully designed web application using only their keyboard. They're tabbing through the interface, and I'm cringing as they get stuck in a focus trap, can't access the main navigation, and eventually give up in frustration.
+
+This isn't a hypothetical scenario – this happened to me last year when I realized that my "perfect" design was completely unusable for millions of people. That moment changed everything about how I approach web development.
+
+After 5+ years of building web applications and learning from my mistakes, I've discovered that accessibility isn't just about compliance – it's about creating digital experiences that truly work for everyone. And the best part? When you build for accessibility, you build better products for everyone.
+
+## The Accessibility Wake-Up Call
+
+Let me start with a story that'll make you rethink everything you know about web design.
+
+Last year, I was working on a fintech application for a client. The design was gorgeous – clean, modern, with beautiful animations and a sleek interface. We were proud of it. Then, during user testing, we invited a user who relies on a screen reader to test the application.
+
+What happened next was humbling. The screen reader couldn't navigate the interface, the forms were impossible to fill out, and the user couldn't complete a single transaction. Our beautiful design was completely inaccessible.
+
+That's when I realized: accessibility isn't optional. It's not a nice-to-have feature. It's a fundamental requirement for building applications that serve real people with real needs.
+
+## The WCAG 2.1 Framework: Your Accessibility Roadmap
+
+The Web Content Accessibility Guidelines (WCAG) 2.1 are the gold standard for web accessibility. They're organized around four principles that form the foundation of accessible design:
+
+### 1. Perceivable: Information must be presentable in ways users can perceive
+
+This means your content must be available to users through different senses – sight, hearing, and touch.
+
+**Color Contrast: The Foundation of Visual Accessibility**
+
+One of the most common accessibility issues I see is poor color contrast. Here's how to get it right:
+
+```css
+/* Good: High contrast ratios */
+.primary-button {
+  background-color: #0066cc; /* Blue */
+  color: #ffffff; /* White */
+  /* Contrast ratio: 4.5:1 (meets WCAG AA) */
+}
+
+.text-content {
+  color: #333333; /* Dark gray */
+  background-color: #ffffff; /* White */
+  /* Contrast ratio: 12.6:1 (exceeds WCAG AAA) */
+}
+
+/* Bad: Low contrast */
+.low-contrast-text {
+  color: #cccccc; /* Light gray */
+  background-color: #ffffff; /* White */
+  /* Contrast ratio: 1.6:1 (fails WCAG AA) */
+}
+```
+
+**Alt Text: Making Images Accessible**
+
+Every image needs meaningful alt text. Here's how to do it right:
+
+```html
+<!-- Good: Descriptive alt text -->
+<img src="user-dashboard.png" 
+     alt="User dashboard showing monthly revenue of $45,000 with a 23% increase from last month" />
+
+<!-- Good: Decorative images -->
+<img src="decorative-border.png" 
+     alt="" 
+     role="presentation" />
+
+<!-- Bad: Missing alt text -->
+<img src="chart.png" />
+
+<!-- Bad: Unhelpful alt text -->
+<img src="chart.png" alt="chart" />
+```
+
+### 2. Operable: Interface components must be operable
+
+Users must be able to interact with your interface using different input methods.
+
+**Keyboard Navigation: The Universal Access Method**
+
+Every interactive element must be keyboard accessible:
+
+```html
+<!-- Good: Proper focus management -->
+<button class="primary-button" 
+        onclick="submitForm()"
+        onkeydown="handleKeydown(event)">
+  Submit Form
+</button>
+
+<script>
+function handleKeydown(event) {
+  if (event.key === 'Enter' || event.key === ' ') {
+    event.preventDefault();
+    submitForm();
+  }
+}
+</script>
+
+<!-- Good: Skip links for navigation -->
+<a href="#main-content" class="skip-link">Skip to main content</a>
+
+<nav aria-label="Main navigation">
+  <ul>
+    <li><a href="/dashboard">Dashboard</a></li>
+    <li><a href="/reports">Reports</a></li>
+    <li><a href="/settings">Settings</a></li>
+  </ul>
+</nav>
+
+<main id="main-content">
+  <!-- Main content here -->
+</main>
+```
+
+**Focus Management: Guiding Users Through Your Interface**
+
+```css
+/* Good: Visible focus indicators */
+button:focus,
+input:focus,
+select:focus,
+textarea:focus {
+  outline: 2px solid #0066cc;
+  outline-offset: 2px;
+}
+
+/* Good: Custom focus styles */
+.custom-button:focus {
+  box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.3);
+  border-color: #0066cc;
+}
+
+/* Bad: Removing focus indicators */
+button:focus {
+  outline: none; /* Never do this! */
+}
+```
+
+### 3. Understandable: Information and UI operation must be understandable
+
+Your content and interface must be clear and predictable.
+
+**Form Labels: Making Forms Accessible**
+
+```html
+<!-- Good: Proper form labeling -->
+<div class="form-group">
+  <label for="email">Email Address</label>
+  <input type="email" 
+         id="email" 
+         name="email" 
+         required 
+         aria-describedby="email-help" />
+  <div id="email-help" class="help-text">
+    We'll never share your email with anyone else.
+  </div>
+</div>
+
+<!-- Good: Complex form controls -->
+<fieldset>
+  <legend>Payment Method</legend>
+  <div class="radio-group">
+    <input type="radio" 
+           id="credit-card" 
+           name="payment" 
+           value="credit-card" />
+    <label for="credit-card">Credit Card</label>
+    
+    <input type="radio" 
+           id="paypal" 
+           name="payment" 
+           value="paypal" />
+    <label for="paypal">PayPal</label>
+  </div>
+</fieldset>
+
+<!-- Bad: Unlabeled form controls -->
+<input type="email" placeholder="Enter your email" />
+```
+
+**Error Handling: Clear Communication**
+
+```html
+<!-- Good: Accessible error messages -->
+<div class="form-group">
+  <label for="password">Password</label>
+  <input type="password" 
+         id="password" 
+         name="password" 
+         aria-describedby="password-error"
+         aria-invalid="true" />
+  <div id="password-error" 
+       class="error-message" 
+       role="alert">
+    Password must be at least 8 characters long and contain at least one number.
+  </div>
+</div>
+
+<!-- Good: Success messages -->
+<div class="success-message" 
+     role="alert" 
+     aria-live="polite">
+  Your account has been created successfully!
+</div>
+```
+
+### 4. Robust: Content must be robust enough to be interpreted by assistive technologies
+
+Your code must work with current and future assistive technologies.
+
+**Semantic HTML: The Foundation of Accessibility**
+
+```html
+<!-- Good: Semantic HTML structure -->
+<header>
+  <nav aria-label="Main navigation">
+    <ul>
+      <li><a href="/" aria-current="page">Home</a></li>
+      <li><a href="/about">About</a></li>
+      <li><a href="/contact">Contact</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+  <article>
+    <header>
+      <h1>How to Build Accessible Web Applications</h1>
+      <p class="article-meta">
+        Published on <time datetime="2024-12-14">December 14, 2024</time>
+        by <span class="author">Godwill Barasa</span>
+      </p>
+    </header>
+    
+    <section>
+      <h2>Understanding WCAG Guidelines</h2>
+      <p>Content goes here...</p>
+    </section>
+  </article>
+</main>
+
+<aside>
+  <h2>Related Articles</h2>
+  <ul>
+    <li><a href="/article1">Article 1</a></li>
+    <li><a href="/article2">Article 2</a></li>
+  </ul>
+</aside>
+
+<footer>
+  <p>&copy; 2024 Godwill Barasa. All rights reserved.</p>
+</footer>
+```
+
+## ARIA: The Accessibility Enhancement Layer
+
+ARIA (Accessible Rich Internet Applications) provides additional semantic information to assistive technologies. Here's how to use it effectively:
+
+### ARIA Labels and Descriptions
+
+```html
+<!-- Good: ARIA labels for complex controls -->
+<button aria-label="Close dialog" 
+        onclick="closeDialog()">
+  ×
+</button>
+
+<!-- Good: ARIA descriptions -->
+<input type="search" 
+       aria-label="Search products"
+       aria-describedby="search-help" />
+<div id="search-help">
+  Search by product name, category, or SKU
+</div>
+
+<!-- Good: ARIA live regions for dynamic content -->
+<div id="status" 
+     aria-live="polite" 
+     aria-atomic="true">
+  <!-- Status updates will be announced to screen readers -->
+</div>
+```
+
+### ARIA States and Properties
+
+```html
+<!-- Good: ARIA states -->
+<button aria-expanded="false" 
+        aria-controls="menu"
+        onclick="toggleMenu()">
+  Menu
+</button>
+<ul id="menu" 
+    aria-hidden="true">
+  <li><a href="/item1">Item 1</a></li>
+  <li><a href="/item2">Item 2</a></li>
+</ul>
+
+<!-- Good: ARIA properties -->
+<div role="tablist" 
+     aria-label="Product categories">
+  <button role="tab" 
+          aria-selected="true" 
+          aria-controls="electronics-panel"
+          id="electronics-tab">
+    Electronics
+  </button>
+  <button role="tab" 
+          aria-selected="false" 
+          aria-controls="clothing-panel"
+          id="clothing-tab">
+    Clothing
+  </button>
+</div>
+
+<div role="tabpanel" 
+     aria-labelledby="electronics-tab"
+     id="electronics-panel">
+  <!-- Electronics content -->
+</div>
+```
+
+## The Accessibility Testing Toolkit
+
+Building accessible applications requires comprehensive testing. Here's my testing strategy:
+
+### 1. Automated Testing Tools
+
+```javascript
+// axe-core integration for automated testing
+import { axe, toHaveNoViolations } from 'jest-axe';
+
+expect.extend(toHaveNoViolations);
+
+test('should not have accessibility violations', async () => {
+  const { container } = render(<MyComponent />);
+  const results = await axe(container);
+  expect(results).toHaveNoViolations();
+});
+
+// Lighthouse CI for performance and accessibility
+// lighthouse-ci --config=./lighthouse.config.js
+```
+
+### 2. Manual Testing Checklist
+
+**Keyboard Navigation Testing:**
+- [ ] All interactive elements are reachable via keyboard
+- [ ] Focus order is logical and intuitive
+- [ ] Focus indicators are visible
+- [ ] No keyboard traps exist
+- [ ] Skip links work properly
+
+**Screen Reader Testing:**
+- [ ] Content is announced correctly
+- [ ] Form labels are associated properly
+- [ ] Headings create a logical structure
+- [ ] Images have meaningful alt text
+- [ ] Dynamic content updates are announced
+
+**Visual Testing:**
+- [ ] Color contrast meets WCAG AA standards
+- [ ] Content is readable at 200% zoom
+- [ ] Information isn't conveyed by color alone
+- [ ] Text is resizable without horizontal scrolling
+
+### 3. User Testing with Real Users
+
+```html
+<!-- Testing with actual assistive technology users -->
+<div class="accessibility-testing">
+  <h2>Accessibility Testing Protocol</h2>
+  <ol>
+    <li>Recruit users who rely on assistive technologies</li>
+    <li>Provide clear testing scenarios</li>
+    <li>Observe without interfering</li>
+    <li>Ask open-ended questions</li>
+    <li>Document all issues and feedback</li>
+  </ol>
+</div>
+```
+
+## The Inclusive Design Process
+
+Accessibility isn't something you add at the end – it's something you build in from the beginning. Here's my inclusive design process:
+
+### 1. Research and Planning
+
+```markdown
+## Accessibility Requirements Gathering
+
+### User Personas
+- **Sarah**: Uses a screen reader due to visual impairment
+- **Mike**: Has motor disabilities and uses voice control
+- **Lisa**: Has dyslexia and benefits from clear typography
+- **Ahmed**: Has color blindness and needs high contrast
+
+### Technical Requirements
+- WCAG 2.1 AA compliance
+- Support for assistive technologies
+- Keyboard navigation
+- High contrast mode
+- Screen reader compatibility
+```
+
+### 2. Design Phase
+
+```css
+/* Design system with accessibility in mind */
+:root {
+  /* High contrast color palette */
+  --color-primary: #0066cc;
+  --color-primary-dark: #004499;
+  --color-text: #333333;
+  --color-text-light: #666666;
+  --color-background: #ffffff;
+  --color-background-alt: #f8f9fa;
+  
+  /* Accessible spacing */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  
+  /* Accessible typography */
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --line-height-base: 1.5;
+  --line-height-tight: 1.25;
+}
+
+/* Focus styles for all interactive elements */
+*:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  :root {
+    --color-primary: #0000ff;
+    --color-text: #000000;
+    --color-background: #ffffff;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+```
+
+### 3. Development Phase
+
+```javascript
+// Accessibility-first component development
+import React, { useRef, useEffect } from 'react';
+
+const AccessibleModal = ({ isOpen, onClose, title, children }) => {
+  const modalRef = useRef(null);
+  const previousFocusRef = useRef(null);
+
+  useEffect(() => {
+    if (isOpen) {
+      // Store the previously focused element
+      previousFocusRef.current = document.activeElement;
+      
+      // Focus the modal
+      modalRef.current?.focus();
+      
+      // Trap focus within the modal
+      const handleTabKey = (e) => {
+        if (e.key === 'Tab') {
+          const focusableElements = modalRef.current?.querySelectorAll(
+            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+          );
+          
+          if (focusableElements) {
+            const firstElement = focusableElements[0];
+            const lastElement = focusableElements[focusableElements.length - 1];
+            
+            if (e.shiftKey) {
+              if (document.activeElement === firstElement) {
+                lastElement.focus();
+                e.preventDefault();
+              }
+            } else {
+              if (document.activeElement === lastElement) {
+                firstElement.focus();
+                e.preventDefault();
+              }
+            }
+          }
+        }
+      };
+      
+      document.addEventListener('keydown', handleTabKey);
+      
+      return () => {
+        document.removeEventListener('keydown', handleTabKey);
+        // Return focus to the previously focused element
+        previousFocusRef.current?.focus();
+      };
+    }
+  }, [isOpen]);
+
+  if (!isOpen) return null;
+
+  return (
+    <div 
+      className="modal-overlay" 
+      onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modal-title"
+    >
+      <div 
+        ref={modalRef}
+        className="modal-content"
+        onClick={(e) => e.stopPropagation()}
+        tabIndex={-1}
+      >
+        <div className="modal-header">
+          <h2 id="modal-title">{title}</h2>
+          <button 
+            onClick={onClose}
+            aria-label="Close modal"
+            className="close-button"
+          >
+            ×
+          </button>
+        </div>
+        <div className="modal-body">
+          {children}
+        </div>
+      </div>
+    </div>
+  );
+};
+```
+
+## The Business Case for Accessibility
+
+Accessibility isn't just the right thing to do – it's good business. Here's why:
+
+### 1. Legal Compliance
+
+```markdown
+## Legal Requirements
+
+### United States
+- Americans with Disabilities Act (ADA)
+- Section 508 of the Rehabilitation Act
+- Web Content Accessibility Guidelines (WCAG) 2.1 AA
+
+### European Union
+- European Accessibility Act
+- EN 301 549 standard
+- WCAG 2.1 AA compliance
+
+### Global
+- UN Convention on the Rights of Persons with Disabilities
+- WCAG 2.1 as the international standard
+```
+
+### 2. Market Opportunity
+
+```markdown
+## Accessibility Market Statistics
+
+- **1 billion people** worldwide have a disability
+- **15% of the global population** has some form of disability
+- **$8 trillion** in disposable income from people with disabilities
+- **71% of users with disabilities** leave a website that's not accessible
+- **82% of users with disabilities** would return to an accessible website
+```
+
+### 3. SEO and Performance Benefits
+
+```html
+<!-- Accessible HTML is also SEO-friendly HTML -->
+<article>
+  <header>
+    <h1>How to Build Accessible Web Applications</h1>
+    <p class="article-meta">
+      Published on <time datetime="2024-12-14">December 14, 2024</time>
+    </p>
+  </header>
+  
+  <section>
+    <h2>Understanding WCAG Guidelines</h2>
+    <p>Content with proper heading structure...</p>
+    
+    <figure>
+      <img src="accessibility-diagram.png" 
+           alt="Diagram showing the four WCAG principles: Perceivable, Operable, Understandable, and Robust" />
+      <figcaption>The four principles of WCAG 2.1</figcaption>
+    </figure>
+  </section>
+</article>
+```
+
+## The Accessibility Maintenance Strategy
+
+Accessibility isn't a one-time implementation – it's an ongoing commitment. Here's how to maintain accessibility over time:
+
+### 1. Automated Testing in CI/CD
+
+```yaml
+# .github/workflows/accessibility.yml
+name: Accessibility Testing
+
+on: [push, pull_request]
+
+jobs:
+  accessibility:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18'
+          
+      - name: Install dependencies
+        run: npm install
+        
+      - name: Run accessibility tests
+        run: npm run test:accessibility
+        
+      - name: Run Lighthouse CI
+        run: npm run lighthouse:ci
+```
+
+### 2. Regular Accessibility Audits
+
+```markdown
+## Monthly Accessibility Audit Checklist
+
+### Automated Testing
+- [ ] Run axe-core tests on all pages
+- [ ] Check Lighthouse accessibility scores
+- [ ] Validate HTML markup
+- [ ] Test color contrast ratios
+
+### Manual Testing
+- [ ] Keyboard navigation testing
+- [ ] Screen reader testing
+- [ ] Mobile accessibility testing
+- [ ] High contrast mode testing
+
+### User Testing
+- [ ] Test with real users who use assistive technologies
+- [ ] Gather feedback on accessibility issues
+- [ ] Document and prioritize fixes
+```
+
+### 3. Team Education and Training
+
+```markdown
+## Accessibility Training Program
+
+### For Developers
+- WCAG 2.1 guidelines overview
+- ARIA implementation best practices
+- Testing with assistive technologies
+- Code review checklist for accessibility
+
+### For Designers
+- Inclusive design principles
+- Color contrast requirements
+- Typography and readability
+- User experience for people with disabilities
+
+### For Content Creators
+- Writing accessible content
+- Alt text best practices
+- Heading structure
+- Link text guidelines
+```
+
+## The Future of Web Accessibility
+
+Accessibility is evolving, and staying current is crucial:
+
+### 1. Emerging Technologies
+
+```html
+<!-- Voice control integration -->
+<button onclick="startVoiceCommand()" 
+        aria-label="Start voice command">
+  🎤 Voice Search
+</button>
+
+<!-- AI-powered accessibility features -->
+<div class="ai-accessibility">
+  <button onclick="generateAltText()" 
+          aria-label="Generate alt text using AI">
+    Generate Alt Text
+  </button>
+</div>
+```
+
+### 2. New Standards and Guidelines
+
+```markdown
+## Upcoming Accessibility Standards
+
+### WCAG 3.0 (In Development)
+- More flexible conformance model
+- Better support for cognitive disabilities
+- Enhanced mobile accessibility
+- Improved testing methodologies
+
+### WAI-ARIA 1.2
+- New roles and properties
+- Better support for complex interactions
+- Enhanced mobile accessibility
+- Improved screen reader support
+```
+
+## The Bottom Line: Building for Everyone
+
+After 5+ years of building web applications and learning from my accessibility mistakes, here's what I've learned:
+
+1. **Accessibility is not optional** – it's a fundamental requirement
+2. **Start early** – accessibility is much easier to build in than to retrofit
+3. **Test with real users** – automated tools are great, but real user feedback is invaluable
+4. **Make it a team effort** – everyone needs to understand accessibility
+5. **Keep learning** – accessibility standards and technologies are constantly evolving
+
+The most important lesson? When you build for accessibility, you build better products for everyone. Accessible design is good design. Accessible code is good code. And accessible applications are applications that truly serve their users.
+
+So, whether you're building your first web application or your hundredth, remember: the web was designed to be accessible to everyone. It's our job as developers to make sure it stays that way.
+
+## Stay Weird 🚀
+
+As I wrap up this comprehensive guide to web accessibility, I'm reminded of why I love this field. It's not just about following guidelines or meeting compliance requirements – it's about creating digital experiences that truly work for everyone.
+
+The accessibility journey I've shared here isn't just about technical implementation – it's about empathy, understanding, and building products that make the world a little more inclusive. Every accessible feature we implement, every barrier we remove, every user we enable – that's what makes this work meaningful.
+
+So, whether you're just starting your accessibility journey or you're a seasoned developer looking to level up your inclusive design skills, remember: the best web applications are the ones that work for everyone, regardless of their abilities or the technologies they use.
+
+Stay weird, stay inclusive, and keep building a web that works for everyone.
+
+[Reach out to me on Twitter](https://twitter.com/godwill_codes)
+
+[Connect with me on LinkedIn](https://www.linkedin.com/in/godwillcodes/)
+
+[Instagram, for the baddies](https://www.instagram.com/godwill.codes)
+
+[Github, for the geeks](https://github.com/godwillcodes)
