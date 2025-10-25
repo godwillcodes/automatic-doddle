@@ -122,6 +122,7 @@ export default function RootLayout({
         <meta name="msapplication-TileColor" content="#000000" />
         <meta name="msapplication-tap-highlight" content="no" />
         <meta name="theme-color" content="#000000" />
+        <meta name="google-site-verification" content="hxP6GVUrNF3O-j3W0qaPhblUWbGH4BLFOUTSUETit2E" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
