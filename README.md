@@ -1,95 +1,249 @@
-# Challenge Details
+# Godwill Barasa - Portfolio Website
 
-Development of an `Email Audit` system is currently in progress. Assume that this project is a real project and is being used in a production environment on a trial basis, since the features are not yet complete.
+A modern, SEO-optimized Progressive Web App (PWA) portfolio website built with Next.js, TypeScript, and Tailwind CSS.
 
-As the first assignment, two UI elements need to be implemented:
+## Live Demo
 
-- The first one is called `RecipientsDisplay`, it is a table cell that is used to intelligently show email recipients inside the `AuditTable` component. This cell will trim recipients that are too long to display in the table.
-- The second element is called `RecipientTooltip`, a tooltip-like component that will be used to display all of the email recipients, even ones that are trimmed in the table cell.
+**Website**: [https://godwillbarasa.netlify.app/](https://godwillbarasa.netlify.app/)
 
-The task is to implement these UI elements in the `RecipientsDisplay` file within any of the included frameworks. Modifying or adding new props, re-ordering the recipients, and adding new or extra functionalities and features are not allowed in this assignment. Additionally, the component needs to be written in **Typescript**.
+## Features
 
-## `RecipientsDisplay`
+### Progressive Web App (PWA)
+- Offline functionality with service worker
+- Installable on mobile and desktop devices
+- App shortcuts for quick navigation
+- Push notifications ready
+- Responsive design optimized for all devices
 
-Assume that an employee can send an email to many recipients. Due to the limited amount of space, the information has to be displayed well. The design team has come up with the following design specifications:
+### SEO Optimized
+- Structured data (Schema.org markup)
+- Open Graph and Twitter Card meta tags
+- XML sitemap with image optimization
+- Robots.txt configuration
+- Core Web Vitals optimized
+- Google Search Console ready
 
-- If all the email addresses in the recipients list fit in the available space, display them as they are, delimited by a comma and space (e.g. `John.Smith@gmail.com, Jane.Smith@outlook.com`).
-- If there is not enough space to display the entire recipients list, it must be trimmed. To prevent showing clipped email addresses that are hard to read, show only the portion of the recipients list that does fit. In other words, if the entirety of an email address does not fit, it must not be shown.
-- If the recipients list has been trimmed (i.e. at least one email address is not shown), add `, ...` after the last email address shown. Furthermore, the rightmost end of the column must indicate the number of trimmed recipients with the provided `RecipientsBadge` component.
-- A special case is given to the first recipient. If there is not enough space to fit even the first recipient's email address, the email address is allowed to be clipped with an ellipsis. If there is only one recipient, a badge must not be shown. If there is more than one recipient, the first recipient must be excluded from the number of trimmed recipients in the badge.
-- This functionality should work on any screen size and when the screen is resized. For simplicity, this will only be tested in a recent version of a `Chromium` browser.
-- For the element that holds the list of recipients, the `display` must be set to `flex` and the `align-items` property must be set to `center` to ensure alignment correctness.
-- Do not modify or add new props to the `RecipientsBadge` component.
-- Do not re-order the recipients.
-- Do not add new/extra functionalities and features.
+### Modern Web Technologies
+- Next.js 13 with App Router
+- TypeScript for type safety
+- Tailwind CSS for styling
+- MDX for rich content
+- Dark/Light mode support
+- Accessibility (WCAG 2.1 compliant)
 
-### `RecipientsDisplay` Examples
+## Tech Stack
 
-**Trim recipients that do not fit in the column. Show `, ...` after the last fitting recipient and a badge with `+N` at the end of the column.**
+![Next.js](https://img.shields.io/badge/Next.js-13.4.16-black?style=flat-square&logo=next.js)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.1.6-blue?style=flat-square&logo=typescript)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.3.3-38B2AC?style=flat-square&logo=tailwind-css)
+![React](https://img.shields.io/badge/React-18.2.0-61DAFB?style=flat-square&logo=react)
+![Node.js](https://img.shields.io/badge/Node.js-18+-339933?style=flat-square&logo=node.js)
+![Netlify](https://img.shields.io/badge/Netlify-00C7B7?style=flat-square&logo=netlify)
 
-![Email trim example 1](Email%20trim%20example%201.svg)
+**Framework**: Next.js 13.4.16  
+**Language**: TypeScript  
+**Styling**: Tailwind CSS  
+**Content**: MDX with rehype-prism  
+**Deployment**: Netlify  
+**Analytics**: Google Analytics (optional)  
+**SEO**: Google Search Console
 
-**If there is not enough space to show the ellipsis and the extra space, trim that recipient as well.**
+## Project Structure
 
-Incorrect:
-
-![Email trim example 2A](Email%20trim%20example%202A.svg)
-
-Correct:
-
-![Email trim example 2B](Email%20trim%20example%202B.svg)
-
-**If there is not enough space to show the first recipient, the badge should show the number of trimmed recipients excluding the first recipient, and the recipient should be truncated with an ellipsis only. If there is only one recipient, there should be no badge.**
-
-Two recipients:
-
-![Email trim example 3A](Email%20trim%20example%203A.svg)
-
-One recipient:
-
-![Email trim example 3B](Email%20trim%20example%203B.svg)
-
-## `RecipientsTooltip`
-
-Assume a use-case exists where the entirety of a recipient list must be made visible. The solution provided by the design team is to show the full list of the recipients at the **top right** corner of the viewport.
-
-- The recipients list must be shown in a tooltip at the **top right** corner of the viewport.
-- The tooltip must only be shown when the user hovers over a `RecipientsBadge` component.
-- The tooltip must not be shown if the user is not hovering over a badge.
-- The tooltip must display **`all of the email addresses in the recipients list, delimited by a comma and space`** (e.g. `John.Smith@gmail.com, Jane.Smith@outlook.com`).
-- Assume that the viewport is wide enough to show the tooltip without any truncation.
-- Do not create a new file, the tooltip must be located inside the `RecipientsDisplay` file.
-- Do not re-order the recipients, display them as they are.
-- Do not add new/extra functionalities and features.
-- The tooltip should have the following styles:
-  - Margin from the top right corner of the viewport is `8px`.
-  - Padding top and bottom are `8px`.
-  - Padding left and right are `16px`.
-  - Background color is `#666`.
-  - Text color is `#f0f0f0`.
-  - Border radius is `24px`.
-  - The `display` property must be set to `flex` and the `align-items` property must be set to `center` to ensure alignment correctness.
-
-### `RecipientsTooltip` Examples
-
-**An example format of showing the recipients list in the tooltip.**
-
-```bash
-a@test.example.com, b@test.example.com, c@test.example.com
+```
+src/
+├── app/                    # Next.js App Router
+│   ├── articles/          # Blog articles (MDX)
+│   ├── projects/          # Projects showcase
+│   ├── speaking/          # Speaking engagements
+│   ├── uses/              # Tools and tech stack
+│   ├── layout.tsx         # Root layout with PWA features
+│   └── page.tsx           # Homepage
+├── components/            # Reusable components
+│   ├── ArticleLayout.tsx  # Article layout
+│   ├── PWAInstallPrompt.tsx # PWA install prompt
+│   └── Analytics.tsx     # Analytics integration
+├── lib/                   # Utility functions
+│   ├── articles.ts       # Article management
+│   ├── metadata.ts       # SEO metadata
+│   └── structured-data.ts # Schema.org markup
+└── styles/               # Global styles
+    ├── tailwind.css      # Tailwind CSS
+    └── prism.css         # Code syntax highlighting
 ```
 
-**The example of margins for the recipients list.**
+## Getting Started
 
-![Tooltip example 1](Tooltip%20example%201.png)
+### Prerequisites
+- Node.js 18+ 
+- npm or yarn
 
-**The style example for recipients list in the tooltip.**
+### Installation
 
-![Tooltip example 2](Tooltip%20example%202.png)
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/yourusername/portfolio.git
+   cd portfolio
+   ```
 
-## Evaluation
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
 
-It is crucial to adhere strictly to the specified design and functionality requirements, as the UI components you develop will undergo rigorous testing, including screenshot comparisons. This means that every pixel counts; margins, padding, font sizes, and colors must match the provided specifications exactly. Discrepancies between your implementation and the design specifications could lead to test failures, even if they seem minor.
+3. **Set up environment variables**
+   ```bash
+   cp .env.example .env.local
+   ```
+   
+   Add your configuration:
+   ```bash
+   NEXT_PUBLIC_SITE_URL=https://godwillbarasa.netlify.app
+   GOOGLE_ANALYTICS_ID=G-XXXXXXXXXX  # Optional
+   GOOGLE_TAG_MANAGER_ID=GTM-XXXXXXX  # Optional
+   ```
 
-To assist you in aligning your submission with the expected outcomes, we provide `Evaluation example [WxH].png` reference files. Comparing your solution against these reference screenshots will help you ensure that your implementation closely matches the specified design.
+4. **Run development server**
+   ```bash
+   npm run dev
+   ```
 
-In addition to automated screenshot comparisons, your code will be reviewed by human engineers. This review process will focus on code quality, adherence to the project's coding standards, and the implementation's efficiency and maintainability. It's important to write clean, well-documented, and optimized code, as these aspects will be closely scrutinized. By ensuring your UI components meet both the visual and code quality standards, you will significantly increase the likelihood of your submission passing the evaluation process.
+5. **Open [http://localhost:3000](http://localhost:3000)**
+
+## Content Management
+
+### Adding New Articles
+1. Create a new MDX file in `src/app/articles/[slug]/page.mdx`
+2. Add the article metadata:
+   ```javascript
+   export const article = {
+     author: 'Godwill Barasa',
+     date: '2024-12-20',
+     title: 'Your Article Title',
+     description: 'Article description for SEO',
+   }
+   ```
+
+### Updating Projects
+Edit the projects data in `src/app/projects/page.tsx`
+
+### Managing Speaking Engagements
+Update speaking data in `src/app/speaking/page.tsx`
+
+## SEO Features
+
+### Structured Data
+- Person schema for author information
+- Article schema for blog posts
+- Website schema for site information
+- Breadcrumb schema for navigation
+
+### Performance Optimization
+- Image optimization with Next.js Image component
+- Code splitting for faster loading
+- Service worker for offline functionality
+- Caching strategies for static assets
+
+### PWA Features
+- Web App Manifest for app installation
+- Service Worker for offline functionality
+- App shortcuts for quick access
+- Install prompts for better UX
+
+## Deployment
+
+### Netlify (Recommended)
+1. Connect your GitHub repository to Netlify
+2. Set build command: `npm run build`
+3. Set publish directory: `.next`
+4. Deploy!
+
+### Environment Variables for Production
+```bash
+NEXT_PUBLIC_SITE_URL=https://yourdomain.com
+GOOGLE_ANALYTICS_ID=G-XXXXXXXXXX
+GOOGLE_TAG_MANAGER_ID=GTM-XXXXXXX
+```
+
+## Analytics & Monitoring
+
+### Google Search Console
+1. Add your site to Google Search Console
+2. Verify ownership with the provided meta tag
+3. Submit your sitemap: `/sitemap.xml`
+4. Monitor search performance
+
+### Built-in SEO Dashboard
+Visit `/seo-dashboard` to monitor:
+- SEO score and recommendations
+- Core Web Vitals status
+- PWA optimization score
+- Performance metrics
+
+## Customization
+
+### Styling
+- Modify `tailwind.config.ts` for theme customization
+- Update colors in `src/styles/tailwind.css`
+- Customize components in `src/components/`
+
+### Content
+- Update personal information in `src/app/layout.tsx`
+- Modify social links in `src/components/SocialIcons.tsx`
+- Add new sections by creating new pages
+
+## PWA Testing
+
+### Desktop
+1. Open Chrome DevTools (F12)
+2. Go to Application tab
+3. Check Manifest and Service Workers sections
+4. Test offline functionality
+
+### Mobile
+1. Open the site on mobile
+2. Look for "Add to Home Screen" prompt
+3. Test app shortcuts
+4. Verify offline functionality
+
+## SEO Testing
+
+### Google PageSpeed Insights
+Test your site: [PageSpeed Insights](https://pagespeed.web.dev/)
+
+### Mobile-Friendly Test
+Check mobile optimization: [Mobile-Friendly Test](https://search.google.com/test/mobile-friendly)
+
+### Rich Results Test
+Test structured data: [Rich Results Test](https://search.google.com/test/rich-results)
+
+## Performance Metrics
+
+- **Lighthouse Score**: 95+ (Performance, Accessibility, Best Practices, SEO)
+- **Core Web Vitals**: All metrics in "Good" range
+- **PWA Score**: 95+ (Installable, PWA Optimized)
+- **SEO Score**: 90+ (Meta tags, structured data, sitemap)
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly
+5. Submit a pull request
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
+
+## Author
+
+**Godwill Barasa**
+- Website: [https://godwillbarasa.netlify.app](https://godwillbarasa.netlify.app)
+- Twitter: [@godwill_codes](https://twitter.com/godwill_codes)
+- LinkedIn: [godwillcodes](https://linkedin.com/in/godwillcodes)
+- GitHub: [godwillcodes](https://github.com/godwillcodes)
+
+---
+
+**Star this repository if you found it helpful!**
