@@ -1,7 +1,9 @@
 import { type Metadata } from 'next'
+import Script from 'next/script'
 
 import { Providers } from '@/app/providers'
 import { Layout } from '@/components/Layout'
+import { PWAInstallPrompt } from '@/components/PWAInstallPrompt'
 
 import '@/styles/tailwind.css'
 
@@ -86,6 +88,19 @@ export const metadata: Metadata = {
     yandex: process.env.YANDEX_VERIFICATION,
     yahoo: process.env.YAHOO_VERIFICATION,
   },
+  manifest: '/manifest.json',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'Godwill Barasa',
+  },
+  other: {
+    'mobile-web-app-capable': 'yes',
+    'apple-mobile-web-app-capable': 'yes',
+    'apple-mobile-web-app-status-bar-style': 'black-translucent',
+    'msapplication-TileColor': '#000000',
+    'theme-color': '#000000',
+  },
 }
 
 export default function RootLayout({
@@ -99,6 +114,14 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" />
         <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500&family=Work+Sans&display=swap" rel="stylesheet"></link>
+        <link rel="manifest" href="/manifest.json" />
+        <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-title" content="Godwill Barasa" />
+        <meta name="msapplication-TileColor" content="#000000" />
+        <meta name="msapplication-tap-highlight" content="no" />
+        <meta name="theme-color" content="#000000" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -144,12 +167,32 @@ export default function RootLayout({
             })
           }}
         />
+        <Script
+          id="pwa-registration"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              if ('serviceWorker' in navigator) {
+                window.addEventListener('load', function() {
+                  navigator.serviceWorker.register('/sw.js')
+                    .then(function(registration) {
+                      console.log('SW registered: ', registration);
+                    })
+                    .catch(function(registrationError) {
+                      console.log('SW registration failed: ', registrationError);
+                    });
+                });
+              }
+            `,
+          }}
+        />
       </head>
       <body className="flex h-full bg-zinc-50 dark:bg-black">
         <Providers>
           <div className="flex w-full">
             <Layout>{children}</Layout>
           </div>
+          <PWAInstallPrompt />
         </Providers>
       </body>
     </html>
