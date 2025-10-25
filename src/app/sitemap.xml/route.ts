@@ -45,8 +45,8 @@ export async function GET() {
     ${isArticle ? `
     <image:image>
       <image:loc>${baseUrl}/images/portrait.jpg</image:loc>
-      <image:title>${page.article?.title || 'Article Image'}</image:title>
-      <image:caption>${page.article?.description || 'Article featured image'}</image:caption>
+      <image:title>${(page as any).article?.title || 'Article Image'}</image:title>
+      <image:caption>${(page as any).article?.description || 'Article featured image'}</image:caption>
       <image:license>${baseUrl}</image:license>
     </image:image>
     <news:news>
@@ -55,7 +55,7 @@ export async function GET() {
         <news:language>en</news:language>
       </news:publication>
       <news:publication_date>${page.lastmod}</news:publication_date>
-      <news:title>${page.article?.title || ''}</news:title>
+      <news:title>${(page as any).article?.title || ''}</news:title>
     </news:news>` : ''}
   </url>`
     })
