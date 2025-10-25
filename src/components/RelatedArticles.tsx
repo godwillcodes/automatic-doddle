@@ -44,9 +44,11 @@ export function RelatedArticles({ currentArticle, articles }: RelatedArticlesPro
                 <span className="relative z-10">{article.title}</span>
               </Link>
             </Card.Title>
-            <Card.Description className="relative z-10 mt-2 text-sm text-zinc-600 dark:text-zinc-400">
-              {article.description}
-            </Card.Description>
+            <div className="relative z-10 mt-2 text-sm text-zinc-600 dark:text-zinc-400">
+              <Card.Description>
+                {article.description}
+              </Card.Description>
+            </div>
             <Card.Cta>Read article</Card.Cta>
           </Card>
         ))}
