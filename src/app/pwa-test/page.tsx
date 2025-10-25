@@ -19,7 +19,7 @@ export default function PWATestPage() {
     // Check service worker registration
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.getRegistration().then((registration) => {
-        setSwRegistration(registration)
+        setSwRegistration(registration || null)
       })
     }
     
