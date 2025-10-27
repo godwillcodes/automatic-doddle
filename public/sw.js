@@ -1,3 +1,6 @@
+// Ensure the newly installed service worker activates and takes control ASAP
+self.skipWaiting();
+
 const CACHE_NAME = 'godwill-barasa-v1';
 const urlsToCache = [
   '/',
@@ -51,6 +54,6 @@ self.addEventListener('activate', (event) => {
           }
         })
       );
-    })
+    }).then(() => self.clients.claim())
   );
 });
