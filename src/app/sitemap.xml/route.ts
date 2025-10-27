@@ -13,6 +13,7 @@ export async function GET() {
     { path: '/projects', priority: '0.7', changefreq: 'monthly', lastmod: currentDate },
     { path: '/speaking', priority: '0.6', changefreq: 'monthly', lastmod: currentDate },
     { path: '/uses', priority: '0.5', changefreq: 'monthly', lastmod: currentDate },
+    { path: '/thank-you', priority: '0.4', changefreq: 'monthly', lastmod: currentDate },
     { path: '/seo-dashboard', priority: '0.3', changefreq: 'monthly', lastmod: currentDate },
     { path: '/pwa-test', priority: '0.3', changefreq: 'monthly', lastmod: currentDate },
   ]
@@ -32,7 +33,7 @@ export async function GET() {
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   ${allPages
     .map((page) => {
-      const url = `${baseUrl}${page.path}`
+      const url = `${baseUrl}${page.path}`.replace(/\/+/g, '/').replace(':/', '://')
       
       return `  <url>
     <loc>${url}</loc>
