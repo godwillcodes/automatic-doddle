@@ -10,7 +10,7 @@ interface ArticleMetadata {
 }
 
 export function generateArticleMetadata(article: ArticleMetadata): Metadata {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://godwillbarasa.com'
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://godwillbarasa.netlify.app'
   
   return {
     title: article.title,
@@ -70,7 +70,7 @@ export function generatePageMetadata(
   path: string,
   keywords?: string[]
 ): Metadata {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://godwillbarasa.com'
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://godwillbarasa.netlify.app'
   
   return {
     title,

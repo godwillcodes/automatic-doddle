@@ -1,3 +1,5 @@
+[![Netlify Status](https://api.netlify.com/api/v1/badges/38ff7057-2bb7-478f-9178-c19144b2fa51/deploy-status)](https://app.netlify.com/projects/godwillbarasa/deploys)
+
 # Godwill Barasa - Portfolio Website
 
 A modern, SEO-optimized Progressive Web App (PWA) portfolio website built with Next.js, TypeScript, and Tailwind CSS.

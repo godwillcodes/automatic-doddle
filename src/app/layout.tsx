@@ -41,7 +41,7 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://godwillbarasa.com'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://godwillbarasa.netlify.app'),
   alternates: {
     canonical: '/',
     types: {
@@ -51,7 +51,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: process.env.NEXT_PUBLIC_SITE_URL || 'https://godwillbarasa.com',
+    url: process.env.NEXT_PUBLIC_SITE_URL || 'https://godwillbarasa.netlify.app',
     siteName: 'Godwill Barasa',
     title: 'Godwill Barasa - Senior Frontend Engineer & Full Stack Developer',
     description: 'Senior Frontend Engineer with 5+ years building fast, accessible, and human-centered web experiences. Expert in React, Vue.js, TypeScript, and Ruby on Rails.',
