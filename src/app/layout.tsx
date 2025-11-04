@@ -57,9 +57,9 @@ export const metadata: Metadata = {
     description: 'Senior Frontend Engineer with 5+ years building fast, accessible, and human-centered web experiences. Expert in React, Vue.js, TypeScript, and Ruby on Rails.',
     images: [
       {
-        url: '/images/portrait.jpg',
-        width: 1200,
-        height: 630,
+        url: '/icons/icon-512x512.png',
+        width: 512,
+        height: 512,
         alt: 'Godwill Barasa - Software Engineer and Technical Lead',
       },
     ],
@@ -70,7 +70,7 @@ export const metadata: Metadata = {
     creator: '@godwill_codes',
     title: 'Godwill Barasa - Senior Frontend Engineer & Full Stack Developer',
     description: 'Senior Frontend Engineer with 5+ years building fast, accessible, and human-centered web experiences. Expert in React, Vue.js, TypeScript, and Ruby on Rails.',
-    images: ['/images/portrait.jpg'],
+    images: ['/icons/icon-512x512.png'],
   },
   robots: {
     index: true,
@@ -130,8 +130,8 @@ export default function RootLayout({
               "@context": "https://schema.org",
               "@type": "Person",
               "name": "Godwill Barasa",
-              "url": "https://godwillbarasa.com",
-              "image": "https://godwillbarasa.com/images/portrait.jpg",
+              "url": process.env.NEXT_PUBLIC_SITE_URL || 'https://godwillbarasa.netlify.app',
+              "image": `${process.env.NEXT_PUBLIC_SITE_URL || 'https://godwillbarasa.netlify.app'}/icons/icon-512x512.png`,
               "description": "Senior Frontend Engineer with 5+ years experience building fast, accessible, and human-centered web experiences. Expert in React, Vue.js, TypeScript, and Ruby on Rails.",
               "jobTitle": "Senior Frontend Engineer",
               "worksFor": {

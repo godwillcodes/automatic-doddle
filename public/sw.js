@@ -10,10 +10,8 @@ const urlsToCache = [
   '/speaking',
   '/uses',
   '/manifest.json',
-  '/images/portrait.jpg',
-  '/images/avatar.jpg',
-  '/styles/tailwind.css',
-  '/styles/prism.css'
+  // Cache a known-existing large icon for install prompts and sharing fallbacks
+  '/icons/icon-512x512.png'
 ];
 
 // Install event - cache resources
