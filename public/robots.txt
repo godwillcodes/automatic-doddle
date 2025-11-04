@@ -1,0 +1,16 @@
+# *
+User-agent: *
+Allow: /
+
+# *
+User-agent: *
+Disallow: /admin/
+Disallow: /api/
+Disallow: /_next/
+Disallow: /private/
+
+# Host
+Host: https://godwillbarasa.netlify.app
+
+# Sitemaps
+Sitemap: https://godwillbarasa.netlify.app/sitemap.xml
