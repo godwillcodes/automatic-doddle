@@ -1,18 +1,19 @@
 // Script to help with Google indexing requests
 // Run this after your site is live and verified in Google Search Console
 
+const SITE = (process.env.NEXT_PUBLIC_SITE_URL || 'https://godwillbarasa.netlify.app').replace(/\/$/, '')
 const keyPages = [
-  'https://godwillbarasa.com/',
-  'https://godwillbarasa.com/about',
-  'https://godwillbarasa.com/articles',
-  'https://godwillbarasa.com/projects',
-  'https://godwillbarasa.com/speaking',
-  'https://godwillbarasa.com/uses',
+  `${SITE}/`,
+  `${SITE}/about`,
+  `${SITE}/articles`,
+  `${SITE}/projects`,
+  `${SITE}/speaking`,
+  `${SITE}/uses`,
   // Add your most important articles
-  'https://godwillbarasa.com/articles/web-accessibility-wcag-compliance-inclusive-design',
-  'https://godwillbarasa.com/articles/ruby-rails-best-practices-modern-web-development',
-  'https://godwillbarasa.com/articles/impact-driven-prioritization-faster-smarter-product-decisions',
-  'https://godwillbarasa.com/articles/building-retaining-high-performing-engineering-teams'
+  `${SITE}/articles/web-accessibility-wcag-compliance-inclusive-design`,
+  `${SITE}/articles/ruby-rails-best-practices-modern-web-development`,
+  `${SITE}/articles/impact-driven-prioritization-faster-smarter-product-decisions`,
+  `${SITE}/articles/building-retaining-high-performing-engineering-teams`
 ]
 
 console.log('🔍 Pages to request indexing for:')
