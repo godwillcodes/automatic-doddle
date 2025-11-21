@@ -11,46 +11,37 @@ import logoPlanetaria from '@/images/logos/planetaria.svg'
 
 const projects = [
   {
-    name: 'M-Pesa Agent Portal Redesign',
-    description: 'Complete redesign of agent onboarding portal for Safaricom M-Pesa, reducing onboarding friction by 30% and achieving 20-25% adoption growth among active users.',
-    role: 'Engineering Team Lead',
-    link: { href: 'https://www.safaricom.co.ke/', label: 'safaricom.co.ke' },
-    stack: ['React', 'TypeScript', 'GraphQL', 'GCP'],
+    name: 'Performance Audit Pro (WordPress)',
+    description:
+      'A performance governance plugin that unifies Google PageSpeed Insights audits, Core Web Vitals RUM, automated workers, and stakeholder-ready exports—all inside wp-admin.',
+    role: 'Creator & Maintainer',
+    link: {
+      href: 'https://github.com/godwillcodes/WPSitePerformanceTracker',
+      label: 'github.com/godwillcodes/WPSitePerformanceTracker',
+    },
+    stack: ['WordPress', 'PHP', 'Core Web Vitals', 'PageSpeed Insights'],
   },
   {
-    name: 'Microloan Tracking Dashboard',
-    description: 'Mobile dashboard for microloan tracking and management, delivering enterprise-grade digital solutions for financial services across Sub-Saharan Africa.',
-    role: 'Engineering Team Lead',
-    link: { href: 'https://www.safaricom.co.ke/', label: 'safaricom.co.ke' },
-    stack: ['React', 'TypeScript', 'GraphQL', 'Mobile'],
+    name: 'PixelPress',
+    description:
+      'Image compression suite leveraging Next.js, Sharp, and adaptive binary search algorithms to squeeze JPEG/PNG inputs into optimized WebP/AVIF outputs with real-time telemetry.',
+    role: 'Creator',
+    link: {
+      href: 'https://github.com/godwillcodes/PixelPress',
+      label: 'github.com/godwillcodes/PixelPress',
+    },
+    stack: ['Next.js', 'Sharp', 'TypeScript', 'Performance Engineering'],
   },
   {
-    name: 'Language Operations Platform',
-    description: 'Scalable, user-centered language operation products with internal dashboards and automated deployment pipelines, increasing adoption by 25% and reducing customer drop-off by 15%.',
-    role: 'Product Engineering Lead',
-    link: { href: 'https://pgls.com/', label: 'pgls.com' },
-    stack: ['React', 'TypeScript', 'CI/CD', 'Monitoring'],
-  },
-  {
-    name: 'Technical Recruiting Pipeline',
-    description: 'End-to-end technical recruiting system using Greenhouse ATS, reducing time-to-hire by 35% and growing engineering capacity from 10 to 25 engineers in 12 months.',
-    role: 'Technical Lead',
-    link: { href: 'https://pgls.com/', label: 'pgls.com' },
-    stack: ['Greenhouse ATS', 'Process Optimization', 'Data Analytics'],
-  },
-  {
-    name: 'Internal Tooling & Automation',
-    description: 'Workflow tools and automated deployment pipelines that improved team efficiency by 30%, reduced rollout errors by 40%, and cut release cycle times from 4 weeks to 2.5 weeks.',
-    role: 'Product Engineering Lead',
-    link: { href: 'https://pgls.com/', label: 'pgls.com' },
-    stack: ['Automation', 'DevOps', 'Monitoring', 'Observability'],
-  },
-  {
-    name: 'Cross-Functional Team Leadership',
-    description: 'Led distributed teams across multiple time zones, managing ambiguous projects and collaborating across multicultural, remote teams to deliver scalable products.',
-    role: 'Technical Lead',
-    link: { href: 'https://pgls.com/', label: 'pgls.com' },
-    stack: ['Team Leadership', 'Remote Collaboration', 'Product Strategy'],
+    name: 'QuantumKey',
+    description:
+      'Zero-trust credential vault for distributed teams, combining cryptographic key rotation, granular secrets governance, and developer-friendly CLI integrations.',
+    role: 'Creator',
+    link: {
+      href: 'https://github.com/godwillcodes/QuantumKey',
+      label: 'github.com/godwillcodes/QuantumKey',
+    },
+    stack: ['Node.js', 'TypeScript', 'Security', 'CLI Tooling'],
   },
 
 ]

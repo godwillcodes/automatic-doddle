@@ -65,7 +65,7 @@ function PhoneIcon(props: React.ComponentPropsWithoutRef<'svg'>) {
 export const metadata: Metadata = {
   title: 'About',
   description:
-    'Godwill Barasa - Senior Frontend Engineer with 5+ years building fast, accessible, and human-centered web experiences. Expert in React, Vue.js, TypeScript, and Ruby on Rails.',
+    'Godwill Barasa - Web Applications Developer leading digital asset management initiatives, Core Web Vitals optimisation, and enterprise WordPress/React delivery.',
 }
 
 export default function About() {
@@ -77,7 +77,7 @@ export default function About() {
             
             <Image
               src={portraitImage2}
-              alt="Godwill Barasa - Senior Frontend Engineer and Software Developer"
+              alt="Godwill Barasa - Web Applications Developer and Digital Asset Management Lead"
               sizes="(min-width: 1024px) 32rem, 20rem"
               className="aspect-square rotate-2 mt-10 rounded-2xl bg-zinc-100 object-cover dark:bg-zinc-800"
             />
@@ -89,10 +89,10 @@ export default function About() {
           </h1>
           <div className="mt-6 space-y-7 text-base text-zinc-600 dark:text-zinc-400">
             <p>
-              As a Senior Frontend Engineer with 5+ years of experience, I'm passionate about building fast, accessible, and human-centered web experiences that empower creators and small businesses. I thrive in early-stage product environments, specializing in rapid prototyping, iterative development, and shipping performant applications that deliver real value.
+              As a Web Applications Developer focused on digital asset management, I build performant, multilingual platforms that keep brand content, metadata, and licensing in sync across teams. My background spans Core Web Vitals optimisation, design systems, and the workflows required to push media to every channel with confidence.
             </p>
             <p>
-              Currently at Piedmont Global Language Solutions, I lead technical delivery of scalable, business-critical front-end platforms using React, Next.js, Tailwind, and TypeScript. I've successfully handled 40% traffic surges while maintaining performance, resilience, and cross-environment compatibility. I've established robust test discipline by developing comprehensive unit and component test suites with Jest, improving code reliability and reducing production defects.
+              Currently at Piedmont Global Language Solutions, I guide the architecture for enterprise WordPress, Next.js, and headless CMS experiences that manage thousands of multilingual assets. I partner with localization, marketing, and compliance teams to design metadata taxonomies, automate media workflows, and keep experience performance in the 90+ Lighthouse range.
             </p>
             <p>
               Previously at Ogilvy Africa Kenya, I engineered data-heavy UIs, including complex tables and reconciliation workflows, on scalable web platforms using Vue.js, TypeScript, and Node.js. I integrated headless CMSs like Contentful via GraphQL to deliver dynamic, high-concurrency content while maintaining 99.9% uptime. I built containerized cloud environments with Docker and orchestrated deployments via Kubernetes, halving deployment duration from 40 to 20 minutes and lowering production failures by 30%.

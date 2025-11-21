@@ -210,7 +210,7 @@ function Resume() {
   let resume: Array<Role> = [
     {
       company: 'Piedmont Global Language Solutions (PGLS)',
-      title: 'Senior Frontend Engineer',
+      title: 'Lead Web Applications Developer',
       logo: logoPlanetaria,
       start: '2025',
       end: {
@@ -259,30 +259,26 @@ function Resume() {
           <Role key={roleIndex} role={role} />
         ))}
       </ol>
-      <Button href="/resume.pdf" variant="secondary" className="group mt-6 w-full">
-        Download CV
-        <ArrowDownIcon className="h-4 w-4 stroke-zinc-400 transition group-active:stroke-zinc-600 dark:group-hover:stroke-zinc-50 dark:group-active:stroke-zinc-50" />
-      </Button>
+
     </div>
   )
 }
 
 function Skills() {
   let skills = [
-    'Frontend Development (React, Vue.js, TypeScript)',
-    'Backend Development (Ruby on Rails, Node.js, PHP)',
-    'Accessibility & WCAG 2.1 Compliance',
+    'Digital Asset Management as a Service',
+    'Web Applications Development (Wordpress, React, Vue.js, TypeScript)',
+    'Headless CMS & Content Supply Chains',
     'Core Web Vitals Optimization',
-    'Responsive Design & Mobile-First Development',
+    'WordPress & Next.js Performance Engineering',
+    'Metadata Modeling & Taxonomy Design',
     'API Integration (REST, GraphQL)',
     'Testing (Jest, Cypress, Unit & Integration)',
     'CI/CD Automation & DevOps',
     'Docker & Kubernetes Orchestration',
     'Database Design & Optimization (PostgreSQL)',
-    'Performance Monitoring & Analytics',
-    'Design Systems & Component Libraries',
+    'Accessibility & WCAG 2.1 Compliance',
     'Internationalization (i18n) & Localization',
-    'Cross-Browser Compatibility',
     'Security Best Practices & OAuth2 Flows',
     'Agile Development & Team Mentorship'
   ]
@@ -332,31 +328,37 @@ function Photos() {
 }
 
 export default async function Home() {
-  let articles = (await getAllArticles()).slice(0, 4)
+  let articles = await getAllArticles()
 
   return (
     <>
       <Container className="mt-9">
         <div className="max-w-5xl">
           <h1 className="text-3xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-4xl">
-            Meet <span className="text-teal-500 unbounded font-bold">Godwill Barasa</span> <br></br><br></br> Senior Frontend Engineer at
-            <a href="https://pgls.com/" target="_blank" className="underline text-3xl unbounded text-teal-500"> Piedmont Global Language Solutions</a>,
-            passionate about building fast, accessible, and human-centered web experiences.
+            Meet <span className="text-teal-500 unbounded font-bold">Godwill Barasa</span>, Web Applications Developer building high-performance digital assets and content delivery platforms at
+            <a href="https://piedmontglobal.com/" target="_blank" className="underline text-3xl unbounded text-teal-500"> Piedmont Global</a>.
           </h1>
+
           <p className="mt-6 text-base text-zinc-600 dark:text-zinc-400">
-            Frontend Engineer with 5+ years of experience building performant, accessible web applications that empower creators and small businesses. 
-            I thrive in early-stage product environments, specializing in rapid prototyping, iterative development, and shipping applications that deliver real value.
+            I build application layers that move product media, licensing metadata, and multilingual content across global publishing networks. The work integrates DAM-as-a-Service systems, modern WordPress-to-React pipelines, and performance observability to keep every asset fast, traceable, and distribution-ready.
+          </p>
+
+          <p className="mt-4 text-base text-zinc-600 dark:text-zinc-400">
+            At <span className="text-teal-500 underline">Piedmont Global</span>, I architect enterprise WordPress–Next.js delivery pipelines, model scalable taxonomies, and automate content supply chains that support international volume while maintaining Core Web Vitals compliance and strict data governance.
+          </p>
+
+          <p className="mt-4 text-base text-zinc-600 dark:text-zinc-400">
+            I’m also the author of <a href="https://github.com/godwillcodes/WPSitePerformanceTracker" target="_blank" className="text-teal-500 underline">Performance Audit Pro</a>, a WordPress performance analytics plugin providing automated Lighthouse audits, real-user metrics, and regression tracking inside the CMS.
           </p>
           <p className="mt-4 text-base text-zinc-600 dark:text-zinc-400">
-            At <span className="text-teal-500">Piedmont Global Language Solutions</span>, I lead technical delivery of scalable, business-critical front-end platforms 
-            using React, Next.js, Tailwind, and TypeScript. I've successfully handled 40% traffic surges while maintaining performance, resilience, and 
-            cross-environment compatibility.
+            Previously at 
+            <a href="https://www.ogilvy.africa/" target="_blank" className="text-teal-500 underline"> Ogilvy Africa</a>,
+            <a href="https://belvadigital.com/" target="_blank" className="text-teal-500 underline ml-1">Belva Digital</a>, and
+            <a href="https://legibra.com/" target="_blank" className="text-teal-500 underline ml-1">Legibra</a>,
+            I engineered end-to-end content and commerce systems using Vue.js, Node.js, Laravel, WordPress, and containerized deployment workflows—supporting enterprise editorial operations and high-traffic platforms with measurable performance gains.
           </p>
-          <p className="mt-4 text-base text-zinc-600 dark:text-zinc-400">
-            Previously at <span className="text-teal-500">Ogilvy Africa Kenya</span>, I engineered data-heavy UIs and complex workflows using Vue.js, TypeScript, and Node.js. 
-            I built containerized cloud environments with Docker and Kubernetes, reducing deployment duration by 50% and production failures by 30%.
-          </p>
-        
+
+
 
 
           <div className="mt-6 flex gap-6">

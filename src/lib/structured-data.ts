@@ -5,8 +5,8 @@ export function generatePersonStructuredData() {
     "name": "Godwill Barasa",
     "url": "https://godwillbarasa.com",
     "image": "https://godwillbarasa.com/images/portrait.jpg",
-    "description": "Senior Frontend Engineer with 5+ years experience building fast, accessible, and human-centered web experiences. Expert in React, Vue.js, TypeScript, and Ruby on Rails.",
-    "jobTitle": "Senior Frontend Engineer",
+    "description": "Web Applications Developer focused on digital asset management platforms, Core Web Vitals, and enterprise-grade WordPress/React systems.",
+    "jobTitle": "Web Applications Developer, Digital Asset Management",
     "worksFor": {
       "@type": "Organization",
       "name": "Piedmont Global Language Solutions"
@@ -23,15 +23,16 @@ export function generatePersonStructuredData() {
       "https://www.instagram.com/godwill.codes"
     ],
     "knowsAbout": [
-      "Frontend Development",
+      "Digital Asset Management",
+      "Web Applications Development",
       "React",
       "Vue.js",
       "TypeScript",
       "Ruby on Rails",
-      "Accessibility",
-      "WCAG 2.1",
+      "WordPress",
+      "Headless CMS",
       "Core Web Vitals",
-      "Full Stack Development",
+      "Performance Engineering",
       "JavaScript",
       "Node.js",
       "Docker",
@@ -40,8 +41,8 @@ export function generatePersonStructuredData() {
     "alumniOf": "University of Nairobi",
     "hasOccupation": {
       "@type": "Occupation",
-      "name": "Senior Frontend Engineer",
-      "description": "Building scalable web applications and leading technical teams"
+      "name": "Web Applications Developer, Digital Asset Management",
+      "description": "Architecting DAM platforms, brand portals, and high-performance web applications"
     }
   }
 }
@@ -90,9 +91,9 @@ export function generateWebsiteStructuredData() {
   return {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "name": "Godwill Barasa - Senior Frontend Engineer",
+    "name": "Godwill Barasa - Web Applications Developer",
     "url": "https://godwillbarasa.com",
-    "description": "Senior Frontend Engineer passionate about building fast, accessible, and human-centered web experiences.",
+    "description": "Web Applications Developer specialising in digital asset management, Core Web Vitals, and performance-led content systems.",
     "author": {
       "@type": "Person",
       "name": "Godwill Barasa"
