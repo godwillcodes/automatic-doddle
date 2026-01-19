@@ -1,0 +1,215 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-dm-sans);
+  --font-mono: var(--font-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-dm-sans), sans-serif;
+}
+
+/* Hide scrollbar for photo gallery */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Blog content styling */
+.prose {
+  /* Better spacing for all elements */
+  & > * + * {
+    margin-top: 1.5rem;
+  }
+
+  /* Enhanced list styling */
+  ul, ol {
+    padding-left: 1.5rem;
+  }
+
+  li {
+    margin-top: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  li + li {
+    margin-top: 0.75rem;
+  }
+
+  /* Nested lists */
+  li > ul,
+  li > ol {
+    margin-top: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  /* Custom list markers */
+  ul > li::marker {
+    content: "▸ ";
+  }
+
+  /* Images and GIFs */
+  img {
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  img:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+
+  /* GIF specific styling */
+  img[src$=".gif"],
+  img[src*=".gif?"] {
+    border: 2px solid rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+  }
+
+  /* Figure and caption styling */
+  figure {
+    margin: 3rem 0;
+  }
+
+  figcaption {
+    text-align: center;
+    margin-top: 1rem;
+    font-size: 0.875rem;
+    color: rgba(0, 0, 0, 0.5);
+    font-style: italic;
+    line-height: 1.6;
+  }
+
+  /* Video styling */
+  video {
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    width: 100%;
+    height: auto;
+    margin: 2rem 0;
+  }
+
+  /* Video container for responsive embeds (YouTube, Vimeo, etc.) */
+  .video-container,
+  .embed-container {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 aspect ratio */
+    height: 0;
+    overflow: hidden;
+    margin: 2rem 0;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
+
+  .video-container iframe,
+  .video-container object,
+  .video-container embed,
+  .embed-container iframe,
+  .embed-container object,
+  .embed-container embed {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+  }
+
+  /* Twitter/X embed styling */
+  .twitter-tweet,
+  blockquote.twitter-tweet {
+    margin: 2rem auto !important;
+    max-width: 550px;
+  }
+
+  /* Code block styling */
+  pre {
+    font-family: 'Fira Code', 'Consolas', 'Monaco', monospace;
+    line-height: 1.7;
+    tab-size: 2;
+  }
+
+  pre code {
+    display: block;
+    font-size: 0.9em;
+  }
+
+  /* Inline code */
+  :not(pre) > code {
+    font-family: 'Fira Code', 'Consolas', 'Monaco', monospace;
+    font-size: 0.9em;
+    white-space: nowrap;
+  }
+
+  /* Better paragraph spacing */
+  p + p {
+    margin-top: 1.75rem;
+  }
+
+  /* Better list spacing */
+  ul, ol {
+    padding-left: 1.5rem;
+  }
+
+  li + li {
+    margin-top: 0.5rem;
+  }
+
+  /* Nested lists */
+  li > ul,
+  li > ol {
+    margin-top: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  /* Headings spacing */
+  h2 + p,
+  h3 + p,
+  h4 + p {
+    margin-top: 1rem;
+  }
+
+  /* Code blocks after paragraphs */
+  p + pre {
+    margin-top: 2rem;
+  }
+
+  pre + p {
+    margin-top: 2rem;
+  }
+
+  /* Blockquotes */
+  blockquote {
+    font-style: italic;
+    quotes: '"' '"';
+  }
+
+  blockquote p:first-of-type::before {
+    content: open-quote;
+  }
+
+  blockquote p:last-of-type::after {
+    content: close-quote;
+  }
+}

@@ -1,16 +1,11 @@
-# *
+# robots.txt for godwill.codes
+# Allow all crawlers
+
 User-agent: *
 Allow: /
 
-# *
-User-agent: *
-Disallow: /admin/
+# Disallow admin/API routes if any
 Disallow: /api/
-Disallow: /_next/
-Disallow: /private/
 
-# Host
-Host: https://godwillbarasa.netlify.app
-
-# Sitemaps
-Sitemap: https://godwillbarasa.netlify.app/sitemap.xml
+# Sitemap location
+Sitemap: https://godwill.codes/sitemap.xml
