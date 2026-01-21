@@ -48,7 +48,7 @@ export default function Hero() {
           >
             <div className="inline-block px-4 py-1.5 rounded-full border border-black/10 bg-black/[0.02]">
               <span className="text-xs font-medium tracking-wider uppercase text-black/50">
-                Web Applications Developer
+                Senior Web Engineer
               </span>
             </div>
           </motion.div>
@@ -61,7 +61,7 @@ export default function Hero() {
             className="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight leading-[1.1] mb-12 text-black"
           >
             <span itemProp="name">Meet Godwill Barasa</span>,{' '}
-            <span className="text-black/40" itemProp="jobTitle">Senior Web Engineer building high-performance digital assets at</span>{' '}
+            <span className="text-black/40" itemProp="jobTitle">Senior Web Engineer building high-performance digital assets with React, Next.js, TypeScript, WordPress, and Laravel at</span>{' '}
             <span itemProp="worksFor">Piedmont Global</span>.
           </motion.h1>
 
@@ -73,14 +73,12 @@ export default function Hero() {
             className="space-y-6 text-base sm:text-lg leading-relaxed text-black/60 font-light mb-16"
           >
             <p>
-Senior Web Engineer with 8+ years of experience building, scaling, and optimizing high-traffic web applications, specializing in React, Next.js, and experimentation-driven product development. Focused on turning ambiguous ideas into production-ready, user-centric experiences, from shaping technical direction and architecture to measuring impact through Core Web Vitals, funnel analytics, and continuous experimentation.
+              Senior Web Engineer with 8+ years of experience building, scaling, and optimizing high-traffic web applications, specializing in React, Next.js, and experimentation-driven product development. Focused on turning ambiguous ideas into production-ready, user-centric experiences, from shaping frontend architecture and performance budgets to measuring impact through Core Web Vitals, funnel analytics, and continuous experimentation.
             </p>
 
             <p>
-Comfortable operating in monorepo-style environments and cross-functional, remote teams, with a track record of standardizing frontend tooling, strengthening CI/CD, and improving delivery reliability and quality. Passionate about shipping beautifully crafted interfaces, collaborating directly with designers, PMs, and customers, and iterating quickly to help teams make better decisions, faster.
+              Comfortable operating in monorepo-style environments and cross-functional, remote teams, with a track record of standardizing frontend tooling, strengthening CI/CD pipelines, and improving delivery reliability and quality. Passionate about shipping beautifully crafted interfaces, collaborating directly with designers, PMs, and customers, and iterating quickly so teams can ship, learn, and make better decisions, faster.
             </p>
-
-           
           </motion.div>
 
           {/* Photo Gallery */}

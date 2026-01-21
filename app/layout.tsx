@@ -22,29 +22,35 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Godwill Barasa | Full-Stack Engineer & Performance Architect",
+    default: "Godwill Barasa | Senior Full-Stack Engineer (React, Next.js, Laravel, WordPress)",
     template: "%s | Godwill Barasa",
   },
-  description: "Full-Stack Engineer specializing in high-performance content delivery systems, WordPress-to-React pipelines, and enterprise architecture. Building scalable solutions at Piedmont Global.",
+  description: "Senior Full-Stack Engineer building high-performance web applications with React, Next.js, TypeScript, Laravel, and WordPress. Focused on Core Web Vitals, experimentation, analytics, and CI/CD.",
   applicationName: "Godwill Barasa Portfolio",
   keywords: [
     "Godwill Barasa",
+    "Senior Full Stack Engineer",
     "Full Stack Engineer",
-    "React Developer",
-    "Next.js Developer",
-    "WordPress Expert",
+    "React Engineer",
+    "Next.js Engineer",
+    "TypeScript Engineer",
+    "Laravel Developer",
+    "WordPress Developer",
     "Performance Optimization",
     "Web Development",
-    "TypeScript",
-    "Node.js",
-    "Enterprise Architecture",
+    "Core Web Vitals",
+    "Frontend Performance",
+    "CI/CD",
+    "Experimentation",
+    "A/B Testing",
+    "Google Analytics",
+    "Google Tag Manager",
     "Frontend Developer",
     "Backend Developer",
     "Software Engineer",
     "Web Performance",
-    "Core Web Vitals",
   ],
-  authors: [{ name: "Godwill Barasa", url: "https://godwill.codes" }],
+  authors: [{ name: "Godwill Barasa", url: "https://godwillbarasa.netlify.app" }],
   creator: "Godwill Barasa",
   publisher: "Godwill Barasa",
   formatDetection: {
@@ -52,7 +58,7 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://godwill.codes'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://godwillbarasa.netlify.app'),
   alternates: {
     canonical: '/',
   },
@@ -61,8 +67,8 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: "/",
     siteName: "Godwill Barasa",
-    title: "Godwill Barasa | Full-Stack Engineer & Performance Architect",
-    description: "Full-Stack Engineer specializing in high-performance content delivery systems and enterprise architecture.",
+    title: "Godwill Barasa | Senior Full-Stack Engineer (React, Next.js, Laravel, WordPress)",
+    description: "Senior Full-Stack Engineer building high-performance web applications with React, Next.js, TypeScript, Laravel, and WordPress.",
     images: [
       {
         url: '/og-image.png',
@@ -74,8 +80,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Godwill Barasa | Full-Stack Engineer & Performance Architect",
-    description: "Full-Stack Engineer specializing in high-performance content delivery systems and enterprise architecture.",
+    title: "Godwill Barasa | Senior Full-Stack Engineer (React, Next.js, Laravel, WordPress)",
+    description: "Senior Full-Stack Engineer building high-performance web applications with React, Next.js, TypeScript, Laravel, and WordPress.",
     images: ['/og-image.png'],
   },
   robots: {
@@ -113,7 +119,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://godwill.codes'
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://godwillbarasa.netlify.app'
   
   return (
     <html lang="en" className="scroll-smooth">
@@ -130,8 +136,8 @@ export default function RootLayout({
           data={{
             name: "Godwill Barasa",
             url: siteUrl,
-            jobTitle: "Full-Stack Engineer & Performance Architect",
-            description: "Full-Stack Engineer specializing in high-performance content delivery systems and enterprise architecture.",
+            jobTitle: "Senior Full-Stack Engineer",
+            description: "Senior Full-Stack Engineer building high-performance web applications with React, Next.js, TypeScript, Laravel, and WordPress.",
             sameAs: [
               "https://github.com/godwillcodes",
               "https://www.linkedin.com/in/godwillcodes/",

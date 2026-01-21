@@ -1,4 +1,4 @@
-# robots.txt for godwill.codes
+# robots.txt
 # Allow all crawlers
 
 User-agent: *
@@ -8,4 +8,4 @@ Allow: /
 Disallow: /api/
 
 # Sitemap location
-Sitemap: https://godwill.codes/sitemap.xml
+Sitemap: https://godwillbarasa.netlify.app/sitemap.xml

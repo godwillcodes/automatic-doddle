@@ -3,8 +3,8 @@ import Experience from '@/components/Experience'
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: "Godwill Barasa | Full-Stack Engineer & Performance Architect",
-  description: "Full-Stack Engineer specializing in high-performance content delivery systems, WordPress-to-React pipelines, and enterprise architecture. Building scalable solutions at Piedmont Global.",
+  title: 'Godwill Barasa | Senior Full-Stack Engineer (React, Next.js, Laravel, WordPress)',
+  description: 'Senior Full-Stack Engineer building high-performance web applications with React, Next.js, TypeScript, Laravel, and WordPress. Focused on Core Web Vitals, experimentation, analytics, and CI/CD.',
   alternates: {
     canonical: '/',
   },

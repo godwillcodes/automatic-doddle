@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     }
   }
   
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://godwill.codes'
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://godwillbarasa.netlify.app'
   const postUrl = `${siteUrl}/blog/${post.slug}`
   
   return {
@@ -88,7 +88,7 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
   }
   
   // Generate JSON-LD for SEO
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://godwill.codes'
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://godwillbarasa.netlify.app'
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'BlogPosting',

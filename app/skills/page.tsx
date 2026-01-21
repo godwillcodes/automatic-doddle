@@ -3,17 +3,17 @@ import { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Skills & Expertise | Godwill Barasa',
-  description: 'A comprehensive foundation in modern web development, infrastructure, performance optimization, and product thinking.',
-  keywords: ['React', 'Next.js', 'TypeScript', 'Performance', 'Architecture', 'Full Stack', 'Frontend Development'],
+  description: 'Full-stack expertise across React, Next.js, TypeScript, Laravel, and WordPress—plus performance optimization, Core Web Vitals, and CI/CD.',
+  keywords: ['Senior Full Stack Engineer', 'React', 'Next.js', 'TypeScript', 'Laravel', 'WordPress', 'Performance Optimization', 'Core Web Vitals', 'CI/CD', 'Frontend Development', 'Backend Development'],
   openGraph: {
     title: 'Skills & Expertise | Godwill Barasa',
-    description: 'A comprehensive foundation in modern web development, infrastructure, performance optimization, and product thinking.',
+    description: 'Full-stack expertise across React, Next.js, TypeScript, Laravel, and WordPress—plus performance optimization, Core Web Vitals, and CI/CD.',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Skills & Expertise | Godwill Barasa',
-    description: 'A comprehensive foundation in modern web development, infrastructure, performance optimization, and product thinking.',
+    description: 'Full-stack expertise across React, Next.js, TypeScript, Laravel, and WordPress—plus performance optimization, Core Web Vitals, and CI/CD.',
   },
 }
 
