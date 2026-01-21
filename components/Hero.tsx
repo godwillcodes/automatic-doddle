@@ -2,13 +2,14 @@
 
 import { useRef } from 'react'
 import { motion, useInView } from 'framer-motion'
-import { Github, Linkedin, ArrowRight } from 'lucide-react'
+import { Github, Linkedin, ArrowRight, FileText } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 
 const socialLinks = [
   { icon: Github, href: 'https://github.com/godwillcodes', label: 'GitHub' },
   { icon: Linkedin, href: 'https://www.linkedin.com/in/godwillcodes/', label: 'LinkedIn' },
+  { icon: FileText, href: 'https://iamgodwillb.medium.com/', label: 'Medium' },
 ]
 
 type Photo = {
@@ -62,7 +63,7 @@ export default function Hero() {
           >
             <span itemProp="name">Meet Godwill Barasa</span>,{' '}
             <span className="text-black/40" itemProp="jobTitle">Senior Web Engineer building high-performance digital assets with React, Next.js, TypeScript, WordPress, and Laravel at</span>{' '}
-            <span itemProp="worksFor">Piedmont Global</span>.
+            <span itemProp="worksFor"><a href="https://piedmontglobal.com/" target="_blank" rel="noopener noreferrer" className="hover:text-black/80 transition-colors underline decoration-2 underline-offset-2 decoration-black/20">Piedmont Global</a></span>.
           </motion.h1>
 
           {/* Bio paragraphs */}
@@ -73,7 +74,7 @@ export default function Hero() {
             className="space-y-6 text-base sm:text-lg leading-relaxed text-black/60 font-light mb-16"
           >
             <p>
-              Senior Web Engineer with 8+ years of experience building, scaling, and optimizing high-traffic web applications, specializing in React, Next.js, and experimentation-driven product development. Focused on turning ambiguous ideas into production-ready, user-centric experiences, from shaping frontend architecture and performance budgets to measuring impact through Core Web Vitals, funnel analytics, and continuous experimentation. Creator of open source projects including Site Performance Tracker and PixelPress.
+              Senior Web Engineer with 8+ years of experience building, scaling, and optimizing high-traffic web applications, specializing in React, Next.js, and experimentation-driven product development. Focused on turning ambiguous ideas into production-ready, user-centric experiences, from shaping frontend architecture and performance budgets to measuring impact through Core Web Vitals, funnel analytics, and continuous experimentation. Creator of open source projects including <a href="https://github.com/godwillcodes/WPSitePerformanceTracker" target="_blank" rel="noopener noreferrer" className="hover:text-black/80 transition-colors underline decoration-2 underline-offset-2 decoration-black/20">Site Performance Tracker</a> and <a href="https://github.com/godwillcodes/PixelPress" target="_blank" rel="noopener noreferrer" className="hover:text-black/80 transition-colors underline decoration-2 underline-offset-2 decoration-black/20">PixelPress</a>.
             </p>
 
             <p>
@@ -164,14 +165,14 @@ function PhotoGallery({ photos, isInView }: { photos: Photo[]; isInView: boolean
               ease: [0.16, 1, 0.3, 1],
             }}
             whileHover={{ scale: 1.05, zIndex: 10 }}
-            className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-2xl overflow-hidden border border-black/10 bg-black/5"
+            className="relative w-60 h-60 rounded-2xl overflow-hidden border border-black/10 bg-black/5"
           >
             <Image
               src={photo.src}
               alt={photo.alt}
               fill
               className="object-cover"
-              sizes="(max-width: 640px) 112px, 128px"
+              sizes="240px"
             />
             <div className="absolute inset-0 bg-black/0 hover:bg-black/5 transition-colors duration-300" />
           </motion.div>

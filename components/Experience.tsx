@@ -2,6 +2,7 @@
 
 import { useRef } from 'react'
 import { motion, useInView } from 'framer-motion'
+import { ExternalLink } from 'lucide-react'
 
 type ExperienceItem = {
   company: string
@@ -10,6 +11,7 @@ type ExperienceItem = {
   location: string
   dates: string
   bullets: string[]
+  website?: string
 }
 
 const experience: ExperienceItem[] = [
@@ -19,6 +21,7 @@ const experience: ExperienceItem[] = [
     team: '(Marketing)',
     location: 'Fairfax, VA',
     dates: 'May 2025 – Present (Remote)',
+    website: 'https://piedmontglobal.com/',
     bullets: [
       'Frontend platform & performance: Led React and Next.js development for public-facing marketing properties, introducing standardized performance budgets, shared component libraries, and build optimizations (code splitting, memoization, lazy loading) that improved Core Web Vitals and yielded ~40% gains in page speed and accessibility scores on key routes',
       'Tooling & CI/CD: Collaborated with engineering and DevOps teams to refine GitHub Actions–based CI/CD workflows for these sites, including automated builds, Jest test suites, and preview deployments per branch, reducing time-to-merge and catching regressions earlier in the process.',
@@ -31,6 +34,7 @@ const experience: ExperienceItem[] = [
     title: 'Staff Frontend Engineer',
     location: 'Nairobi, Kenya',
     dates: 'July 2024 – May 2025 (Remote)',
+    website: 'https://www.ogilvy.com/kenya/',
     bullets: [
       'Frontend platform & delivery at scale: Led a distributed engineering team building and operating multiple client-facing React/Next.js and WordPress properties in a multi-project monorepo-style setup, shipping 15+ website features and campaigns per quarter while improving on-time delivery from 70% to 95% and reducing production defects by 30%.',
       'Standards, tooling & performance budgets: Defined and enforced standardized frontend tooling (shared ESLint/Prettier configs, component patterns, TailwindCSS conventions) and performance budgets across projects, cutting average page load times by ~35% and pushing Lighthouse performance, accessibility, and SEO scores into the 90s on key marketing and landing pages.',
@@ -43,6 +47,7 @@ const experience: ExperienceItem[] = [
     title: 'Fullstack Engineer',
     location: 'Nairobi, Kenya',
     dates: 'April 2021 – June 2024 (Remote)',
+    website: 'https://belva.co.ke/',
     bullets: [
       'Shared frontend platform for multiple products: Developed and maintained React and Next.js applications (with TailwindCSS) backed by Laravel, contributing to shared component libraries, configuration patterns, and deployment playbooks used across a central repo to keep behavior consistent and reduce duplication.',
       'Performance-focused tooling: Implemented code splitting, memoization, lazy loading as part of a standardized performance toolkit, significantly improving Core Web Vitals and page speed for SEO-critical and high-traffic landing pages, and documenting patterns so other teams could adopt them quickly.',
@@ -55,6 +60,7 @@ const experience: ExperienceItem[] = [
     title: 'Mobile Engineer',
     location: 'Nairobi, Kenya',
     dates: 'Jan 2019 – April 2021',
+    website: 'https://legibra.com/',
     bullets: [
       'Built and maintained cross-platform applications using React Native, Bootstrap, and Python, delivering production systems while enforcing clean code standards and performance optimization.',
       'Integrated RESTful APIs and middleware services in agile environments, collaborating with distributed teams to ship iterative features and maintain code quality.',
@@ -66,6 +72,7 @@ const experience: ExperienceItem[] = [
     title: 'Web Engineer (Intern)',
     location: 'Nairobi, Kenya',
     dates: 'Feb 2018 – July 2018',
+    website: 'https://us.pg.com/',
     bullets: [
       "Modernized regional brand microsites to align with P&G's global design systems and accessibility standards, supporting digital transformation initiatives.",
       'Implemented marketing automation workflows, integrating CMS-driven content with analytics and engagement platforms to improve campaign tracking and personalization.',
@@ -113,8 +120,22 @@ export default function Experience() {
               >
                 <header className="flex flex-col gap-3 sm:gap-4">
                   <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-2">
-                    <div className="text-xl sm:text-2xl font-semibold tracking-tight text-black">
-                      {item.company}
+                    <div className="flex items-center gap-2">
+                      <div className="text-xl sm:text-2xl font-semibold tracking-tight text-black">
+                        {item.website ? (
+                          <a
+                            href={item.website}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="group inline-flex items-center gap-2 hover:text-black/80 transition-colors underline decoration-2 underline-offset-2 decoration-black/20"
+                          >
+                            {item.company}
+                            <ExternalLink size={16} strokeWidth={1.5} className="opacity-60 group-hover:opacity-100 transition-opacity" />
+                          </a>
+                        ) : (
+                          item.company
+                        )}
+                      </div>
                     </div>
                     <div className="text-sm text-black/40 font-light">{item.dates}</div>
                   </div>
@@ -148,7 +169,17 @@ export default function Experience() {
             className="mt-10 rounded-3xl border border-black/10 bg-black/[0.02] p-7 sm:p-8"
           >
             <div className="text-xs font-medium tracking-wider uppercase text-black/40 mb-3">Open Source</div>
-            <div className="text-lg sm:text-xl font-semibold tracking-tight text-black mb-2">PixelPress</div>
+            <div className="text-lg sm:text-xl font-semibold tracking-tight text-black mb-2">
+              <a
+                href="https://github.com/godwillcodes/PixelPress"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group inline-flex items-center gap-2 hover:text-black/80 transition-colors underline decoration-2 underline-offset-2 decoration-black/20"
+              >
+                PixelPress
+                <ExternalLink size={16} strokeWidth={1.5} className="opacity-60 group-hover:opacity-100 transition-opacity" />
+              </a>
+            </div>
             <div className="text-sm sm:text-base text-black/55 font-light leading-relaxed">
               Next.js, Sharp, and TypeScript | High-performance image compression and conversion utility leveraging advanced algorithms to minimize file sizes while maintaining visual quality.
             </div>
@@ -161,7 +192,17 @@ export default function Experience() {
             className="mt-6 rounded-3xl border border-black/10 bg-black/[0.02] p-7 sm:p-8"
           >
             <div className="text-xs font-medium tracking-wider uppercase text-black/40 mb-3">Open Source</div>
-            <div className="text-lg sm:text-xl font-semibold tracking-tight text-black mb-2">Site Performance Tracker</div>
+            <div className="text-lg sm:text-xl font-semibold tracking-tight text-black mb-2">
+              <a
+                href="https://github.com/godwillcodes/WPSitePerformanceTracker"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group inline-flex items-center gap-2 hover:text-black/80 transition-colors underline decoration-2 underline-offset-2 decoration-black/20"
+              >
+                Site Performance Tracker
+                <ExternalLink size={16} strokeWidth={1.5} className="opacity-60 group-hover:opacity-100 transition-opacity" />
+              </a>
+            </div>
             <div className="text-sm sm:text-base text-black/55 font-light leading-relaxed">
               WordPress plugin | Comprehensive website performance monitoring through automated synthetic audits and real user metrics. Built with Google PageSpeed Insights API integration, it delivers actionable insights to help you optimize your site's speed, Core Web Vitals, and overall user experience.
             </div>

@@ -2,7 +2,7 @@
 
 import { useRef, useState } from 'react'
 import { motion, useInView } from 'framer-motion'
-import { Mail, Send, CheckCircle2, Phone, Github, Linkedin } from 'lucide-react'
+import { Mail, Send, CheckCircle2, Phone, Github, Linkedin, FileText } from 'lucide-react'
 
 const contactMethods = [
   {
@@ -22,6 +22,7 @@ const contactMethods = [
 const socialLinks = [
   { icon: Github, href: 'https://github.com/godwillcodes', label: 'GitHub' },
   { icon: Linkedin, href: 'https://www.linkedin.com/in/godwillcodes/', label: 'LinkedIn' },
+  { icon: FileText, href: 'https://iamgodwillb.medium.com/', label: 'Medium' },
 ]
 
 export default function Contact() {
@@ -45,7 +46,7 @@ export default function Contact() {
   }
 
   return (
-    <section id="contact" ref={sectionRef} className="relative py-12 bg-white overflow-hidden">
+    <section id="contact" ref={sectionRef} className="relative pt-8 bg-white overflow-hidden">
       {/* Subtle background grid */}
       <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.02)_1px,transparent_1px)] bg-[size:64px_64px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_50%,black,transparent)]" />
       
