@@ -58,7 +58,7 @@ export default function Footer() {
           </div>
 
           {/* Copyright */}
-          <p className="text-sm text-black/30 font-light">
+          <p className="text-lg text-black/30 font-light">
             © 2026 Godwill Barasa. All rights reserved.
           </p>
         </div>

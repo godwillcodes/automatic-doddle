@@ -19,11 +19,11 @@ type Photo = {
 }
 
 const photos: Photo[] = [
-  { id: 1, src: '/header-images/1.jpg', alt: 'Photo 1' },
-  { id: 2, src: '/header-images/2.jpg', alt: 'Photo 2' },
-  { id: 3, src: '/header-images/3.jpg', alt: 'Photo 3' },
-  { id: 4, src: '/header-images/4.jpg', alt: 'Photo 4' },
-  { id: 5, src: '/header-images/5.jpg', alt: 'Photo 5' },
+  { id: 1, src: '/header-images/1.jpg', alt: 'Godwill Barasa - Professional portrait photo 1' },
+  { id: 2, src: '/header-images/2.jpg', alt: 'Godwill Barasa - Professional portrait photo 2' },
+  { id: 3, src: '/header-images/3.jpg', alt: 'Godwill Barasa - Professional portrait photo 3' },
+  { id: 4, src: '/header-images/4.jpg', alt: 'Godwill Barasa - Professional portrait photo 4' },
+  { id: 5, src: '/header-images/5.jpg', alt: 'Godwill Barasa - Professional portrait photo 5' },
 ]
 
 export default function Hero() {
@@ -94,12 +94,12 @@ export default function Hero() {
           >
             <Link href="/blog">
               <motion.div
-                className="inline-flex items-center gap-3 px-8 py-4 rounded-full border border-black/10 hover:border-black/20 bg-white hover:bg-black/2 transition-all duration-300"
+                className="inline-flex items-center gap-3 px-8 py-4 rounded-full bg-black text-white text-base font-medium hover:bg-black/90 transition-all duration-300"
                 whileHover={{ scale: 1.02, x: 4 }}
                 whileTap={{ scale: 0.98 }}
               >
-                <span className="text-base font-medium text-black/70">Read my articles</span>
-                <ArrowRight size={18} strokeWidth={2} className="text-black/40" />
+                <span className="text-base font-medium text-white">Read my articles</span>
+                <ArrowRight size={18} strokeWidth={2} className="text-white" />
               </motion.div>
             </Link>
           </motion.div>

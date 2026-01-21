@@ -14,8 +14,8 @@ const contactMethods = [
   {
     icon: Phone,
     label: 'Phone',
-    value: '+254 712 345 678',
-    href: 'tel:+254712345678'
+    value: '+254 781 249 443',
+    href: 'tel:+254781249443'
   }
 ]
 
@@ -211,7 +211,7 @@ export default function Contact() {
                 disabled={isSubmitting || isSuccess}
                 whileHover={{ scale: isSubmitting || isSuccess ? 1 : 1.01 }}
                 whileTap={{ scale: isSubmitting || isSuccess ? 1 : 0.99 }}
-                className="w-full flex items-center justify-center gap-3 px-8 py-4 bg-black text-white font-medium rounded-2xl hover:bg-black/90 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full flex items-center justify-center gap-3 px-8 py-4 bg-black text-white text-lg font-medium rounded-2xl hover:bg-black/90 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isSubmitting ? (
                   <>
