@@ -76,8 +76,6 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Godwill Barasa | Full-Stack Engineer & Performance Architect",
     description: "Full-Stack Engineer specializing in high-performance content delivery systems and enterprise architecture.",
-    creator: "@godwillbarasa",
-    site: "@godwillbarasa",
     images: ['/og-image.png'],
   },
   robots: {
@@ -135,9 +133,8 @@ export default function RootLayout({
             jobTitle: "Full-Stack Engineer & Performance Architect",
             description: "Full-Stack Engineer specializing in high-performance content delivery systems and enterprise architecture.",
             sameAs: [
-              "https://github.com/godwillbarasa",
-              "https://linkedin.com/in/godwillbarasa",
-              "https://twitter.com/godwillbarasa",
+              "https://github.com/godwillcodes",
+              "https://www.linkedin.com/in/godwillcodes/",
             ],
           }}
         />

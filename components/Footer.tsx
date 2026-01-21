@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { Github, Linkedin, Mail, Twitter, ArrowUpRight } from 'lucide-react'
+import { Github, Linkedin, ArrowUpRight } from 'lucide-react'
 
 export default function Footer() {
   const currentYear = new Date().getFullYear()
@@ -16,10 +16,8 @@ export default function Footer() {
       { label: 'Contact', href: '/contact' },
     ],
     social: [
-      { label: 'GitHub', href: 'https://github.com', icon: Github },
-      { label: 'LinkedIn', href: 'https://linkedin.com', icon: Linkedin },
-      { label: 'Twitter', href: 'https://twitter.com', icon: Twitter },
-      { label: 'Email', href: 'mailto:godwill.codes@gmail.com', icon: Mail },
+      { label: 'GitHub', href: 'https://github.com/godwillcodes', icon: Github },
+      { label: 'LinkedIn', href: 'https://www.linkedin.com/in/godwillcodes/', icon: Linkedin },
     ],
   }
 

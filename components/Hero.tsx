@@ -2,15 +2,13 @@
 
 import { useRef } from 'react'
 import { motion, useInView } from 'framer-motion'
-import { Twitter, Instagram, Github, Linkedin, ArrowRight } from 'lucide-react'
+import { Github, Linkedin, ArrowRight } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 
 const socialLinks = [
-  { icon: Twitter, href: '#', label: 'Twitter' },
-  { icon: Instagram, href: '#', label: 'Instagram' },
-  { icon: Github, href: '#', label: 'GitHub' },
-  { icon: Linkedin, href: '#', label: 'LinkedIn' },
+  { icon: Github, href: 'https://github.com/godwillcodes', label: 'GitHub' },
+  { icon: Linkedin, href: 'https://www.linkedin.com/in/godwillcodes/', label: 'LinkedIn' },
 ]
 
 type Photo = {
@@ -63,7 +61,7 @@ export default function Hero() {
             className="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight leading-[1.1] mb-12 text-black"
           >
             <span itemProp="name">Meet Godwill Barasa</span>,{' '}
-            <span className="text-black/40" itemProp="jobTitle">Web Applications Developer building high-performance digital assets at</span>{' '}
+            <span className="text-black/40" itemProp="jobTitle">Senior Web Engineer building high-performance digital assets at</span>{' '}
             <span itemProp="worksFor">Piedmont Global</span>.
           </motion.h1>
 
@@ -75,11 +73,11 @@ export default function Hero() {
             className="space-y-6 text-base sm:text-lg leading-relaxed text-black/60 font-light mb-16"
           >
             <p>
-              I build application layers that move product media, licensing metadata, and multilingual content across global publishing networks. The work integrates DAM-as-a-Service systems, modern WordPress-to-React pipelines, and performance observability to keep every asset fast, traceable, and distribution-ready.
+Senior Web Engineer with 8+ years of experience building, scaling, and optimizing high-traffic web applications, specializing in React, Next.js, and experimentation-driven product development. Focused on turning ambiguous ideas into production-ready, user-centric experiences, from shaping technical direction and architecture to measuring impact through Core Web Vitals, funnel analytics, and continuous experimentation.
             </p>
 
             <p>
-              At Piedmont Global, I architect enterprise WordPress-Next.js delivery pipelines, model scalable taxonomies, and automate content supply chains that support international volume while maintaining Core Web Vitals compliance and strict data governance.
+Comfortable operating in monorepo-style environments and cross-functional, remote teams, with a track record of standardizing frontend tooling, strengthening CI/CD, and improving delivery reliability and quality. Passionate about shipping beautifully crafted interfaces, collaborating directly with designers, PMs, and customers, and iterating quickly to help teams make better decisions, faster.
             </p>
 
            

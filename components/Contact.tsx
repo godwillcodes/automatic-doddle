@@ -2,7 +2,7 @@
 
 import { useRef, useState } from 'react'
 import { motion, useInView } from 'framer-motion'
-import { Mail, Send, CheckCircle2, Phone, Github, Linkedin, Twitter } from 'lucide-react'
+import { Mail, Send, CheckCircle2, Phone, Github, Linkedin } from 'lucide-react'
 
 const contactMethods = [
   {
@@ -20,9 +20,8 @@ const contactMethods = [
 ]
 
 const socialLinks = [
-  { icon: Github, href: 'https://github.com', label: 'GitHub' },
-  { icon: Linkedin, href: 'https://linkedin.com', label: 'LinkedIn' },
-  { icon: Twitter, href: 'https://twitter.com', label: 'Twitter' },
+  { icon: Github, href: 'https://github.com/godwillcodes', label: 'GitHub' },
+  { icon: Linkedin, href: 'https://www.linkedin.com/in/godwillcodes/', label: 'LinkedIn' },
 ]
 
 export default function Contact() {

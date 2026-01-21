@@ -48,8 +48,6 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       card: 'summary_large_image',
       title: post.title,
       description: post.excerpt,
-      creator: '@godwillbarasa',
-      site: '@godwillbarasa',
       images: post.image ? [post.image] : [],
     },
     alternates: {

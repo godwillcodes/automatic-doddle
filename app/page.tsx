@@ -1,4 +1,5 @@
 import Hero from '@/components/Hero'
+import Experience from '@/components/Experience'
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -17,6 +18,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-white" itemScope itemType="https://schema.org/WebPage">
       <Hero />
+      <Experience />
     </div>
   )
 }
