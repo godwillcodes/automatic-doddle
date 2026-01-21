@@ -23,9 +23,9 @@ export default function Footer() {
   }
 
   return (
-    <footer className="relative bg-white border-t border-black/5">
+    <footer className="relative bg-white dark:bg-zinc-900 border-t border-black/5 dark:border-white/5">
       {/* Subtle background grid */}
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.015)_1px,transparent_1px)] bg-[size:80px_80px] [mask-image:radial-gradient(ellipse_100%_100%_at_50%_0%,black_20%,transparent_70%)]" />
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.015)_1px,transparent_1px)] bg-[size:80px_80px] dark:bg-[linear-gradient(rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:80px_80px] [mask-image:radial-gradient(ellipse_100%_100%_at_50%_0%,black_20%,transparent_70%)]" />
       
       <div className="relative mx-auto max-w-7xl px-6 sm:px-8 lg:px-0 py-12">
         <div className="flex justify-between items-center">
@@ -46,7 +46,7 @@ export default function Footer() {
                     duration: 0.5,
                     ease: [0.16, 1, 0.3, 1]
                   }}
-                  className="w-11 h-11 rounded-2xl border border-black/10 flex items-center justify-center text-black/40 hover:text-black hover:border-black/20 hover:bg-black/[0.02] transition-all duration-300"
+                  className="w-11 h-11 rounded-2xl border border-black/10 dark:border-white/10 flex items-center justify-center text-black/40 dark:text-white/40 hover:text-black dark:hover:text-white hover:border-black/20 dark:hover:border-white/20 hover:bg-black/5 dark:hover:bg-white/5 transition-all duration-300"
                   whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.95 }}
                   aria-label={social.label}
@@ -58,7 +58,7 @@ export default function Footer() {
           </div>
 
           {/* Copyright */}
-          <p className="text-lg text-black/30 font-light">
+          <p className="text-lg text-black/30 dark:text-white/30 font-light">
             © 2026 Godwill Barasa. All rights reserved.
           </p>
         </div>

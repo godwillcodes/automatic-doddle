@@ -5,6 +5,8 @@ import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { PersonStructuredData, WebsiteStructuredData } from "@/components/StructuredData";
+import { ThemeProvider } from "@/contexts/ThemeContext";
+import FloatingThemeSwitcher from "@/components/FloatingThemeSwitcher";
 
 const dmSans = DM_Sans({
   variable: "--font-dm-sans",
@@ -167,30 +169,33 @@ export default function RootLayout({
         <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)" />
       </head>
       <body
-        className={`${dmSans.variable} ${geistMono.variable} antialiased bg-white text-zinc-900`}
+        className={`${dmSans.variable} ${geistMono.variable} antialiased bg-white text-zinc-900 dark:bg-zinc-900 dark:text-zinc-100`}
       >
-        <PersonStructuredData 
-          data={{
-            name: "Godwill Barasa",
-            url: siteUrl,
-            jobTitle: "Senior Full-Stack Engineer",
-            description: "Senior Full-Stack Engineer building high-performance web applications with React, Next.js, TypeScript, Laravel, and WordPress.",
-            sameAs: [
-              "https://github.com/godwillcodes",
-              "https://www.linkedin.com/in/godwillcodes/",
-            ],
-          }}
-        />
-        <WebsiteStructuredData 
-          data={{
-            name: "Godwill Barasa Portfolio",
-            url: siteUrl,
-            description: "Full-Stack Engineer specializing in high-performance content delivery systems and enterprise architecture.",
-          }}
-        />
-        <Header />
-        <main id="main-content">{children}</main>
-        <Footer />
+        <ThemeProvider>
+          <PersonStructuredData 
+            data={{
+              name: "Godwill Barasa",
+              url: siteUrl,
+              jobTitle: "Senior Full-Stack Engineer",
+              description: "Senior Full-Stack Engineer building high-performance web applications with React, Next.js, TypeScript, Laravel, and WordPress.",
+              sameAs: [
+                "https://github.com/godwillcodes",
+                "https://www.linkedin.com/in/godwillcodes/",
+              ],
+            }}
+          />
+          <WebsiteStructuredData 
+            data={{
+              name: "Godwill Barasa Portfolio",
+              url: siteUrl,
+              description: "Full-Stack Engineer specializing in high-performance content delivery systems and enterprise architecture.",
+            }}
+          />
+          <Header />
+          <main id="main-content">{children}</main>
+          <Footer />
+          <FloatingThemeSwitcher />
+        </ThemeProvider>
       </body>
     </html>
   );

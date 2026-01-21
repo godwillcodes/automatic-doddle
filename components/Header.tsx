@@ -37,8 +37,8 @@ export default function Header() {
         }}
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
           scrolled 
-            ? 'bg-white/80 backdrop-blur-xl' 
-            : 'bg-white'
+            ? 'bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl' 
+            : 'bg-white dark:bg-zinc-900'
         }`}
       >
         <nav className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-0">
@@ -48,7 +48,7 @@ export default function Header() {
               <motion.div
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="text-xl font-semibold tracking-tight text-black transition-colors duration-300 group-hover:text-black/70"
+                className="text-xl font-semibold tracking-tight text-black dark:text-white transition-colors duration-300 group-hover:text-black/70 dark:group-hover:text-white/70"
               >
                 Godwill Barasa
               </motion.div>
@@ -71,7 +71,7 @@ export default function Header() {
                     href={item.href}
                     className="relative group px-4 py-2 text-lg font-medium transition-colors duration-300"
                   >
-                    <span className="relative z-10 transition-colors duration-300 text-black/50 group-hover:text-black">
+                    <span className="relative z-10 transition-colors duration-300 text-black/50 dark:text-white/50 group-hover:text-black dark:group-hover:text-white">
                       {item.name}
                     </span>
                   </Link>
@@ -105,7 +105,7 @@ export default function Header() {
             <motion.button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               whileTap={{ scale: 0.95 }}
-              className="md:hidden p-2 rounded-xl text-black/60 hover:text-black hover:bg-black/5 transition-all duration-300"
+              className="md:hidden p-2 rounded-xl text-black/60 dark:text-white/60 hover:text-black dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5 transition-all duration-300"
               aria-label="Toggle menu"
             >
               <AnimatePresence mode="wait">
@@ -145,7 +145,7 @@ export default function Header() {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.3 }}
-                className="fixed inset-0 top-20 bg-black/20 backdrop-blur-sm md:hidden"
+                className="fixed inset-0 top-20 bg-black/20 dark:bg-white/20 backdrop-blur-sm md:hidden"
                 onClick={() => setIsMobileMenuOpen(false)}
               />
               
@@ -158,7 +158,7 @@ export default function Header() {
                   duration: 0.4,
                   ease: [0.16, 1, 0.3, 1]
                 }}
-                className="md:hidden border-t border-black/5 bg-white/95 backdrop-blur-xl"
+                className="md:hidden border-t border-black/5 dark:border-white/5 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-xl"
               >
                 <div className="px-6 py-8 space-y-1">
                   {navItems.map((item, index) => (
@@ -176,7 +176,7 @@ export default function Header() {
                       <Link
                         href={item.href}
                         onClick={() => setIsMobileMenuOpen(false)}
-                        className="block px-4 py-3 text-base font-medium rounded-xl transition-all duration-300 text-black/50 hover:bg-black/5 hover:text-black"
+                        className="block px-4 py-3 text-base font-medium rounded-xl transition-all duration-300 text-black/50 dark:text-white/50 hover:bg-black/5 dark:hover:bg-white/5 hover:text-black dark:hover:text-white"
                       >
                         {item.name}
                       </Link>

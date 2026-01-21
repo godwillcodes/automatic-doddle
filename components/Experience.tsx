@@ -85,7 +85,7 @@ export default function Experience() {
   const isInView = useInView(sectionRef, { once: true, amount: 0.2 })
 
   return (
-    <section ref={sectionRef} className="relative pb-12 bg-white overflow-hidden">
+    <section ref={sectionRef} className="relative pb-12 bg-white dark:bg-zinc-900 overflow-hidden">
       <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.015)_1px,transparent_1px)] bg-[size:80px_80px] [mask-image:radial-gradient(ellipse_110%_60%_at_50%_0%,black_35%,transparent_80%)]" />
 
       <div className="relative mx-auto max-w-7xl px-6 sm:px-8 lg:px-0">
@@ -95,15 +95,15 @@ export default function Experience() {
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="max-w-5xl"
         >
-          <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full border border-black/10 bg-black/[0.02] mb-8">
-            <span className="text-xs font-medium tracking-wider uppercase text-black/50">Work Experience</span>
+          <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full border border-black/10 dark:border-white/10 bg-black/2 dark:bg-white/5 mb-8">
+            <span className="text-xs font-medium tracking-wider uppercase text-black/50 dark:text-white/50">Work Experience</span>
           </div>
 
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight text-black leading-[1.1]">
+          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight text-black dark:text-white leading-[1.1]">
             Experience
           </h2>
 
-          <p className="mt-6 text-lg sm:text-xl text-black/50 leading-relaxed font-light">
+          <p className="mt-6 text-lg sm:text-xl text-black/50 dark:text-white/50 leading-relaxed font-light">
             Roles focused on building high-performance web products, improving delivery reliability, and enabling teams through standards and tooling.
           </p>
         </motion.div>
@@ -116,18 +116,18 @@ export default function Experience() {
                 initial={{ opacity: 0, y: 18 }}
                 animate={isInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ delay: 0.1 + index * 0.06, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-                className="rounded-3xl border border-black/10 bg-white p-7 sm:p-8"
+                className="rounded-3xl border border-black/10 dark:border-white/10 bg-white dark:bg-zinc-800 p-7 sm:p-8"
               >
                 <header className="flex flex-col gap-3 sm:gap-4">
                   <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-2">
                     <div className="flex items-center gap-2">
-                      <div className="text-xl sm:text-2xl font-semibold tracking-tight text-black">
+                      <div className="text-xl sm:text-2xl font-semibold tracking-tight text-black dark:text-white">
                         {item.website ? (
                           <a
                             href={item.website}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="group inline-flex items-center gap-2 hover:text-black/80 transition-colors underline decoration-2 underline-offset-2 decoration-black/20"
+                            className="group inline-flex items-center gap-2 hover:text-black/80 dark:hover:text-white/80 transition-colors underline decoration-2 underline-offset-2 decoration-black/20 dark:decoration-white/20"
                           >
                             {item.company}
                             <ExternalLink size={16} strokeWidth={1.5} className="opacity-60 group-hover:opacity-100 transition-opacity" />
@@ -137,22 +137,22 @@ export default function Experience() {
                         )}
                       </div>
                     </div>
-                    <div className="text-sm text-black/40 font-light">{item.dates}</div>
+                    <div className="text-sm text-black/40 dark:text-white/40 font-light">{item.dates}</div>
                   </div>
 
-                  <div className="text-base sm:text-lg text-black/55 font-light leading-relaxed">
-                    <span className="text-black/70">{item.title}</span>
-                    {item.team ? <span className="text-black/40"> {item.team}</span> : null}
-                    <span className="text-black/30"> | </span>
-                    <span className="text-black/40">{item.location}</span>
+                  <div className="text-base sm:text-lg text-black/55 dark:text-white/55 font-light leading-relaxed">
+                    <span className="text-black/70 dark:text-white/70">{item.title}</span>
+                    {item.team ? <span className="text-black/40 dark:text-white/40"> {item.team}</span> : null}
+                    <span className="text-black/30 dark:text-white/30"> | </span>
+                    <span className="text-black/40 dark:text-white/40">{item.location}</span>
                   </div>
                 </header>
 
                 <div className="mt-6">
-                  <ul className="space-y-3 text-sm sm:text-base text-black/55 font-light leading-relaxed">
+                  <ul className="space-y-3 text-sm sm:text-base text-black/55 dark:text-white/55 font-light leading-relaxed">
                     {item.bullets.map((bullet) => (
                       <li key={bullet} className="flex gap-3">
-                        <span className="mt-2 h-1.5 w-1.5 rounded-full bg-black/25 shrink-0" />
+                        <span className="mt-2 h-1.5 w-1.5 rounded-full bg-black/25 dark:bg-white/25 shrink-0" />
                         <span>{bullet}</span>
                       </li>
                     ))}
@@ -166,21 +166,21 @@ export default function Experience() {
             initial={{ opacity: 0, y: 18 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ delay: 0.5, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-            className="mt-10 rounded-3xl border border-black/10 bg-black/[0.02] p-7 sm:p-8"
+            className="mt-10 rounded-3xl border border-black/10 dark:border-white/10 bg-black/2 dark:bg-white/5 p-7 sm:p-8"
           >
-            <div className="text-xs font-medium tracking-wider uppercase text-black/40 mb-3">Open Source</div>
-            <div className="text-lg sm:text-xl font-semibold tracking-tight text-black mb-2">
+            <div className="text-xs font-medium tracking-wider uppercase text-black/40 dark:text-white/40 mb-3">Open Source</div>
+            <div className="text-lg sm:text-xl font-semibold tracking-tight text-black dark:text-white mb-2">
               <a
                 href="https://github.com/godwillcodes/PixelPress"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group inline-flex items-center gap-2 hover:text-black/80 transition-colors underline decoration-2 underline-offset-2 decoration-black/20"
+                className="group inline-flex items-center gap-2 hover:text-black/80 dark:hover:text-white/80 transition-colors underline decoration-2 underline-offset-2 decoration-black/20 dark:decoration-white/20"
               >
                 PixelPress
                 <ExternalLink size={16} strokeWidth={1.5} className="opacity-60 group-hover:opacity-100 transition-opacity" />
               </a>
             </div>
-            <div className="text-sm sm:text-base text-black/55 font-light leading-relaxed">
+            <div className="text-sm sm:text-base text-black/55 dark:text-white/55 font-light leading-relaxed">
               Next.js, Sharp, and TypeScript | High-performance image compression and conversion utility leveraging advanced algorithms to minimize file sizes while maintaining visual quality.
             </div>
           </motion.div>
@@ -189,21 +189,21 @@ export default function Experience() {
             initial={{ opacity: 0, y: 18 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ delay: 0.6, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-            className="mt-6 rounded-3xl border border-black/10 bg-black/[0.02] p-7 sm:p-8"
+            className="mt-6 rounded-3xl border border-black/10 dark:border-white/10 bg-black/2 dark:bg-white/5 p-7 sm:p-8"
           >
-            <div className="text-xs font-medium tracking-wider uppercase text-black/40 mb-3">Open Source</div>
-            <div className="text-lg sm:text-xl font-semibold tracking-tight text-black mb-2">
+            <div className="text-xs font-medium tracking-wider uppercase text-black/40 dark:text-white/40 mb-3">Open Source</div>
+            <div className="text-lg sm:text-xl font-semibold tracking-tight text-black dark:text-white mb-2">
               <a
                 href="https://github.com/godwillcodes/WPSitePerformanceTracker"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group inline-flex items-center gap-2 hover:text-black/80 transition-colors underline decoration-2 underline-offset-2 decoration-black/20"
+                className="group inline-flex items-center gap-2 hover:text-black/80 dark:hover:text-white/80 transition-colors underline decoration-2 underline-offset-2 decoration-black/20 dark:decoration-white/20"
               >
                 Site Performance Tracker
                 <ExternalLink size={16} strokeWidth={1.5} className="opacity-60 group-hover:opacity-100 transition-opacity" />
               </a>
             </div>
-            <div className="text-sm sm:text-base text-black/55 font-light leading-relaxed">
+            <div className="text-sm sm:text-base text-black/55 dark:text-white/55 font-light leading-relaxed">
               WordPress plugin | Comprehensive website performance monitoring through automated synthetic audits and real user metrics. Built with Google PageSpeed Insights API integration, it delivers actionable insights to help you optimize your site's speed, Core Web Vitals, and overall user experience.
             </div>
           </motion.div>
