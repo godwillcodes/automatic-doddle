@@ -153,6 +153,19 @@ export default function Experience() {
               Next.js, Sharp, and TypeScript | High-performance image compression and conversion utility leveraging advanced algorithms to minimize file sizes while maintaining visual quality.
             </div>
           </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 18 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ delay: 0.6, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+            className="mt-6 rounded-3xl border border-black/10 bg-black/[0.02] p-7 sm:p-8"
+          >
+            <div className="text-xs font-medium tracking-wider uppercase text-black/40 mb-3">Open Source</div>
+            <div className="text-lg sm:text-xl font-semibold tracking-tight text-black mb-2">Site Performance Tracker</div>
+            <div className="text-sm sm:text-base text-black/55 font-light leading-relaxed">
+              WordPress plugin | Comprehensive website performance monitoring through automated synthetic audits and real user metrics. Built with Google PageSpeed Insights API integration, it delivers actionable insights to help you optimize your site's speed, Core Web Vitals, and overall user experience.
+            </div>
+          </motion.div>
         </div>
       </div>
     </section>

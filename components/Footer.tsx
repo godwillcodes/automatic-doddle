@@ -26,7 +26,7 @@ export default function Footer() {
       {/* Subtle background grid */}
       <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.015)_1px,transparent_1px)] bg-[size:80px_80px] [mask-image:radial-gradient(ellipse_100%_100%_at_50%_0%,black_20%,transparent_70%)]" />
       
-      <div className="relative mx-auto max-w-[1400px] px-6 sm:px-8 lg:px-12 py-20 lg:py-32">
+      <div className="relative mx-auto max-w-7xl px-6 sm:px-8 lg:px-0 py-20 lg:py-32">
         {/* Main content */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-20 mb-20">
           {/* Brand - Takes more space */}

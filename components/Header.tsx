@@ -41,7 +41,7 @@ export default function Header() {
             : 'bg-white'
         }`}
       >
-        <nav className="mx-auto max-w-[1400px] px-6 sm:px-8 lg:px-12">
+        <nav className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-0">
           <div className="flex h-20 items-center justify-between">
             {/* Logo */}
             <Link href="/" className="group">

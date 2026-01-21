@@ -43,7 +43,7 @@ export default function BlogPostLayout({ post, relatedPosts, children }: BlogPos
 
       {/* Article header */}
       <header className="relative pt-20 pb-16 lg:pt-32 lg:pb-24 bg-white">
-        <div className="mx-auto max-w-6xl px-6 sm:px-8 lg:px-12 bg-white">
+        <div className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-0 bg-white">
           <motion.div
             initial={{ opacity: 1, y: 0 }}
             animate={{ opacity: 1, y: 0 }}
@@ -89,7 +89,7 @@ export default function BlogPostLayout({ post, relatedPosts, children }: BlogPos
 
       {/* Article content */}
       <div ref={contentRef} className="relative pb-32 bg-white">
-        <div className="mx-auto max-w-6xl px-6 sm:px-8 lg:px-12 bg-white">
+        <div className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-0 bg-white">
           {/* Read Article Feature */}
           <ReadArticle title={post.title} content={post.content} />
 
@@ -136,7 +136,7 @@ export default function BlogPostLayout({ post, relatedPosts, children }: BlogPos
       {/* Related articles */}
       {relatedPosts.length > 0 && (
         <div className="relative border-t border-black/5 py-20 lg:py-32">
-          <div className="mx-auto max-w-[1400px] px-6 sm:px-8 lg:px-12">
+          <div className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-0">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}

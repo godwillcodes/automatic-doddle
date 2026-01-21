@@ -60,7 +60,7 @@ export default function Skills() {
       {/* Subtle background grid */}
       <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.02)_1px,transparent_1px)] bg-[size:64px_64px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_50%,black,transparent)]" />
       
-      <div className="relative mx-auto max-w-[1400px] px-6 sm:px-8 lg:px-12">
+      <div className="relative mx-auto max-w-7xl px-6 sm:px-8 lg:px-0">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}

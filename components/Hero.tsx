@@ -37,7 +37,7 @@ export default function Hero() {
       {/* Ultra-subtle grid background */}
       <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.015)_1px,transparent_1px)] bg-[size:80px_80px] [mask-image:radial-gradient(ellipse_100%_100%_at_50%_50%,black_40%,transparent_80%)]" />
 
-      <div className="relative z-10 mx-auto max-w-[1400px] w-full px-6 sm:px-8 lg:px-12 py-20 lg:py-24">
+      <div className="relative z-10 mx-auto max-w-7xl w-full px-6 sm:px-8 lg:px-0 py-20 lg:py-24">
         <div className="max-w-7xl">
           {/* Badge */}
           <motion.div
@@ -73,7 +73,7 @@ export default function Hero() {
             className="space-y-6 text-base sm:text-lg leading-relaxed text-black/60 font-light mb-16"
           >
             <p>
-              Senior Web Engineer with 8+ years of experience building, scaling, and optimizing high-traffic web applications, specializing in React, Next.js, and experimentation-driven product development. Focused on turning ambiguous ideas into production-ready, user-centric experiences, from shaping frontend architecture and performance budgets to measuring impact through Core Web Vitals, funnel analytics, and continuous experimentation.
+              Senior Web Engineer with 8+ years of experience building, scaling, and optimizing high-traffic web applications, specializing in React, Next.js, and experimentation-driven product development. Focused on turning ambiguous ideas into production-ready, user-centric experiences, from shaping frontend architecture and performance budgets to measuring impact through Core Web Vitals, funnel analytics, and continuous experimentation. Creator of open source projects including Site Performance Tracker and PixelPress.
             </p>
 
             <p>
