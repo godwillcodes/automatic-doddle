@@ -69,7 +69,7 @@ export default function Header() {
                 >
                   <Link
                     href={item.href}
-                    className="relative group px-4 py-2 text-lg font-medium transition-colors duration-300"
+                    className="relative group px-4 py-2 text-base font-medium transition-colors duration-300"
                   >
                     <span className="relative z-10 transition-colors duration-300 text-black/50 dark:text-white/50 group-hover:text-black dark:group-hover:text-white">
                       {item.name}
@@ -94,7 +94,7 @@ export default function Header() {
                 onClick={() => setIsCVModalOpen(true)}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="px-5 py-2.5 rounded-full bg-black text-white text-lg font-medium hover:bg-black/90 transition-all duration-300 flex items-center gap-2"
+                className="px-5 py-2.5 rounded-full bg-black text-white text-base font-medium hover:bg-black/90 transition-all duration-300 flex items-center gap-2"
               >
                 <Download size={16} strokeWidth={2} />
                 <span>Download CV</span>
