@@ -1,0 +1,30 @@
+<!-- 
+  This file is used by Netlify to detect forms during build.
+  It contains hidden versions of all forms used in the site.
+  Do not delete this file.
+-->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Forms</title>
+</head>
+<body>
+  <!-- Contact Form -->
+  <form name="contact" netlify netlify-honeypot="bot-field" hidden>
+    <input type="text" name="name" />
+    <input type="email" name="email" />
+    <textarea name="message"></textarea>
+  </form>
+
+  <!-- Newsletter Form -->
+  <form name="newsletter" netlify netlify-honeypot="bot-field" hidden>
+    <input type="email" name="email" />
+  </form>
+
+  <!-- CV Download Form -->
+  <form name="cv-download" netlify netlify-honeypot="bot-field" hidden>
+    <input type="text" name="name" />
+    <input type="email" name="email" />
+  </form>
+</body>
+</html>

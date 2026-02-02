@@ -134,7 +134,7 @@ body {
     max-width: 550px;
   }
 
-  /* Code block styling */
+  /* Code block styling - works with rehype-pretty-code */
   pre {
     font-family: 'Fira Code', 'Consolas', 'Monaco', monospace;
     line-height: 1.7;
@@ -152,55 +152,123 @@ body {
     font-size: 0.9em;
     white-space: nowrap;
   }
+}
 
-  /* Better paragraph spacing */
-  p + p {
-    margin-top: 1.75rem;
-  }
+/* ============================================
+   rehype-pretty-code / Shiki Syntax Highlighting
+   ============================================ */
 
-  /* Better list spacing */
-  ul, ol {
-    padding-left: 1.5rem;
-  }
+/* Code block container */
+[data-rehype-pretty-code-figure] {
+  margin: 2rem 0;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
 
-  li + li {
-    margin-top: 0.5rem;
-  }
+/* Code block title/caption (filename) */
+[data-rehype-pretty-code-title] {
+  background-color: #374151; /* gray-700 */
+  color: white;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  font-family: var(--font-dm-sans), sans-serif;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
 
-  /* Nested lists */
-  li > ul,
-  li > ol {
-    margin-top: 0.75rem;
-    margin-bottom: 0.75rem;
-  }
+/* Pre element styling */
+[data-rehype-pretty-code-figure] pre {
+  margin: 0;
+  padding: 1rem 1.25rem;
+  background-color: #1e1e1e !important;
+  overflow-x: auto;
+  border-radius: 0;
+}
 
-  /* Headings spacing */
-  h2 + p,
-  h3 + p,
-  h4 + p {
-    margin-top: 1rem;
-  }
+/* Code element inside pre */
+[data-rehype-pretty-code-figure] pre code {
+  display: block;
+  font-family: 'Fira Code', 'JetBrains Mono', 'Consolas', monospace;
+  font-size: 0.875rem;
+  line-height: 1.7;
+  color: #e5e5e5;
+  background: transparent !important;
+  padding: 0;
+}
 
-  /* Code blocks after paragraphs */
-  p + pre {
-    margin-top: 2rem;
-  }
+/* Individual code lines */
+[data-rehype-pretty-code-figure] code > [data-line] {
+  display: inline-block;
+  width: 100%;
+  padding: 0 0.25rem;
+}
 
-  pre + p {
-    margin-top: 2rem;
-  }
+/* Line numbers */
+[data-rehype-pretty-code-figure] code[data-line-numbers] {
+  counter-reset: line;
+}
 
-  /* Blockquotes */
-  blockquote {
-    font-style: italic;
-    quotes: '"' '"';
-  }
+[data-rehype-pretty-code-figure] code[data-line-numbers] > [data-line]::before {
+  counter-increment: line;
+  content: counter(line);
+  display: inline-block;
+  width: 1.5rem;
+  margin-right: 1.5rem;
+  text-align: right;
+  color: #6b7280;
+  font-size: 0.75rem;
+}
 
-  blockquote p:first-of-type::before {
-    content: open-quote;
-  }
+/* Highlighted lines */
+[data-rehype-pretty-code-figure] [data-line].highlighted,
+[data-rehype-pretty-code-figure] [data-highlighted-line] {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-left: 3px solid #3b82f6;
+  margin-left: -3px;
+  padding-left: calc(0.25rem + 3px);
+}
 
-  blockquote p:last-of-type::after {
-    content: close-quote;
-  }
+/* Highlighted words/chars */
+[data-rehype-pretty-code-figure] [data-highlighted-chars],
+[data-rehype-pretty-code-figure] .word {
+  background-color: rgba(59, 130, 246, 0.3);
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+}
+
+/* Language badge - shown when no title */
+[data-rehype-pretty-code-figure]:not(:has([data-rehype-pretty-code-title])) pre::before {
+  content: attr(data-language);
+  display: block;
+  background-color: #374151;
+  color: white;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  font-family: var(--font-dm-sans), sans-serif;
+  text-transform: capitalize;
+  margin: -1rem -1.25rem 1rem -1.25rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Inline code (not in pre blocks) */
+:not(pre) > code:not([data-language]) {
+  background-color: rgba(0, 0, 0, 0.06);
+  color: rgba(0, 0, 0, 0.9);
+  padding: 0.125rem 0.375rem;
+  border-radius: 0.375rem;
+  font-size: 0.9em;
+  font-family: 'Fira Code', 'Consolas', monospace;
+}
+
+/* Dark mode adjustments */
+.dark [data-rehype-pretty-code-figure] {
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.dark :not(pre) > code:not([data-language]) {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.9);
 }

@@ -28,16 +28,23 @@ export default function NewsletterCTA({
 
     setStatus('loading')
 
-    // Simulate API call - replace with your actual newsletter API
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500))
+      const response = await fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({
+          'form-name': 'newsletter',
+          email
+        }).toString()
+      })
       
-      // In production, you would call your newsletter API here:
-      // await fetch('/api/newsletter', { method: 'POST', body: JSON.stringify({ email }) })
-      
-      setStatus('success')
-      setMessage('Thanks for subscribing! Check your inbox to confirm.')
-      setEmail('')
+      if (response.ok) {
+        setStatus('success')
+        setMessage('Thanks for subscribing! You\'ll hear from me soon.')
+        setEmail('')
+      } else {
+        throw new Error('Form submission failed')
+      }
     } catch (error) {
       setStatus('error')
       setMessage('Something went wrong. Please try again.')
@@ -67,15 +74,28 @@ export default function NewsletterCTA({
           </p>
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3">
+          <form 
+            name="newsletter" 
+            method="POST" 
+            data-netlify="true"
+            data-netlify-honeypot="bot-field"
+            onSubmit={handleSubmit} 
+            className="flex flex-col sm:flex-row gap-3"
+          >
+            {/* Hidden fields for Netlify */}
+            <input type="hidden" name="form-name" value="newsletter" />
+            <input type="hidden" name="bot-field" />
+            
             <div className="relative flex-1">
               <input
                 type="email"
+                name="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="your@email.com"
                 disabled={status === 'loading' || status === 'success'}
                 className="w-full px-5 py-3.5 rounded-xl border border-black/10 bg-white text-black placeholder:text-black/30 focus:outline-none focus:ring-2 focus:ring-black/10 focus:border-transparent transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                required
               />
             </div>
             

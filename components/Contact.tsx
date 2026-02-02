@@ -31,18 +31,37 @@ export default function Contact() {
   const [formData, setFormData] = useState({ name: '', email: '', message: '' })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
+  const [error, setError] = useState('')
 
-  const handleSubmit = () => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
     if (!formData.name || !formData.email || !formData.message) return
     
     setIsSubmitting(true)
+    setError('')
     
-    setTimeout(() => {
+    try {
+      const response = await fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({
+          'form-name': 'contact',
+          ...formData
+        }).toString()
+      })
+      
+      if (response.ok) {
+        setIsSuccess(true)
+        setFormData({ name: '', email: '', message: '' })
+        setTimeout(() => setIsSuccess(false), 4000)
+      } else {
+        throw new Error('Form submission failed')
+      }
+    } catch (err) {
+      setError('Something went wrong. Please try again.')
+    } finally {
       setIsSubmitting(false)
-      setIsSuccess(true)
-      setFormData({ name: '', email: '', message: '' })
-      setTimeout(() => setIsSuccess(false), 4000)
-    }, 1500)
+    }
   }
 
   return (
@@ -160,7 +179,18 @@ export default function Contact() {
             transition={{ delay: 0.2, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             className="lg:col-span-7"
           >
-            <div className="space-y-6">
+            <form 
+              name="contact" 
+              method="POST" 
+              data-netlify="true"
+              data-netlify-honeypot="bot-field"
+              onSubmit={handleSubmit}
+              className="space-y-6"
+            >
+              {/* Hidden fields for Netlify */}
+              <input type="hidden" name="form-name" value="contact" />
+              <input type="hidden" name="bot-field" />
+              
               <div className="space-y-5">
                 <div>
                   <label htmlFor="name" className="block text-sm font-medium text-black/60 mb-2">
@@ -169,10 +199,12 @@ export default function Contact() {
                   <input
                     type="text"
                     id="name"
+                    name="name"
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     className="w-full px-5 py-4 rounded-2xl bg-white border border-black/10 text-black placeholder-black/30 focus:outline-none focus:border-black/20 transition-all duration-300"
                     placeholder="Your name"
+                    required
                   />
                 </div>
 
@@ -183,10 +215,12 @@ export default function Contact() {
                   <input
                     type="email"
                     id="email"
+                    name="email"
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     className="w-full px-5 py-4 rounded-2xl bg-white border border-black/10 text-black placeholder-black/30 focus:outline-none focus:border-black/20 transition-all duration-300"
                     placeholder="your@email.com"
+                    required
                   />
                 </div>
 
@@ -196,18 +230,19 @@ export default function Contact() {
                   </label>
                   <textarea
                     id="message"
+                    name="message"
                     rows={6}
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                     className="w-full px-5 py-4 rounded-2xl bg-white border border-black/10 text-black placeholder-black/30 focus:outline-none focus:border-black/20 transition-all duration-300 resize-none"
                     placeholder="Tell me about your project..."
+                    required
                   />
                 </div>
               </div>
 
               <motion.button
-                type="button"
-                onClick={handleSubmit}
+                type="submit"
                 disabled={isSubmitting || isSuccess}
                 whileHover={{ scale: isSubmitting || isSuccess ? 1 : 1.01 }}
                 whileTap={{ scale: isSubmitting || isSuccess ? 1 : 0.99 }}
@@ -242,7 +277,19 @@ export default function Contact() {
                   </p>
                 </motion.div>
               )}
-            </div>
+
+              {error && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="p-5 rounded-2xl bg-red-50 border border-red-200"
+                >
+                  <p className="text-sm text-red-600 font-light">
+                    {error}
+                  </p>
+                </motion.div>
+              )}
+            </form>
           </motion.div>
         </div>
       </div>

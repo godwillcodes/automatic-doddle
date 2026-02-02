@@ -15,7 +15,9 @@ export default function DownloadCVModal({ isOpen, onClose }: DownloadCVModalProp
   const [isSuccess, setIsSuccess] = useState(false)
   const [error, setError] = useState('')
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    
     if (!formData.name || !formData.email) {
       setError('Please fill in all fields')
       return
@@ -25,16 +27,17 @@ export default function DownloadCVModal({ isOpen, onClose }: DownloadCVModalProp
     setError('')
 
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1500))
+      // Submit to Netlify Forms
+      const response = await fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({
+          'form-name': 'cv-download',
+          ...formData
+        }).toString()
+      })
       
-      // Replace with your actual API endpoint
-      // const response = await fetch('/api/send-cv', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(formData),
-      // })
-      // if (!response.ok) throw new Error('Failed to send CV')
+      if (!response.ok) throw new Error('Failed to submit form')
 
       setIsSuccess(true)
       setTimeout(() => {
@@ -162,11 +165,22 @@ export default function DownloadCVModal({ isOpen, onClose }: DownloadCVModalProp
                         </div>
 
                         {/* Form */}
-                        <div className="space-y-5">
+                        <form 
+                          name="cv-download" 
+                          method="POST" 
+                          data-netlify="true"
+                          data-netlify-honeypot="bot-field"
+                          onSubmit={handleSubmit}
+                          className="space-y-5"
+                        >
+                          {/* Hidden fields for Netlify */}
+                          <input type="hidden" name="form-name" value="cv-download" />
+                          <input type="hidden" name="bot-field" />
+                          
                           {/* Name field */}
                           <div>
                             <label
-                              htmlFor="name"
+                              htmlFor="cv-name"
                               className="block text-sm font-medium text-black/60 mb-2"
                             >
                               Name
@@ -178,7 +192,8 @@ export default function DownloadCVModal({ isOpen, onClose }: DownloadCVModalProp
                                 strokeWidth={2}
                               />
                               <input
-                                id="name"
+                                id="cv-name"
+                                name="name"
                                 type="text"
                                 value={formData.name}
                                 onChange={(e) =>
@@ -187,6 +202,7 @@ export default function DownloadCVModal({ isOpen, onClose }: DownloadCVModalProp
                                 disabled={isSubmitting}
                                 className="w-full pl-12 pr-4 py-3.5 rounded-2xl bg-white border border-black/10 text-black placeholder-black/30 focus:outline-none focus:border-black/20 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                                 placeholder="Your name"
+                                required
                               />
                             </div>
                           </div>
@@ -194,7 +210,7 @@ export default function DownloadCVModal({ isOpen, onClose }: DownloadCVModalProp
                           {/* Email field */}
                           <div>
                             <label
-                              htmlFor="email"
+                              htmlFor="cv-email"
                               className="block text-sm font-medium text-black/60 mb-2"
                             >
                               Email
@@ -206,7 +222,8 @@ export default function DownloadCVModal({ isOpen, onClose }: DownloadCVModalProp
                                 strokeWidth={2}
                               />
                               <input
-                                id="email"
+                                id="cv-email"
+                                name="email"
                                 type="email"
                                 value={formData.email}
                                 onChange={(e) =>
@@ -215,6 +232,7 @@ export default function DownloadCVModal({ isOpen, onClose }: DownloadCVModalProp
                                 disabled={isSubmitting}
                                 className="w-full pl-12 pr-4 py-3.5 rounded-2xl bg-white border border-black/10 text-black placeholder-black/30 focus:outline-none focus:border-black/20 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                                 placeholder="your@email.com"
+                                required
                               />
                             </div>
                           </div>
@@ -232,8 +250,7 @@ export default function DownloadCVModal({ isOpen, onClose }: DownloadCVModalProp
 
                           {/* Submit button */}
                           <motion.button
-                            type="button"
-                            onClick={handleSubmit}
+                            type="submit"
                             disabled={isSubmitting}
                             whileHover={{ scale: isSubmitting ? 1 : 1.01 }}
                             whileTap={{ scale: isSubmitting ? 1 : 0.99 }}
@@ -251,7 +268,7 @@ export default function DownloadCVModal({ isOpen, onClose }: DownloadCVModalProp
                               </>
                             )}
                           </motion.button>
-                        </div>
+                        </form>
                       </motion.div>
                     )}
                   </AnimatePresence>
