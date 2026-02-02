@@ -3,10 +3,13 @@
 import { useRef, ReactNode } from 'react'
 import { motion, useInView } from 'framer-motion'
 import { ArrowLeft, ArrowUpRight, Clock, Calendar } from 'lucide-react'
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
 import { BlogPost } from '@/lib/mdx'
 import Link from 'next/link'
 import ReadArticle from './ReadArticle'
+import ReadingProgress from './ReadingProgress'
+import ShareButtons from './ShareButtons'
+import NewsletterCTA from './NewsletterCTA'
 
 interface BlogPostLayoutProps {
   post: BlogPost
@@ -19,8 +22,15 @@ export default function BlogPostLayout({ post, relatedPosts, children }: BlogPos
   const isInView = useInView(contentRef, { once: true, amount: 0.1 })
   const router = useRouter()
 
+  const pathname = usePathname()
+  const siteUrl = typeof window !== 'undefined' ? window.location.origin : 'https://godwillbarasa.netlify.app'
+  const articleUrl = `${siteUrl}${pathname}`
+
   return (
     <article className="relative bg-white min-h-screen text-black">
+      {/* Reading Progress Bar */}
+      <ReadingProgress />
+      
       {/* Subtle background grid */}
       <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.015)_1px,transparent_1px)] bg-size-[80px_80px] mask-[radial-gradient(ellipse_100%_100%_at_50%_0%,black_40%,transparent_80%)]" />
       
@@ -93,6 +103,13 @@ export default function BlogPostLayout({ post, relatedPosts, children }: BlogPos
           {/* Read Article Feature */}
           <ReadArticle title={post.title} content={post.content} />
 
+          {/* Share Buttons - Top */}
+          <ShareButtons 
+            title={post.title} 
+            url={articleUrl} 
+            description={post.excerpt} 
+          />
+
           <motion.div
             initial={{ opacity: 1, y: 0 }}
             animate={{ opacity: 1, y: 0 }}
@@ -130,6 +147,18 @@ export default function BlogPostLayout({ post, relatedPosts, children }: BlogPos
           >
             {children}
           </motion.div>
+
+          {/* Share Buttons - Bottom */}
+          <div className="mt-16 pt-12 border-t border-black/10">
+            <ShareButtons 
+              title={post.title} 
+              url={articleUrl} 
+              description={post.excerpt} 
+            />
+          </div>
+
+          {/* Newsletter CTA */}
+          <NewsletterCTA />
         </div>
       </div>
 

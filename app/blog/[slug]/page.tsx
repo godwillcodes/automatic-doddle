@@ -5,6 +5,8 @@ import { Metadata } from 'next'
 import BlogPostLayout from '@/components/BlogPostLayout'
 import remarkGfm from 'remark-gfm'
 import rehypePrettyCode from 'rehype-pretty-code'
+import rehypeSlug from 'rehype-slug'
+import { mdxComponents } from '@/components/mdx/mdx-components'
 
 export async function generateStaticParams() {
   const posts = await getAllPosts()
@@ -76,11 +78,27 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
     mdxOptions: {
       remarkPlugins: [remarkGfm],
       rehypePlugins: [
+        rehypeSlug,
         [
           rehypePrettyCode,
           {
-            theme: 'github-light',
+            theme: {
+              dark: 'github-dark',
+              light: 'github-light',
+            },
             keepBackground: false,
+            defaultLang: 'typescript',
+            onVisitLine(node: { children: { length: number }[] }) {
+              if (node.children.length === 0) {
+                node.children = [{ type: 'text', value: ' ' } as never]
+              }
+            },
+            onVisitHighlightedLine(node: { properties: { className: string[] } }) {
+              node.properties.className.push('highlighted')
+            },
+            onVisitHighlightedChars(node: { properties: { className: string[] } }) {
+              node.properties.className = ['word']
+            },
           },
         ] as any,
       ],
@@ -116,7 +134,7 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <BlogPostLayout post={post} relatedPosts={relatedPosts}>
-        <MDXRemote source={post.content} options={mdxOptions} />
+        <MDXRemote source={post.content} options={mdxOptions} components={mdxComponents} />
       </BlogPostLayout>
     </>
   )
