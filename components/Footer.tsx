@@ -27,7 +27,7 @@ export default function Footer() {
       {/* Subtle background grid */}
       <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.015)_1px,transparent_1px)] bg-[size:80px_80px] dark:bg-[linear-gradient(rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:80px_80px] [mask-image:radial-gradient(ellipse_100%_100%_at_50%_0%,black_20%,transparent_70%)]" />
       
-      <div className="relative mx-auto max-w-7xl px-6 sm:px-8 lg:px-0 py-12">
+      <div className="relative mx-auto max-w-7xl px-6 sm:px-8 lg:px-0 py-6">
         <div className="flex justify-between items-center">
           {/* Social links */}
           <div className="flex gap-3">
