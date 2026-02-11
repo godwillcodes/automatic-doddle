@@ -4,7 +4,8 @@ const matter = require('gray-matter')
 
 const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://godwillbarasa.netlify.app'
 const contentDir = path.join(process.cwd(), 'content/blog')
-const outPath = path.join(process.cwd(), 'public', 'sitemap.xml')
+const SITEMAP_FILENAME = 'godwillbarasa-sitemap.xml'
+const outPath = path.join(process.cwd(), 'public', SITEMAP_FILENAME)
 
 const staticRoutes = [
   { url: baseUrl, changefreq: 'weekly', priority: '1.0' },
@@ -63,4 +64,4 @@ ${allEntries.map(urlNode).join('\n')}
 
 fs.mkdirSync(path.dirname(outPath), { recursive: true })
 fs.writeFileSync(outPath, xml, 'utf8')
-console.log('Generated public/sitemap.xml with', allEntries.length, 'URLs')
+console.log('Generated public/' + SITEMAP_FILENAME + ' with', allEntries.length, 'URLs')

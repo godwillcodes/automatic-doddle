@@ -8,4 +8,4 @@ Allow: /
 Disallow: /api/
 
 # Sitemap location
-Sitemap: https://godwillbarasa.netlify.app/sitemap.xml
+Sitemap: https://godwillbarasa.netlify.app/godwillbarasa-sitemap.xml
