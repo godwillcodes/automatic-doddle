@@ -33,7 +33,7 @@ export default function Hero() {
   return (
     <section 
       ref={sectionRef}
-      className="relative min-h-screen bg-white dark:bg-zinc-900 flex items-center overflow-hidden"
+      className="relative min-h-screen bg-white flex items-center overflow-hidden"
     >
       {/* Ultra-subtle grid background */}
       <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.015)_1px,transparent_1px)] bg-[size:80px_80px] [mask-image:radial-gradient(ellipse_100%_100%_at_50%_50%,black_40%,transparent_80%)]" />
@@ -59,7 +59,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 30 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-            className="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight leading-[1.1] mb-12 text-black dark:text-white"
+            className="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight leading-[1.1] mb-12 text-black"
           >
             <span itemProp="name">Meet Godwill Barasa</span>,{' '}
             <span className="text-black/40" itemProp="jobTitle">Senior Web Engineer building high-performance digital assets with React, Next.js, TypeScript, WordPress, and Laravel at</span>{' '}
@@ -71,7 +71,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="space-y-6 text-base sm:text-lg leading-relaxed text-black/60 dark:text-white/60 font-light mb-16"
+            className="space-y-6 text-base sm:text-lg leading-relaxed text-black/60 font-light mb-16"
           >
             <p>
               Senior Web Engineer with 8+ years of experience building, scaling, and optimizing high-traffic web applications, specializing in React, Next.js, and experimentation-driven product development. Focused on turning ambiguous ideas into production-ready, user-centric experiences, from shaping frontend architecture and performance budgets to measuring impact through Core Web Vitals, funnel analytics, and continuous experimentation. Creator of open source projects including <a href="https://github.com/godwillcodes/WPSitePerformanceTracker" target="_blank" rel="noopener noreferrer" className="hover:text-black/80 transition-colors underline decoration-2 underline-offset-2 decoration-black/20">Site Performance Tracker</a> and <a href="https://github.com/godwillcodes/PixelPress" target="_blank" rel="noopener noreferrer" className="hover:text-black/80 transition-colors underline decoration-2 underline-offset-2 decoration-black/20">PixelPress</a>.
@@ -128,10 +128,10 @@ export default function Hero() {
                   }}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="p-3 rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-zinc-900 hover:border-black/20 dark:hover:border-white/20 hover:bg-black/2 dark:hover:bg-white/5 transition-all duration-300"
+                  className="p-3 rounded-2xl border border-black/10 bg-white hover:border-black/20 hover:bg-black/2 transition-all duration-300"
                   aria-label={social.label}
                 >
-                  <Icon size={18} className="text-black/60 dark:text-white/60" strokeWidth={1.5} />
+                  <Icon size={18} className="text-black/60" strokeWidth={1.5} />
                 </motion.a>
               )
             })}
@@ -165,7 +165,7 @@ function PhotoGallery({ photos, isInView }: { photos: Photo[]; isInView: boolean
               ease: [0.16, 1, 0.3, 1],
             }}
             whileHover={{ scale: 1.05, zIndex: 10 }}
-            className="relative w-60 h-60 rounded-2xl overflow-hidden border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5"
+            className="relative w-60 h-60 rounded-2xl overflow-hidden border border-black/10 bg-black/5"
           >
             <Image
               src={photo.src}

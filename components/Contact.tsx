@@ -65,7 +65,7 @@ export default function Contact() {
   }
 
   return (
-    <section id="contact" ref={sectionRef} className="relative pt-8 bg-white dark:bg-zinc-900 overflow-hidden">
+    <section id="contact" ref={sectionRef} className="relative pt-8 bg-white overflow-hidden">
       {/* Subtle background grid */}
       <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.02)_1px,transparent_1px)] bg-[size:64px_64px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_50%,black,transparent)]" />
       

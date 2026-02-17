@@ -82,10 +82,7 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
         [
           rehypePrettyCode,
           {
-            theme: {
-              dark: 'github-dark',
-              light: 'github-light',
-            },
+            theme: 'github-light',
             keepBackground: false,
             defaultLang: 'typescript',
             onVisitLine(node: { children: { length: number }[] }) {

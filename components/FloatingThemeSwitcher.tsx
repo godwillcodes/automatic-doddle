@@ -24,7 +24,7 @@ export default function FloatingThemeSwitcher() {
         }}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
-        className="w-14 h-14 rounded-full border border-black/10 dark:border-white/10 bg-white dark:bg-zinc-900 shadow-lg dark:shadow-black/20 flex items-center justify-center text-black/60 dark:text-white/60 hover:text-black dark:hover:text-white hover:border-black/20 dark:hover:border-white/20 hover:bg-black/5 dark:hover:bg-white/5 transition-all duration-300"
+        className="w-14 h-14 rounded-full border border-black/10 bg-white shadow-lg flex items-center justify-center text-black/60 hover:text-black hover:border-black/20 hover:bg-black/5 transition-all duration-300"
         aria-label="Toggle theme"
       >
         <motion.div
