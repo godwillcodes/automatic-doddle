@@ -167,6 +167,9 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
         <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
         <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)" />
+        <meta httpEquiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+        <meta httpEquiv="Pragma" content="no-cache" />
+        <meta httpEquiv="Expires" content="0" />
       </head>
       <body
         className={`${dmSans.variable} ${geistMono.variable} antialiased bg-white text-zinc-900 dark:bg-zinc-900 dark:text-zinc-100`}

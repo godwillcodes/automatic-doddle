@@ -1,0 +1,51 @@
+# Netlify configuration for cache control
+
+# Disable caching for all HTML pages
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Cache-Control = "no-cache, no-store, must-revalidate"
+    Pragma = "no-cache"
+    Expires = "0"
+
+# Keep static assets cached (Next.js handles versioning via hashes)
+[[headers]]
+  for = "/_next/static/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/static/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Cache images with shorter TTL
+[[headers]]
+  for = "/*.jpg"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
+
+[[headers]]
+  for = "/*.jpeg"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
+
+[[headers]]
+  for = "/*.png"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
+
+[[headers]]
+  for = "/*.webp"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
+
+[[headers]]
+  for = "/*.avif"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
+
+[[headers]]
+  for = "/*.svg"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
