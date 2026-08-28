@@ -4,7 +4,7 @@ import { Archivo, IBM_Plex_Mono } from 'next/font/google'
 import './globals.css'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
-import { PersonStructuredData, WebsiteStructuredData } from '@/components/StructuredData'
+import { PersonGraph } from '@/components/StructuredData'
 import { site, siteUrl } from '@/lib/site'
 
 // Archivo variable, with the width axis: display type and numerals use the
@@ -27,7 +27,7 @@ const plexMono = IBM_Plex_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: 'Godwill Barasa | Senior Web Engineer (React, Next.js, Laravel, WordPress)',
+    default: site.title,
     template: '%s | Godwill Barasa',
   },
   description: site.description,
@@ -44,12 +44,12 @@ export const metadata: Metadata = {
     locale: site.locale,
     url: siteUrl,
     siteName: site.name,
-    title: 'Godwill Barasa | Senior Web Engineer',
+    title: site.title,
     description: site.description,
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Godwill Barasa | Senior Web Engineer',
+    title: site.title,
     description: site.description,
   },
   robots: {
@@ -62,10 +62,6 @@ export const metadata: Metadata = {
       'max-image-preview': 'large',
       'max-snippet': -1,
     },
-  },
-  icons: {
-    icon: '/favicon.ico',
-    apple: '/apple-icon.png',
   },
   manifest: '/manifest.webmanifest',
   verification: {
@@ -82,18 +78,7 @@ export default function RootLayout({
       <body
         className="bg-paper text-ink antialiased"
       >
-        <PersonStructuredData
-          data={{
-            name: site.author.name,
-            url: siteUrl,
-            jobTitle: site.author.jobTitle,
-            description: site.description,
-            sameAs: [...site.author.sameAs],
-          }}
-        />
-        <WebsiteStructuredData
-          data={{ name: site.name, url: siteUrl, description: site.description }}
-        />
+        <PersonGraph />
         <a
           href="#main-content"
           className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[200] focus:bg-ink focus:px-4 focus:py-2 focus:text-paper"

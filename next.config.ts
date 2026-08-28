@@ -10,6 +10,25 @@ const nextConfig: NextConfig = {
   },
 
   compress: true,
+
+  async redirects() {
+    return [
+      // One hostname. www is canonical because that is the URL the Lock &
+      // Mercer entity asserts in its sameAs; the apex must not serve a second
+      // copy of the same page. Explicit 301 rather than `permanent: true`,
+      // which emits 308.
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'godwillbarasa.com' }],
+        destination: 'https://www.godwillbarasa.com/:path*',
+        statusCode: 301,
+      },
+      // Routes retired in the person-entity restructure. Their content lives
+      // on the homepage now; the redirect preserves whatever equity they had.
+      { source: '/about', destination: '/', statusCode: 301 },
+      { source: '/skills', destination: '/', statusCode: 301 },
+    ]
+  },
   poweredByHeader: false,
   reactStrictMode: true,
 

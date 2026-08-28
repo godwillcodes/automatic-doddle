@@ -2,19 +2,18 @@ import { MetadataRoute } from 'next'
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'Godwill Barasa - Full-Stack Engineer & Performance Architect',
+    name: 'Godwill Barasa',
     short_name: 'Godwill Barasa',
-    description: 'Full-Stack Engineer specializing in high-performance content delivery systems, WordPress-to-React pipelines, and enterprise architecture.',
+    description:
+      'Godwill Barasa is a software engineer in Nairobi. He founded Lock & Mercer, a venture studio, and builds and operates web platforms in Kenya.',
     start_url: '/',
     display: 'standalone',
-    background_color: '#ffffff',
-    theme_color: '#000000',
+    background_color: '#f4f2ed',
+    theme_color: '#101012',
     icons: [
-      {
-        src: '/favicon.ico',
-        sizes: 'any',
-        type: 'image/x-icon',
-      },
+      { src: '/favicon.ico', sizes: 'any', type: 'image/x-icon' },
+      { src: '/icon.png', sizes: '512x512', type: 'image/png' },
+      { src: '/apple-icon.png', sizes: '180x180', type: 'image/png' },
     ],
   }
 }

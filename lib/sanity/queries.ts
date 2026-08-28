@@ -103,3 +103,24 @@ export const getRelatedPosts = cache(
     return related
   }
 )
+
+export interface NowEntry {
+  updatedAt: string
+  items: string[]
+}
+
+/**
+ * The "Currently" singleton. Returns null when the entry is older than 75
+ * days: a stale "currently" is worse than none, so it hides itself.
+ */
+export const getNow = cache(async (): Promise<NowEntry | null> => {
+  const entry = await readClient.fetch<NowEntry | null>(
+    groq`*[_type == "now"] | order(updatedAt desc) [0] { updatedAt, items }`,
+    {},
+    options
+  )
+  if (!entry?.updatedAt) return null
+  const age = Date.now() - new Date(entry.updatedAt).getTime()
+  if (age > 75 * 24 * 60 * 60 * 1000) return null
+  return entry
+})

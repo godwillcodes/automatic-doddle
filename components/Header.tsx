@@ -4,21 +4,19 @@ import { useCallback, useEffect, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
-import { contact } from '@/lib/record'
+import { site } from '@/lib/site'
 
 const NAV = [
   { index: '01', label: 'Work', href: '/#work' },
-  { index: '02', label: 'Experience', href: '/#experience' },
-  { index: '03', label: 'Open Source', href: '/#lab' },
-  { index: '04', label: 'Writing', href: '/blog' },
-  { index: '05', label: 'About', href: '/about' },
-  { index: '06', label: 'Contact', href: '/contact' },
+  { index: '02', label: 'Writing', href: '/#writing' },
+  { index: '03', label: 'Archive', href: '/blog' },
+  { index: '04', label: 'Contact', href: '/contact' },
 ]
 
 const SOCIAL = [
-  { label: 'GitHub', href: contact.github.href },
-  { label: 'LinkedIn', href: contact.linkedin.href },
-  { label: 'Medium', href: contact.medium.href },
+  { label: 'Lock & Mercer', href: 'https://www.lockandmercer.com/team/godwill-barasa' },
+  { label: 'GitHub', href: 'https://github.com/godwillcodes' },
+  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/godwillcodes/' },
 ]
 
 export default function Header() {
@@ -72,7 +70,7 @@ export default function Header() {
         <div className="mx-auto flex max-w-7xl items-baseline justify-between gap-6 px-6 py-4 sm:px-8">
           <Link href="/" className="group flex items-baseline gap-3">
             <span className="display text-[1.05rem] tracking-tight">Godwill Barasa</span>
-            <span className="meta hidden sm:inline">Senior Web Engineer</span>
+            <span className="meta hidden sm:inline">Founder, Lock &amp; Mercer</span>
           </Link>
 
           <nav aria-label="Primary" className="hidden items-baseline gap-5 md:flex">
@@ -142,8 +140,8 @@ export default function Header() {
         </nav>
 
         <div className="rule-t px-6 py-6 sm:px-8">
-          <a href={`mailto:${contact.email}`} className="meta meta-ink block">
-            {contact.email}
+          <a href={`mailto:${site.author.email}`} className="meta meta-ink block">
+            {site.author.email}
           </a>
           <div className="mt-3 flex gap-6">
             {SOCIAL.map((social) => (
