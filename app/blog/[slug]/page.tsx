@@ -7,6 +7,14 @@ import { getPostBySlug, getPostSlugs, getRelatedPosts } from '@/lib/sanity/queri
 import { urlForOpenGraph } from '@/lib/sanity/client'
 import { absoluteUrl, site } from '@/lib/site'
 
+/**
+ * Falls back to hourly regeneration so a Studio publish reaches the site even
+ * if the Sanity webhook at /api/revalidate is not configured. The webhook
+ * makes it immediate.
+ */
+export const revalidate = 3600
+
+
 export const dynamicParams = false
 
 export async function generateStaticParams() {

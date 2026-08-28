@@ -3,6 +3,14 @@ import type { MetadataRoute } from 'next'
 import { getAllPosts } from '@/lib/sanity/queries'
 import { absoluteUrl } from '@/lib/site'
 
+/**
+ * Falls back to hourly regeneration so a Studio publish reaches the site even
+ * if the Sanity webhook at /api/revalidate is not configured. The webhook
+ * makes it immediate.
+ */
+export const revalidate = 3600
+
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const posts = await getAllPosts()
 

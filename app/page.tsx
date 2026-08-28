@@ -6,6 +6,14 @@ import LatestWriting from '@/components/LatestWriting'
 import { getAllPosts } from '@/lib/sanity/queries'
 import { absoluteUrl } from '@/lib/site'
 
+/**
+ * Falls back to hourly regeneration so a Studio publish reaches the site even
+ * if the Sanity webhook at /api/revalidate is not configured. The webhook
+ * makes it immediate.
+ */
+export const revalidate = 3600
+
+
 export const metadata: Metadata = {
   // Only the canonical is overridden here. Setting `openGraph` on a page
   // REPLACES the parent object rather than merging into it, which is how the
