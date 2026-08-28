@@ -74,7 +74,7 @@ const experience: ExperienceItem[] = [
     dates: 'Feb 2018 – July 2018',
     website: 'https://us.pg.com/',
     bullets: [
-      "Modernized regional brand microsites to align with P&G's global design systems and accessibility standards, supporting digital transformation initiatives.",
+      "Modernized regional brand microsites to align with P&amp;G&apos;s global design systems and accessibility standards, supporting digital transformation initiatives.",
       'Implemented marketing automation workflows, integrating CMS-driven content with analytics and engagement platforms to improve campaign tracking and personalization.',
     ],
   },
@@ -204,7 +204,7 @@ export default function Experience() {
               </a>
             </div>
             <div className="text-sm sm:text-base text-black/55 font-light leading-relaxed">
-              WordPress plugin | Comprehensive website performance monitoring through automated synthetic audits and real user metrics. Built with Google PageSpeed Insights API integration, it delivers actionable insights to help you optimize your site's speed, Core Web Vitals, and overall user experience.
+              WordPress plugin | Comprehensive website performance monitoring through automated synthetic audits and real user metrics. Built with Google PageSpeed Insights API integration, it delivers actionable insights to help you optimize your site&apos;s speed, Core Web Vitals, and overall user experience.
             </div>
           </motion.div>
         </div>

@@ -1,16 +1,23 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
+
+import { useClientFeature } from '@/lib/use-client-feature'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Volume2, Pause, Play, Square, ChevronDown, ChevronUp } from 'lucide-react'
 
 interface ReadArticleProps {
   title: string
-  content: string
+  /**
+   * Plain prose, already stripped of markup by the server. This used to be the
+   * raw MDX source, which meant the speech engine read every '##', '**' and
+   * code fence out loud.
+   */
+  text: string
 }
 
-export default function ReadArticle({ title, content }: ReadArticleProps) {
-  const [isSupported, setIsSupported] = useState(false)
+export default function ReadArticle({ title, text }: ReadArticleProps) {
+  const isSupported = useClientFeature(() => 'speechSynthesis' in window)
   const [isPlaying, setIsPlaying] = useState(false)
   const [isPaused, setIsPaused] = useState(false)
   const [progress, setProgress] = useState(0)
@@ -21,11 +28,6 @@ export default function ReadArticle({ title, content }: ReadArticleProps) {
   const progressIntervalRef = useRef<NodeJS.Timeout | null>(null)
 
   useEffect(() => {
-    // Check if speech synthesis is supported
-    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
-      setIsSupported(true)
-    }
-
     // Cleanup on unmount
     return () => {
       if (window.speechSynthesis) {
@@ -36,14 +38,6 @@ export default function ReadArticle({ title, content }: ReadArticleProps) {
       }
     }
   }, [])
-
-  // Extract text from HTML content
-  const extractText = (htmlContent: string): string => {
-    if (typeof window === 'undefined') return ''
-    const div = document.createElement('div')
-    div.innerHTML = htmlContent
-    return div.textContent || div.innerText || ''
-  }
 
   const startProgressTracking = () => {
     if (progressIntervalRef.current) {
@@ -66,7 +60,7 @@ export default function ReadArticle({ title, content }: ReadArticleProps) {
   const handlePlay = () => {
     if (!isSupported) return
 
-    const textToRead = `${title}. ${extractText(content)}`
+    const textToRead = `${title}. ${text}`
     textRef.current = textToRead
 
     // Create new utterance

@@ -29,13 +29,10 @@ export default function NewsletterCTA({
     setStatus('loading')
 
     try {
-      const response = await fetch('/', {
+      const response = await fetch('/api/contact', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams({
-          'form-name': 'newsletter',
-          email
-        }).toString()
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ form: 'newsletter', email }),
       })
       
       if (response.ok) {
@@ -45,7 +42,7 @@ export default function NewsletterCTA({
       } else {
         throw new Error('Form submission failed')
       }
-    } catch (error) {
+    } catch {
       setStatus('error')
       setMessage('Something went wrong. Please try again.')
     }
@@ -74,17 +71,16 @@ export default function NewsletterCTA({
           </p>
 
           {/* Form */}
-          <form 
-            name="newsletter" 
-            method="POST" 
-            data-netlify="true"
-            data-netlify-honeypot="bot-field"
-            onSubmit={handleSubmit} 
-            className="flex flex-col sm:flex-row gap-3"
-          >
-            {/* Hidden fields for Netlify */}
-            <input type="hidden" name="form-name" value="newsletter" />
-            <input type="hidden" name="bot-field" />
+          <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3">
+            {/* Honeypot: hidden from people, tempting to bots. */}
+            <input
+              type="text"
+              name="company"
+              tabIndex={-1}
+              autoComplete="off"
+              aria-hidden="true"
+              className="hidden"
+            />
             
             <div className="relative flex-1">
               <input

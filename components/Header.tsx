@@ -7,6 +7,7 @@ import { Menu, X, Download } from 'lucide-react'
 import DownloadCVModal from './DownloadCVModal'
 
 const navItems = [
+  { name: 'About', href: '/about' },
   { name: 'Skills', href: '/skills' },
   { name: 'Blog', href: '/blog' },
   { name: 'Contact', href: '/contact' },

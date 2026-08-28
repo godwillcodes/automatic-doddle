@@ -2,19 +2,20 @@
 
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { Github, Linkedin, ArrowUpRight, FileText } from 'lucide-react'
+import { Github, Linkedin, FileText } from 'lucide-react'
 
 export default function Footer() {
   const currentYear = new Date().getFullYear()
 
+  const navigation = [
+    { label: 'Home', href: '/' },
+    { label: 'About', href: '/about' },
+    { label: 'Skills', href: '/skills' },
+    { label: 'Blog', href: '/blog' },
+    { label: 'Contact', href: '/contact' },
+  ]
+
   const footerLinks = {
-    navigation: [
-      { label: 'Home', href: '/' },
-      { label: 'About', href: '/about' },
-      { label: 'Skills', href: '/skills' },
-      { label: 'Blog', href: '/blog' },
-      { label: 'Contact', href: '/contact' },
-    ],
     social: [
       { label: 'GitHub', href: 'https://github.com/godwillcodes', icon: Github },
       { label: 'LinkedIn', href: 'https://www.linkedin.com/in/godwillcodes/', icon: Linkedin },
@@ -28,7 +29,20 @@ export default function Footer() {
       <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.015)_1px,transparent_1px)] bg-[size:80px_80px] [mask-image:radial-gradient(ellipse_100%_100%_at_50%_0%,black_20%,transparent_70%)]" />
       
       <div className="relative mx-auto max-w-7xl px-6 sm:px-8 lg:px-0 py-6">
-        <div className="flex justify-between items-center">
+        <div className="flex flex-col gap-8 sm:flex-row sm:items-center sm:justify-between">
+          {/* Navigation */}
+          <nav aria-label="Footer" className="flex flex-wrap gap-x-6 gap-y-2">
+            {navigation.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="text-sm font-light text-black/45 transition-colors duration-300 hover:text-black"
+              >
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+
           {/* Social links */}
           <div className="flex gap-3">
             {footerLinks.social.map((social, index) => {
@@ -59,7 +73,7 @@ export default function Footer() {
 
           {/* Copyright */}
           <p className="text-base text-black/30 font-light">
-            © 2026 Godwill Barasa. All rights reserved.
+            © {currentYear} Godwill Barasa. All rights reserved.
           </p>
         </div>
       </div>

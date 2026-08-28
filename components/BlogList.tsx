@@ -4,10 +4,10 @@ import { useRef } from 'react'
 import { motion, useInView } from 'framer-motion'
 import { ArrowUpRight } from 'lucide-react'
 import Link from 'next/link'
-import { BlogPost } from '@/lib/mdx'
+import type { PostSummary } from '@/lib/sanity/types'
 
 interface BlogListProps {
-  posts: BlogPost[]
+  posts: PostSummary[]
   showHeader?: boolean
 }
 
@@ -68,7 +68,7 @@ export default function BlogList({ posts, showHeader = true }: BlogListProps) {
                 duration: 0.7,
                 ease: [0.16, 1, 0.3, 1],
               }}
-              className="group bg-white"
+              className="group relative bg-white"
             >
               <Link
                 href={`/blog/${post.slug}`}
@@ -78,17 +78,17 @@ export default function BlogList({ posts, showHeader = true }: BlogListProps) {
                   {/* Left: Metadata */}
                   <div className="lg:col-span-3 space-y-4">
                     <div className="text-xs font-medium tracking-wider uppercase text-black/30">
-                      {post.category}
+                      {post.category.title}
                     </div>
                     <time className="block text-sm text-black/40 font-light">
-                      {new Date(post.date).toLocaleDateString('en-US', {
+                      {new Date(post.publishedAt).toLocaleDateString('en-US', {
                         month: 'long',
                         day: 'numeric',
                         year: 'numeric',
                       })}
                     </time>
                     <div className="text-sm text-black/30 font-light">
-                      {post.readTime}
+                      {post.readingTime} min read
                     </div>
                   </div>
 

@@ -27,17 +27,16 @@ export default function DownloadCVModal({ isOpen, onClose }: DownloadCVModalProp
     setError('')
 
     try {
-      // Submit to Netlify Forms
-      const response = await fetch('/', {
+      const response = await fetch('/api/contact', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams({
-          'form-name': 'cv-download',
-          ...formData
-        }).toString()
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ form: 'cv', ...formData }),
       })
-      
-      if (!response.ok) throw new Error('Failed to submit form')
+
+      if (!response.ok) {
+        const { error: reason } = await response.json().catch(() => ({ error: null }))
+        throw new Error(reason ?? 'Failed to submit form')
+      }
 
       setIsSuccess(true)
       setTimeout(() => {
@@ -46,8 +45,7 @@ export default function DownloadCVModal({ isOpen, onClose }: DownloadCVModalProp
         setFormData({ name: '', email: '' })
       }, 2000)
     } catch (err) {
-      setError('Something went wrong. Please try again.')
-      console.error('Error sending CV:', err)
+      setError(err instanceof Error ? err.message : 'Something went wrong. Please try again.')
     } finally {
       setIsSubmitting(false)
     }
@@ -165,17 +163,16 @@ export default function DownloadCVModal({ isOpen, onClose }: DownloadCVModalProp
                         </div>
 
                         {/* Form */}
-                        <form 
-                          name="cv-download" 
-                          method="POST" 
-                          data-netlify="true"
-                          data-netlify-honeypot="bot-field"
-                          onSubmit={handleSubmit}
-                          className="space-y-5"
-                        >
-                          {/* Hidden fields for Netlify */}
-                          <input type="hidden" name="form-name" value="cv-download" />
-                          <input type="hidden" name="bot-field" />
+                        <form onSubmit={handleSubmit} className="space-y-5">
+                          {/* Honeypot: hidden from people, tempting to bots. */}
+                          <input
+                            type="text"
+                            name="company"
+                            tabIndex={-1}
+                            autoComplete="off"
+                            aria-hidden="true"
+                            className="hidden"
+                          />
                           
                           {/* Name field */}
                           <div>

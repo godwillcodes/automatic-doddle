@@ -41,15 +41,12 @@ export default function Contact() {
     setError('')
     
     try {
-      const response = await fetch('/', {
+      const response = await fetch('/api/contact', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams({
-          'form-name': 'contact',
-          ...formData
-        }).toString()
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ form: 'contact', ...formData }),
       })
-      
+
       if (response.ok) {
         setIsSuccess(true)
         setFormData({ name: '', email: '', message: '' })
@@ -57,7 +54,7 @@ export default function Contact() {
       } else {
         throw new Error('Form submission failed')
       }
-    } catch (err) {
+    } catch {
       setError('Something went wrong. Please try again.')
     } finally {
       setIsSubmitting(false)
@@ -93,11 +90,11 @@ export default function Contact() {
               </motion.div>
               
               <h2 className="text-5xl sm:text-6xl lg:text-7xl font-semibold tracking-tight text-black mb-6 leading-[1.1]">
-                Let's Talk
+                Let&apos;s Talk
               </h2>
               
               <p className="text-xl sm:text-2xl text-black/50 leading-relaxed font-light">
-                Have a project in mind? Let's discuss how we can work together.
+                Have a project in mind? Let&apos;s discuss how we can work together.
               </p>
             </div>
 
@@ -179,18 +176,17 @@ export default function Contact() {
             transition={{ delay: 0.2, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             className="lg:col-span-7"
           >
-            <form 
-              name="contact" 
-              method="POST" 
-              data-netlify="true"
-              data-netlify-honeypot="bot-field"
-              onSubmit={handleSubmit}
-              className="space-y-6"
-            >
-              {/* Hidden fields for Netlify */}
-              <input type="hidden" name="form-name" value="contact" />
-              <input type="hidden" name="bot-field" />
-              
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Honeypot: hidden from people, tempting to bots. */}
+              <input
+                type="text"
+                name="company"
+                tabIndex={-1}
+                autoComplete="off"
+                aria-hidden="true"
+                className="hidden"
+              />
+
               <div className="space-y-5">
                 <div>
                   <label htmlFor="name" className="block text-sm font-medium text-black/60 mb-2">
@@ -273,7 +269,7 @@ export default function Contact() {
                   className="p-5 rounded-2xl bg-black/5 border border-black/10"
                 >
                   <p className="text-sm text-black/60 font-light">
-                    Thank you for reaching out. I'll get back to you soon.
+                    Thank you for reaching out. I&apos;ll get back to you soon.
                   </p>
                 </motion.div>
               )}

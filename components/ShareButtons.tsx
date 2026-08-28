@@ -1,6 +1,8 @@
 'use client'
 
 import { useState } from 'react'
+
+import { useClientFeature } from '@/lib/use-client-feature'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Share2, Twitter, Linkedin, Link2, Check, Mail } from 'lucide-react'
 
@@ -12,7 +14,9 @@ interface ShareButtonsProps {
 
 export default function ShareButtons({ title, url, description }: ShareButtonsProps) {
   const [copied, setCopied] = useState(false)
-  const [isExpanded, setIsExpanded] = useState(false)
+  // navigator doesn't exist on the server, so reading it during render would
+  // guarantee a hydration mismatch React will not patch up.
+  const canNativeShare = useClientFeature(() => 'share' in navigator)
 
   const encodedTitle = encodeURIComponent(title)
   const encodedUrl = encodeURIComponent(url)
@@ -109,13 +113,11 @@ export default function ShareButtons({ title, url, description }: ShareButtonsPr
           </motion.button>
 
           {/* Native share (mobile) */}
-          {typeof navigator !== 'undefined' && 'share' in navigator && (
+          {canNativeShare && (
             <motion.button
               onClick={() => {
-                navigator.share({
-                  title,
-                  text: description,
-                  url,
+                navigator.share({ title, text: description, url }).catch(() => {
+                  // The user dismissed the share sheet. Not an error.
                 })
               }}
               className="p-3 rounded-full bg-black/5 text-black/60 hover:bg-black/10 hover:text-black transition-colors sm:hidden"

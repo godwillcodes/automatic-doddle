@@ -1,24 +1,26 @@
+import type { Metadata } from 'next'
+
 import Hero from '@/components/Hero'
 import Experience from '@/components/Experience'
-import { Metadata } from 'next'
+import LatestWriting from '@/components/LatestWriting'
+import { getAllPosts } from '@/lib/sanity/queries'
+import { absoluteUrl } from '@/lib/site'
 
 export const metadata: Metadata = {
-  title: 'Godwill Barasa | Senior Full-Stack Engineer (React, Next.js, Laravel, WordPress)',
-  description: 'Senior Full-Stack Engineer building high-performance web applications with React, Next.js, TypeScript, Laravel, and WordPress. Focused on Core Web Vitals, experimentation, analytics, and CI/CD.',
-  alternates: {
-    canonical: '/',
-  },
-  openGraph: {
-    url: '/',
-    type: 'website',
-  },
+  // Only the canonical is overridden here. Setting `openGraph` on a page
+  // REPLACES the parent object rather than merging into it, which is how the
+  // homepage previously lost every og:image the layout declared.
+  alternates: { canonical: absoluteUrl('/') },
 }
 
-export default function Home() {
+export default async function Home() {
+  const posts = await getAllPosts()
+
   return (
-    <div className="min-h-screen bg-white" itemScope itemType="https://schema.org/WebPage">
+    <div className="min-h-screen bg-white">
       <Hero />
       <Experience />
+      <LatestWriting posts={posts.slice(0, 3)} />
     </div>
   )
 }
