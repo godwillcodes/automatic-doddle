@@ -3,7 +3,7 @@
  * Open Graph images, JSON-LD and share links all read from here, so moving the
  * site to a new domain is a single environment variable.
  */
-const FALLBACK_URL = 'https://godwillbarasa.netlify.app'
+const FALLBACK_URL = 'https://godwillbarasa.com'
 
 function resolveUrl(): string {
   const explicit = process.env.NEXT_PUBLIC_SITE_URL
