@@ -5,7 +5,8 @@ import './globals.css'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import { PersonGraph } from '@/components/StructuredData'
-import { site, siteUrl } from '@/lib/site'
+import { primaryPhotograph } from '@/lib/person'
+import { absoluteUrl, site, siteUrl } from '@/lib/site'
 
 // Archivo variable, with the width axis: display type and numerals use the
 // condensed cut (font-stretch in globals.css), body text the normal width.
@@ -46,6 +47,17 @@ export const metadata: Metadata = {
     siteName: site.name,
     title: site.title,
     description: site.description,
+    /* The generated card first, then the photograph. A crawler looking for a
+       likeness gets one; a social preview gets the designed card. */
+    images: [
+      { url: absoluteUrl('/opengraph-image'), width: 1200, height: 630, alt: site.title },
+      {
+        url: absoluteUrl(primaryPhotograph.src),
+        width: 640,
+        height: 640,
+        alt: primaryPhotograph.alt,
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',

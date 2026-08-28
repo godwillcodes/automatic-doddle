@@ -168,3 +168,52 @@ export const faqs: Faq[] = [
       'He built and operates SpaceYako, a property platform for Kenya; rebuilt Business Report, an independent Kenyan business publication, as a server-rendered newsroom; migrated Khendo FM, a radio station in Western Kenya and the North Rift, off WordPress; and rebuilt cofek.africa for the Consumers Federation of Kenya.',
   },
 ]
+
+export interface Photograph {
+  src: string
+  /** Truthful description of what is actually in the frame. */
+  alt: string
+  caption: string
+}
+
+/**
+ * The photographs, with descriptive filenames and alt text.
+ *
+ * Alt text describes what is genuinely in each frame. Google Images reads it
+ * alongside the filename and the surrounding copy, and a caption that
+ * describes a different photograph is worse than none: it teaches a crawler
+ * the wrong thing about the person.
+ *
+ * `godwill-barasa-portrait.jpg` is first because it is the clearest view of
+ * his face, and it is the one asserted as the Person entity's image.
+ */
+export const photographs: Photograph[] = [
+  {
+    src: '/photographs/godwill-barasa-portrait.jpg',
+    alt: 'Godwill Barasa seated in an armchair in a blue-lit interior in Nairobi',
+    caption: 'Nairobi',
+  },
+  {
+    src: '/photographs/godwill-barasa-techsgiving-nairobi.jpg',
+    alt: 'Godwill Barasa at the Techsgiving technology event in Nairobi, standing in front of a sponsor backdrop',
+    caption: 'Techsgiving, Nairobi',
+  },
+  {
+    src: '/photographs/godwill-barasa-technology-event-nairobi.jpg',
+    alt: 'Godwill Barasa with three other attendees at a technology event in Nairobi',
+    caption: 'Technology event, Nairobi',
+  },
+  {
+    src: '/photographs/godwill-barasa-nairobi.jpg',
+    alt: 'Godwill Barasa beside a white grand piano in a mirrored, blue-lit room',
+    caption: 'Nairobi',
+  },
+  {
+    src: '/photographs/godwill-barasa-nairobi-hotel-lobby.jpg',
+    alt: 'Godwill Barasa standing in a Nairobi hotel lobby beside a decorated Christmas tree',
+    caption: 'Nairobi',
+  },
+]
+
+/** The single image asserted as the Person entity's likeness. */
+export const primaryPhotograph = photographs[0]
