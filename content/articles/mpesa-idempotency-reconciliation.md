@@ -260,4 +260,4 @@ None of this is exotic. It is the same double-entry discipline accountants worke
 
 ---
 
-Part of a series on production M-Pesa integration: [the Next.js integration guide](/blog/mpesa-daraja-api-nextjs), [why callbacks go missing](/blog/mpesa-callback-not-received), and [running STK Push on serverless](/blog/mpesa-stk-push-serverless).
+Part of a series on production M-Pesa integration: [the Next.js integration guide](/blog/mpesa-daraja-api-nextjs), [why callbacks go missing](/blog/mpesa-callback-not-received), [running STK Push on serverless](/blog/mpesa-stk-push-serverless), [B2C payouts](/blog/mpesa-b2c-payouts), and [refunds and reversals](/blog/mpesa-refunds-and-reversals).

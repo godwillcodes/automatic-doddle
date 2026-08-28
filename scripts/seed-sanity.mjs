@@ -276,6 +276,14 @@ const CATEGORIES = {
     'Fintech',
     'Payments and financial infrastructure in emerging markets.'
   ),
+  'Editorial Platforms': categoryDoc(
+    'Editorial Platforms',
+    'Newsroom systems: publishing under deadline, archives that survive a migration, and pages that hold up when a story breaks.'
+  ),
+  'Broadcast Systems': categoryDoc(
+    'Broadcast Systems',
+    'Web systems for radio and streaming: reading on-air state from the broadcast rather than retyping it into a CMS.'
+  ),
 }
 
 async function main() {

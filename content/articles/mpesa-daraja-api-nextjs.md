@@ -397,3 +397,5 @@ And `timeout` is not `failed`. A timed-out push can still be paid — the custom
 **Someone will pay twice.** Not often, but at any volume it happens — a double-tap, a retried request, a duplicated callback. Decide now whether your system refunds, credits, or absorbs it, because deciding during the incident goes badly.
 
 If you are starting from zero, the next thing to get right is your callback endpoint, because nothing else works until that does. [Start there](/blog/mpesa-callback-not-received) — and if you are on Vercel, Netlify, or anything else without a long-lived server, read [the serverless notes](/blog/mpesa-stk-push-serverless) before you design the flow.
+
+Everything above is collection. The rest of the money's lifecycle has its own articles: [getting the shortcode approved for production](/blog/mpesa-daraja-production-go-live), [paying money back out with B2C](/blog/mpesa-b2c-payouts), and [refunds and reversals](/blog/mpesa-refunds-and-reversals).
