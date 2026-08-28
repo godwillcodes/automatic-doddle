@@ -24,7 +24,7 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
   return (
-    <div className=" bg-white py-20">
+    <div className="bg-paper">
       <Contact />
     </div>
   )

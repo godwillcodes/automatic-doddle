@@ -37,7 +37,7 @@ export default async function OpenGraphImage({
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'space-between',
-          background: '#ffffff',
+          background: '#f4f2ed',
           padding: '72px',
           fontFamily: 'sans-serif',
         }}
@@ -47,18 +47,18 @@ export default async function OpenGraphImage({
             style={{
               display: 'flex',
               padding: '8px 20px',
-              border: '1px solid rgba(0,0,0,0.12)',
+              border: '1px solid #cec8bc',
               borderRadius: '999px',
               fontSize: 22,
               letterSpacing: '0.08em',
               textTransform: 'uppercase',
-              color: 'rgba(0,0,0,0.55)',
+              color: '#5f5c56',
             }}
           >
             {category}
           </div>
           {readingTime ? (
-            <div style={{ display: 'flex', fontSize: 22, color: 'rgba(0,0,0,0.35)' }}>
+            <div style={{ display: 'flex', fontSize: 22, color: '#5f5c56' }}>
               {readingTime} min read
             </div>
           ) : null}
@@ -71,7 +71,7 @@ export default async function OpenGraphImage({
             fontWeight: 600,
             lineHeight: 1.1,
             letterSpacing: '-0.03em',
-            color: '#000000',
+            color: '#101012',
             maxWidth: '1000px',
           }}
         >
@@ -83,14 +83,14 @@ export default async function OpenGraphImage({
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            borderTop: '1px solid rgba(0,0,0,0.08)',
+            borderTop: '2px solid #e3a102',
             paddingTop: '32px',
           }}
         >
-          <div style={{ display: 'flex', fontSize: 28, fontWeight: 600, color: '#000000' }}>
+          <div style={{ display: 'flex', fontSize: 28, fontWeight: 600, color: '#101012' }}>
             Godwill Barasa
           </div>
-          <div style={{ display: 'flex', fontSize: 26, color: 'rgba(0,0,0,0.4)' }}>
+          <div style={{ display: 'flex', fontSize: 26, color: '#855e00' }}>
             godwillbarasa.com
           </div>
         </div>

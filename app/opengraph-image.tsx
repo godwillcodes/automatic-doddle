@@ -14,7 +14,7 @@ export default function OpenGraphImage() {
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
-          background: '#ffffff',
+          background: '#f4f2ed',
           padding: '80px',
           fontFamily: 'sans-serif',
         }}
@@ -25,7 +25,7 @@ export default function OpenGraphImage() {
             fontSize: 80,
             fontWeight: 600,
             letterSpacing: '-0.03em',
-            color: '#000000',
+            color: '#101012',
           }}
         >
           Godwill Barasa
@@ -36,7 +36,7 @@ export default function OpenGraphImage() {
             marginTop: '24px',
             fontSize: 40,
             lineHeight: 1.3,
-            color: 'rgba(0,0,0,0.45)',
+            color: '#5f5c56',
             maxWidth: '900px',
           }}
         >
@@ -47,7 +47,7 @@ export default function OpenGraphImage() {
             display: 'flex',
             marginTop: '56px',
             fontSize: 28,
-            color: 'rgba(0,0,0,0.35)',
+            color: '#5f5c56',
           }}
         >
           godwillbarasa.com

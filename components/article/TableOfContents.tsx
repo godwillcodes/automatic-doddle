@@ -40,8 +40,8 @@ export default function TableOfContents({ headings }: { headings: Heading[] }) {
   if (headings.length < 3) return null
 
   return (
-    <nav aria-label="On this page" className="border-l border-black/10 pl-6">
-      <p className="mb-4 flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-black/40">
+    <nav aria-label="On this page" className="rule-l pl-6">
+      <p className="meta mb-4 flex items-center gap-2">
         <List size={14} strokeWidth={2} />
         On this page
       </p>
@@ -53,8 +53,8 @@ export default function TableOfContents({ headings }: { headings: Heading[] }) {
               aria-current={activeId === heading.id ? 'location' : undefined}
               className={`block text-sm leading-snug transition-colors ${
                 activeId === heading.id
-                  ? 'font-medium text-black'
-                  : 'text-black/45 hover:text-black/75'
+                  ? 'font-[480] text-ink'
+                  : 'text-stone hover:text-ink'
               }`}
             >
               {heading.text}

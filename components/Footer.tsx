@@ -1,80 +1,54 @@
-'use client'
-
-import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { Github, Linkedin, FileText } from 'lucide-react'
+
+import { contact } from '@/lib/record'
+
+const NAV = [
+  { label: 'Work', href: '/#work' },
+  { label: 'Experience', href: '/#experience' },
+  { label: 'Open Source', href: '/#lab' },
+  { label: 'Writing', href: '/blog' },
+  { label: 'About', href: '/about' },
+  { label: 'Contact', href: '/contact' },
+]
 
 export default function Footer() {
-  const currentYear = new Date().getFullYear()
-
-  const navigation = [
-    { label: 'Home', href: '/' },
-    { label: 'About', href: '/about' },
-    { label: 'Skills', href: '/skills' },
-    { label: 'Blog', href: '/blog' },
-    { label: 'Contact', href: '/contact' },
-  ]
-
-  const footerLinks = {
-    social: [
-      { label: 'GitHub', href: 'https://github.com/godwillcodes', icon: Github },
-      { label: 'LinkedIn', href: 'https://www.linkedin.com/in/godwillcodes/', icon: Linkedin },
-      { label: 'Medium', href: 'https://iamgodwillb.medium.com/', icon: FileText },
-    ],
-  }
+  const year = new Date().getFullYear()
 
   return (
-    <footer className="relative bg-white border-t border-black/5">
-      {/* Subtle background grid */}
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.015)_1px,transparent_1px)] bg-[size:80px_80px] [mask-image:radial-gradient(ellipse_100%_100%_at_50%_0%,black_20%,transparent_70%)]" />
-      
-      <div className="relative mx-auto max-w-7xl px-6 sm:px-8 lg:px-0 py-6">
-        <div className="flex flex-col gap-8 sm:flex-row sm:items-center sm:justify-between">
-          {/* Navigation */}
+    <footer className="no-print rule-t bg-paper">
+      <div className="mx-auto max-w-7xl px-6 py-10 sm:px-8">
+        <div className="flex flex-col gap-8 md:flex-row md:items-baseline md:justify-between">
+          <div>
+            <p className="display text-base">Godwill Barasa</p>
+            <p className="meta mt-1">Senior Web Engineer · Nairobi / Remote</p>
+          </div>
+
           <nav aria-label="Footer" className="flex flex-wrap gap-x-6 gap-y-2">
-            {navigation.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="text-sm font-light text-black/45 transition-colors duration-300 hover:text-black"
-              >
+            {NAV.map((item) => (
+              <Link key={item.href} href={item.href} className="nav-link text-sm">
+                <span className="dot" aria-hidden="true" />
                 {item.label}
               </Link>
             ))}
           </nav>
+        </div>
 
-          {/* Social links */}
-          <div className="flex gap-3">
-            {footerLinks.social.map((social, index) => {
-              const Icon = social.icon
-              return (
-                <motion.a
-                  key={social.label}
-                  href={social.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ 
-                    delay: index * 0.05,
-                    duration: 0.5,
-                    ease: [0.16, 1, 0.3, 1]
-                  }}
-                  className="w-11 h-11 rounded-2xl border border-black/10 flex items-center justify-center text-black/40 hover:text-black hover:border-black/20 hover:bg-black/5 transition-all duration-300"
-                  whileHover={{ scale: 1.05, y: -2 }}
-                  whileTap={{ scale: 0.95 }}
-                  aria-label={social.label}
-                >
-                  <Icon size={18} strokeWidth={1.5} />
-                </motion.a>
-              )
-            })}
+        <div className="rule-t mt-8 flex flex-col gap-3 pt-6 sm:flex-row sm:items-baseline sm:justify-between">
+          <div className="flex flex-wrap gap-x-6 gap-y-2">
+            <a href={`mailto:${contact.email}`} className="meta meta-ink">
+              {contact.email}
+            </a>
+            <a href={contact.github.href} target="_blank" rel="noopener noreferrer" className="meta">
+              GitHub
+            </a>
+            <a href={contact.linkedin.href} target="_blank" rel="noopener noreferrer" className="meta">
+              LinkedIn
+            </a>
+            <a href={contact.medium.href} target="_blank" rel="noopener noreferrer" className="meta">
+              Medium
+            </a>
           </div>
-
-          {/* Copyright */}
-          <p className="text-base text-black/30 font-light">
-            © {currentYear} Godwill Barasa. All rights reserved.
-          </p>
+          <p className="meta">© {year} Godwill Barasa</p>
         </div>
       </div>
     </footer>

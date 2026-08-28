@@ -1,39 +1,42 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { motion, useScroll, useSpring } from 'framer-motion'
+import { useEffect, useRef } from 'react'
 
+/**
+ * A hairline of accent along the top edge, driven by a passive scroll
+ * listener writing to a transform — no re-renders, no animation library.
+ */
 export default function ReadingProgress() {
-  const [isVisible, setIsVisible] = useState(false)
-  const { scrollYProgress } = useScroll()
-  
-  const scaleX = useSpring(scrollYProgress, {
-    stiffness: 100,
-    damping: 30,
-    restDelta: 0.001,
-  })
+  const barRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const handleScroll = () => {
-      // Show progress bar after scrolling past the header (200px)
-      setIsVisible(window.scrollY > 200)
+    const bar = barRef.current
+    if (!bar) return
+
+    let frame = 0
+    const update = () => {
+      frame = 0
+      const max = document.documentElement.scrollHeight - window.innerHeight
+      const progress = max > 0 ? Math.min(window.scrollY / max, 1) : 0
+      bar.style.transform = `scaleX(${progress})`
+    }
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(update)
     }
 
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    return () => window.removeEventListener('scroll', handleScroll)
+    update()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll, { passive: true })
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+      if (frame) cancelAnimationFrame(frame)
+    }
   }, [])
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: isVisible ? 1 : 0 }}
-      transition={{ duration: 0.3 }}
-      className="fixed top-0 left-0 right-0 z-50 h-1 bg-black/5"
-    >
-      <motion.div
-        className="h-full bg-black origin-left"
-        style={{ scaleX }}
-      />
-    </motion.div>
+    <div aria-hidden="true" className="no-print fixed inset-x-0 top-0 z-[60] h-[2px]">
+      <div ref={barRef} className="h-full origin-left bg-accent" style={{ transform: 'scaleX(0)' }} />
+    </div>
   )
 }

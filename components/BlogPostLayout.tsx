@@ -1,6 +1,5 @@
 import Link from 'next/link'
 import type { ReactNode } from 'react'
-import { ArrowLeft, ArrowUpRight, Calendar, Clock } from 'lucide-react'
 
 import type { PostSummary } from '@/lib/sanity/types'
 import ReadArticle from './ReadArticle'
@@ -26,13 +25,17 @@ interface BlogPostLayoutProps {
 }
 
 function formatDate(value: string) {
-  return new Date(value).toLocaleDateString('en-US', {
-    month: 'long',
+  return new Date(value).toLocaleDateString('en-GB', {
     day: 'numeric',
+    month: 'long',
     year: 'numeric',
   })
 }
 
+/**
+ * Article page: reading quality first. Wide margins, one measure, mono
+ * metadata, no sidebar clutter beyond the section index.
+ */
 export default function BlogPostLayout({
   post,
   relatedPosts,
@@ -42,120 +45,76 @@ export default function BlogPostLayout({
   children,
 }: BlogPostLayoutProps) {
   return (
-    <article className="relative min-h-screen bg-white text-black">
+    <article className="bg-paper text-ink">
       <ReadingProgress />
 
-      <div className="relative border-b border-black/5 bg-white">
-        <div className="mx-auto max-w-7xl px-6 py-8 sm:px-8 lg:px-0">
-          <Link
-            href="/blog"
-            className="inline-flex items-center gap-2 text-sm font-medium text-black transition-colors duration-300 hover:text-black/60"
-          >
-            <ArrowLeft size={16} strokeWidth={2} />
-            <span>Back to articles</span>
-          </Link>
-        </div>
-      </div>
-
-      <header className="relative bg-white pt-16 pb-12 lg:pt-24 lg:pb-16">
-        <div className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-0">
-          <div className="mb-8">
-            <Link
-              href="/blog"
-              className="inline-block rounded-full border border-black/10 bg-black/[0.02] px-4 py-1.5 transition-colors hover:border-black/20"
-            >
-              <span className="text-xs font-medium uppercase tracking-wider text-black/60">
-                {post.category.title}
-              </span>
+      <div className="mx-auto max-w-7xl px-6 sm:px-8">
+        {/* Issue header */}
+        <header className="rule-b pb-10 pt-6">
+          <div className="flex flex-wrap items-baseline justify-between gap-3 pb-8">
+            <Link href="/blog" className="meta meta-ink">
+              ← Field notes
             </Link>
-          </div>
-
-          <h1 className="mb-10 max-w-4xl text-3xl font-semibold leading-[1.1] tracking-tight text-black sm:text-4xl lg:text-5xl">
-            {post.title}
-          </h1>
-
-          <p className="mb-10 max-w-3xl text-lg font-light leading-relaxed text-black/60 sm:text-xl">
-            {post.excerpt}
-          </p>
-
-          <div className="flex flex-wrap items-center gap-6 text-sm font-light text-black/40">
-            <span className="font-medium text-black/70">{post.author.name}</span>
-            <span className="flex items-center gap-2">
-              <Calendar size={14} strokeWidth={2} />
-              <time dateTime={post.publishedAt}>{formatDate(post.publishedAt)}</time>
-            </span>
-            <span className="flex items-center gap-2">
-              <Clock size={14} strokeWidth={2} />
+            <p className="meta">
+              {post.category.title}
+              <span aria-hidden="true"> · </span>
               {post.readingTime} min read
-            </span>
+            </p>
           </div>
-        </div>
-      </header>
 
-      <div className="relative bg-white pb-24">
-        <div className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-0">
-          <div className="lg:grid lg:grid-cols-12 lg:gap-16">
-            <div className="lg:col-span-8">
-              {readableText ? (
-                <ReadArticle title={post.title} text={readableText} />
-              ) : null}
+          <h1 className="display max-w-4xl text-[clamp(2rem,5vw,3.8rem)]">{post.title}</h1>
 
+          <p className="prose-body mt-6 max-w-3xl text-[1.05rem]">{post.excerpt}</p>
+
+          <div className="meta mt-8 flex flex-wrap items-baseline gap-x-6 gap-y-2">
+            <span className="meta-ink">{post.author.name}</span>
+            <time dateTime={post.publishedAt}>{formatDate(post.publishedAt)}</time>
+            {post.updatedAt && post.updatedAt !== post.publishedAt ? (
+              <span>Revised {formatDate(post.updatedAt)}</span>
+            ) : null}
+          </div>
+        </header>
+
+        <div className="py-10 lg:grid lg:grid-cols-12 lg:gap-14">
+          <div className="lg:col-span-8">
+            {readableText ? <ReadArticle title={post.title} text={readableText} /> : null}
+
+            <div className="article-prose max-w-none">{children}</div>
+
+            <div className="rule-t mt-14 pt-8">
               <ShareButtons title={post.title} url={url} description={post.excerpt} />
-
-              <div className="max-w-none">{children}</div>
-
-              <div className="mt-16 border-t border-black/10 pt-12">
-                <ShareButtons title={post.title} url={url} description={post.excerpt} />
-              </div>
-
-              <NewsletterCTA />
             </div>
 
-            <aside className="hidden lg:col-span-4 lg:block">
-              <div className="sticky top-28">
-                <TableOfContents headings={headings} />
-              </div>
-            </aside>
+            <NewsletterCTA />
           </div>
+
+          <aside className="hidden lg:col-span-4 lg:block">
+            <div className="sticky top-24 space-y-10">
+              <TableOfContents headings={headings} />
+              <ShareButtons title={post.title} url={url} description={post.excerpt} compact />
+            </div>
+          </aside>
         </div>
       </div>
 
       {relatedPosts.length > 0 && (
-        <div className="relative border-t border-black/5 py-20 lg:py-28">
-          <div className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-0">
-            <h2 className="mb-12 text-xl font-semibold tracking-tight text-black sm:text-2xl">
-              Related reading
-            </h2>
-
-            <div className="grid gap-px bg-black/5 sm:grid-cols-2">
+        <div className="rule-t">
+          <div className="mx-auto max-w-7xl px-6 py-14 sm:px-8">
+            <p className="meta mb-8">
+              <span className="meta-accent">Related</span> — from the same notebook
+            </p>
+            <div className="grid gap-10 sm:grid-cols-2">
               {relatedPosts.map((related) => (
-                <div
-                  key={related.slug}
-                  className="group bg-white p-8 transition-colors duration-500 hover:bg-black/[0.01] lg:p-10"
-                >
-                  <Link href={`/blog/${related.slug}`}>
-                    <div className="mb-4 text-xs font-medium uppercase tracking-wider text-black/30">
-                      {related.category.title}
-                    </div>
-
-                    <h3 className="mb-4 text-lg font-semibold leading-tight text-black transition-colors duration-300 group-hover:text-black/70 sm:text-xl">
-                      {related.title}
-                    </h3>
-
-                    <p className="mb-6 text-sm font-light leading-relaxed text-black/50">
-                      {related.excerpt}
-                    </p>
-
-                    <div className="flex items-center gap-2 text-sm font-medium text-black/60">
-                      <span>Read article</span>
-                      <ArrowUpRight
-                        size={16}
-                        strokeWidth={2}
-                        className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-                      />
-                    </div>
-                  </Link>
-                </div>
+                <Link key={related.slug} href={`/blog/${related.slug}`} className="group rule-t pt-6">
+                  <p className="meta">{related.category.title}</p>
+                  <h3 className="display mt-3 text-[clamp(1.2rem,2.2vw,1.6rem)] transition-colors group-hover:text-stone">
+                    {related.title}
+                  </h3>
+                  <p className="prose-body mt-3 text-sm">{related.excerpt}</p>
+                  <p className="meta meta-ink mt-4">
+                    Read article <span className="text-accent-lo">→</span>
+                  </p>
+                </Link>
               ))}
             </div>
           </div>

@@ -1,163 +1,84 @@
 'use client'
 
 import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { Mail, ArrowRight, Check, Loader2 } from 'lucide-react'
 
-interface NewsletterCTAProps {
-  title?: string
-  description?: string
-}
-
-export default function NewsletterCTA({ 
-  title = "Stay in the loop",
-  description = "Get notified when I publish new articles. No spam, unsubscribe anytime."
-}: NewsletterCTAProps) {
+export default function NewsletterCTA() {
   const [email, setEmail] = useState('')
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
-  const [message, setMessage] = useState('')
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    
-    if (!email || !email.includes('@')) {
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault()
+    if (!email.includes('@')) {
       setStatus('error')
-      setMessage('Please enter a valid email address')
       return
     }
 
     setStatus('loading')
-
     try {
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ form: 'newsletter', email }),
       })
-      
-      if (response.ok) {
-        setStatus('success')
-        setMessage('Thanks for subscribing! You\'ll hear from me soon.')
-        setEmail('')
-      } else {
-        throw new Error('Form submission failed')
-      }
+      if (!response.ok) throw new Error('failed')
+      setStatus('success')
+      setEmail('')
     } catch {
       setStatus('error')
-      setMessage('Something went wrong. Please try again.')
     }
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-      className="my-16 p-8 sm:p-10 rounded-2xl border border-black/10 bg-gradient-to-br from-black/[0.02] to-transparent"
-    >
-      <div className="flex flex-col sm:flex-row gap-8 items-start">
-        {/* Icon */}
-        <div className="flex-shrink-0 w-14 h-14 rounded-full bg-black/5 flex items-center justify-center">
-          <Mail size={24} className="text-black/60" strokeWidth={2} />
-        </div>
+    <aside aria-label="Newsletter" className="rule-t rule-b mt-14 py-8">
+      <p className="meta">
+        <span className="meta-accent">Dispatch</span> — new field notes, by email
+      </p>
 
-        {/* Content */}
-        <div className="flex-1">
-          <h3 className="text-xl sm:text-2xl font-semibold text-black mb-2">
-            {title}
-          </h3>
-          <p className="text-black/50 mb-6 leading-relaxed">
-            {description}
-          </p>
+      {status === 'success' ? (
+        <p className="prose-body mt-4" role="status">
+          Subscribed. New pieces will find you.
+        </p>
+      ) : (
+        <form onSubmit={handleSubmit} className="mt-5 flex max-w-md items-baseline gap-4">
+          {/* Honeypot: hidden from people, tempting to bots. */}
+          <input
+            type="text"
+            name="company"
+            tabIndex={-1}
+            autoComplete="off"
+            aria-hidden="true"
+            className="hidden"
+          />
+          <label htmlFor="newsletter-email" className="sr-only">
+            Email address
+          </label>
+          <input
+            id="newsletter-email"
+            type="email"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            disabled={status === 'loading'}
+            placeholder="you@example.com"
+            className="rule-b w-full border-0 bg-transparent py-2 text-base text-ink placeholder:text-stone/60 focus:outline-none"
+          />
+          <button
+            type="submit"
+            disabled={status === 'loading'}
+            className="meta meta-ink shrink-0 transition-colors hover:text-accent-lo disabled:opacity-50"
+          >
+            {status === 'loading' ? 'Sending…' : 'Subscribe →'}
+          </button>
+        </form>
+      )}
 
-          {/* Form */}
-          <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3">
-            {/* Honeypot: hidden from people, tempting to bots. */}
-            <input
-              type="text"
-              name="company"
-              tabIndex={-1}
-              autoComplete="off"
-              aria-hidden="true"
-              className="hidden"
-            />
-            
-            <div className="relative flex-1">
-              <input
-                type="email"
-                name="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="your@email.com"
-                disabled={status === 'loading' || status === 'success'}
-                className="w-full px-5 py-3.5 rounded-xl border border-black/10 bg-white text-black placeholder:text-black/30 focus:outline-none focus:ring-2 focus:ring-black/10 focus:border-transparent transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                required
-              />
-            </div>
-            
-            <motion.button
-              type="submit"
-              disabled={status === 'loading' || status === 'success'}
-              className="flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-black text-white font-medium hover:bg-black/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              whileHover={{ scale: status === 'idle' ? 1.02 : 1 }}
-              whileTap={{ scale: status === 'idle' ? 0.98 : 1 }}
-            >
-              <AnimatePresence mode="wait">
-                {status === 'loading' ? (
-                  <motion.div
-                    key="loading"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    className="flex items-center gap-2"
-                  >
-                    <Loader2 size={18} className="animate-spin" />
-                    <span>Subscribing...</span>
-                  </motion.div>
-                ) : status === 'success' ? (
-                  <motion.div
-                    key="success"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    className="flex items-center gap-2"
-                  >
-                    <Check size={18} />
-                    <span>Subscribed!</span>
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    key="idle"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    className="flex items-center gap-2"
-                  >
-                    <span>Subscribe</span>
-                    <ArrowRight size={18} />
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.button>
-          </form>
-
-          {/* Status message */}
-          <AnimatePresence>
-            {message && (
-              <motion.p
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                className={`mt-4 text-sm ${
-                  status === 'success' ? 'text-emerald-600' : 'text-red-500'
-                }`}
-              >
-                {message}
-              </motion.p>
-            )}
-          </AnimatePresence>
-        </div>
-      </div>
-    </motion.div>
+      {status === 'error' ? (
+        <p className="meta mt-3 text-accent-lo" role="alert">
+          That didn&apos;t go through — check the address and try again.
+        </p>
+      ) : (
+        <p className="meta mt-3">No spam. Unsubscribe anytime.</p>
+      )}
+    </aside>
   )
 }

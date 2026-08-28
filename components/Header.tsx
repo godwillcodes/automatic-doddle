@@ -1,227 +1,165 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import Link from 'next/link'
-import { motion, AnimatePresence } from 'framer-motion'
-import { Menu, X, Download } from 'lucide-react'
-import DownloadCVModal from './DownloadCVModal'
+import { usePathname } from 'next/navigation'
 
-const navItems = [
-  { name: 'About', href: '/about' },
-  { name: 'Skills', href: '/skills' },
-  { name: 'Blog', href: '/blog' },
-  { name: 'Contact', href: '/contact' },
+import { contact } from '@/lib/record'
+
+const NAV = [
+  { index: '01', label: 'Work', href: '/#work' },
+  { index: '02', label: 'Experience', href: '/#experience' },
+  { index: '03', label: 'Open Source', href: '/#lab' },
+  { index: '04', label: 'Writing', href: '/blog' },
+  { index: '05', label: 'About', href: '/about' },
+  { index: '06', label: 'Contact', href: '/contact' },
+]
+
+const SOCIAL = [
+  { label: 'GitHub', href: contact.github.href },
+  { label: 'LinkedIn', href: contact.linkedin.href },
+  { label: 'Medium', href: contact.medium.href },
 ]
 
 export default function Header() {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const [isCVModalOpen, setIsCVModalOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const [openedAt, setOpenedAt] = useState<string | null>(null)
+  const pathname = usePathname()
+  // The overlay closes on route change by construction: it is only open for
+  // the pathname it was opened on. No effect, no cascading render.
+  const open = openedAt === pathname
+  const setOpen = useCallback(
+    (next: boolean) => setOpenedAt(next ? pathname : null),
+    [pathname]
+  )
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20)
-    }
-
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
+    const onScroll = () => setScrolled(window.scrollY > 8)
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
   }, [])
+
+  // Escape closes; body scroll freezes while the overlay is up.
+  useEffect(() => {
+    if (!open) return
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setOpen(false)
+    }
+    document.body.style.overflow = 'hidden'
+    window.addEventListener('keydown', onKey)
+    return () => {
+      document.body.style.overflow = ''
+      window.removeEventListener('keydown', onKey)
+    }
+  }, [open, setOpen])
+
+  const isActive = useCallback(
+    (href: string) => {
+      if (href.startsWith('/#')) return false
+      return pathname === href || pathname.startsWith(`${href}/`)
+    },
+    [pathname]
+  )
 
   return (
     <>
-      <motion.header
-        initial={{ y: -100, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ 
-          duration: 0.8, 
-          ease: [0.16, 1, 0.3, 1],
-        }}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-          scrolled 
-            ? 'bg-white/80 backdrop-blur-xl' 
-            : 'bg-white'
+      <header
+        className={`no-print sticky top-0 z-50 bg-paper transition-shadow duration-500 ${
+          scrolled ? 'rule-b' : ''
         }`}
       >
-        <nav className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-0">
-          <div className="flex h-20 items-center justify-between">
-            {/* Logo */}
-            <Link href="/" className="group">
-              <motion.div
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className="text-xl font-semibold tracking-tight text-black transition-colors duration-300 group-hover:text-black/70"
-              >
-                Godwill Barasa
-              </motion.div>
-            </Link>
+        <div className="mx-auto flex max-w-7xl items-baseline justify-between gap-6 px-6 py-4 sm:px-8">
+          <Link href="/" className="group flex items-baseline gap-3">
+            <span className="display text-[1.05rem] tracking-tight">Godwill Barasa</span>
+            <span className="meta hidden sm:inline">Senior Web Engineer</span>
+          </Link>
 
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex md:items-center md:gap-1">
-              {navItems.map((item, index) => (
-                <motion.div
-                  key={item.href}
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ 
-                    delay: index * 0.05 + 0.2,
-                    duration: 0.6,
-                    ease: [0.16, 1, 0.3, 1]
-                  }}
+          <nav aria-label="Primary" className="hidden items-baseline gap-5 md:flex">
+            {NAV.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                aria-current={isActive(item.href) ? 'page' : undefined}
+                className="nav-link text-sm"
+              >
+                <span className="dot" aria-hidden="true" />
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+
+          <button
+            type="button"
+            onClick={() => setOpen(true)}
+            aria-expanded={open}
+            aria-controls="site-index"
+            className="meta meta-ink flex items-center gap-2 md:hidden"
+          >
+            Index
+            <span aria-hidden="true" className="grid gap-[3px]">
+              <span className="block h-px w-4 bg-ink" />
+              <span className="block h-px w-4 bg-ink" />
+              <span className="block h-px w-4 bg-ink" />
+            </span>
+          </button>
+        </div>
+      </header>
+
+      {/* Full-screen index */}
+      <div
+        id="site-index"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Site index"
+        className={`on-ink fixed inset-0 z-[100] flex flex-col transition-opacity duration-500 ${
+          open ? 'opacity-100' : 'pointer-events-none opacity-0'
+        }`}
+        style={{ transitionTimingFunction: 'var(--ease-editorial)' }}
+      >
+        <div className="flex items-baseline justify-between px-6 py-4 sm:px-8">
+          <span className="meta meta-ink">Index</span>
+          <button type="button" onClick={() => setOpen(false)} className="meta meta-ink">
+            Close
+          </button>
+        </div>
+
+        <nav aria-label="Site index" className="flex-1 overflow-y-auto px-6 sm:px-8">
+          <ul>
+            {NAV.map((item) => (
+              <li key={item.href} className="rule-t">
+                <Link
+                  href={item.href}
+                  onClick={() => setOpen(false)}
+                  className="group flex items-baseline gap-5 py-5"
                 >
-                  <Link
-                    href={item.href}
-                    className="relative group px-4 py-2 text-base font-medium transition-colors duration-300"
-                  >
-                    <span className="relative z-10 transition-colors duration-300 text-black/50 group-hover:text-black">
-                      {item.name}
-                    </span>
-                  </Link>
-                </motion.div>
-              ))}
-            </div>
-            
-            {/* Download CV Button - Desktop */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ 
-                delay: navItems.length * 0.05 + 0.2,
-                duration: 0.6,
-                ease: [0.16, 1, 0.3, 1]
-              }}
-              className="hidden md:block"
-            >
-              <motion.button
-                onClick={() => setIsCVModalOpen(true)}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className="px-5 py-2.5 rounded-full bg-black text-white text-base font-medium hover:bg-black/90 transition-all duration-300 flex items-center gap-2"
-              >
-                <Download size={16} strokeWidth={2} />
-                <span>Download CV</span>
-              </motion.button>
-            </motion.div>
-
-            {/* Mobile Menu Button */}
-            <motion.button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              whileTap={{ scale: 0.95 }}
-              className="md:hidden p-2 rounded-xl text-black/60 hover:text-black hover:bg-black/5 transition-all duration-300"
-              aria-label="Toggle menu"
-            >
-              <AnimatePresence mode="wait">
-                {isMobileMenuOpen ? (
-                  <motion.div
-                    key="close"
-                    initial={{ rotate: -90, opacity: 0 }}
-                    animate={{ rotate: 0, opacity: 1 }}
-                    exit={{ rotate: 90, opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <X size={24} strokeWidth={2} />
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    key="menu"
-                    initial={{ rotate: 90, opacity: 0 }}
-                    animate={{ rotate: 0, opacity: 1 }}
-                    exit={{ rotate: -90, opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <Menu size={24} strokeWidth={2} />
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.button>
-          </div>
+                  <span className="meta meta-accent">{item.index}</span>
+                  <span className="display text-[clamp(1.9rem,7vw,3rem)]">{item.label}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
         </nav>
 
-        {/* Mobile Navigation */}
-        <AnimatePresence>
-          {isMobileMenuOpen && (
-            <>
-              {/* Backdrop */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.3 }}
-                className="fixed inset-0 top-20 bg-black/20 backdrop-blur-sm md:hidden"
-                onClick={() => setIsMobileMenuOpen(false)}
-              />
-              
-              {/* Menu Panel */}
-              <motion.div
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ 
-                  duration: 0.4,
-                  ease: [0.16, 1, 0.3, 1]
-                }}
-                className="md:hidden border-t border-black/5 bg-white/95 backdrop-blur-xl"
+        <div className="rule-t px-6 py-6 sm:px-8">
+          <a href={`mailto:${contact.email}`} className="meta meta-ink block">
+            {contact.email}
+          </a>
+          <div className="mt-3 flex gap-6">
+            {SOCIAL.map((social) => (
+              <a
+                key={social.label}
+                href={social.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="meta"
               >
-                <div className="px-6 py-8 space-y-1">
-                  {navItems.map((item, index) => (
-                    <motion.div
-                      key={item.href}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: -20 }}
-                      transition={{ 
-                        delay: index * 0.05,
-                        duration: 0.3,
-                        ease: [0.16, 1, 0.3, 1]
-                      }}
-                    >
-                      <Link
-                        href={item.href}
-                        onClick={() => setIsMobileMenuOpen(false)}
-                        className="block px-4 py-3 text-base font-medium rounded-xl transition-all duration-300 text-black/50 hover:bg-black/5 hover:text-black"
-                      >
-                        {item.name}
-                      </Link>
-                    </motion.div>
-                  ))}
-                  
-                  {/* Mobile Download CV Button */}
-                  <motion.div
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -20 }}
-                    transition={{ 
-                      delay: navItems.length * 0.05,
-                      duration: 0.3,
-                      ease: [0.16, 1, 0.3, 1]
-                    }}
-                    className="pt-4"
-                  >
-                    <button
-                      onClick={() => {
-                        setIsCVModalOpen(true)
-                        setIsMobileMenuOpen(false)
-                      }}
-                      className="w-full px-4 py-3 rounded-xl bg-black text-white text-base font-medium flex items-center justify-center gap-2 hover:bg-black/90 transition-all duration-300"
-                    >
-                      <Download size={18} strokeWidth={2} />
-                      <span>Download CV</span>
-                    </button>
-                  </motion.div>
-                </div>
-              </motion.div>
-            </>
-          )}
-        </AnimatePresence>
-      </motion.header>
-      
-      {/* Spacer */}
-      <div className="h-20" />
-      
-      {/* Download CV Modal */}
-      <DownloadCVModal 
-        isOpen={isCVModalOpen} 
-        onClose={() => setIsCVModalOpen(false)} 
-      />
+                {social.label}
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
     </>
   )
 }

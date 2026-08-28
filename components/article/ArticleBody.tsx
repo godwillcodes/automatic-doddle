@@ -10,9 +10,9 @@ import { slugify } from '@/lib/slug'
 import CopyCodeButton from './CopyCodeButton'
 
 const CALLOUT_TONES = {
-  note: { Icon: Info, ring: 'border-black/10 bg-black/[0.02]', icon: 'text-black/50' },
-  tip: { Icon: Lightbulb, ring: 'border-emerald-200 bg-emerald-50/60', icon: 'text-emerald-600' },
-  warning: { Icon: TriangleAlert, ring: 'border-amber-200 bg-amber-50/60', icon: 'text-amber-600' },
+  note: { Icon: Info, ring: 'border-rule bg-paper-2/50', icon: 'text-stone' },
+  tip: { Icon: Lightbulb, ring: 'border-rule bg-paper-2/50', icon: 'text-accent-lo' },
+  warning: { Icon: TriangleAlert, ring: 'border-accent-lo/40 bg-paper-2/50', icon: 'text-accent-lo' },
 } as const
 
 function Heading({
@@ -27,20 +27,20 @@ function Heading({
   const Tag = `h${level}` as 'h2' | 'h3' | 'h4'
   const size =
     level === 2
-      ? 'text-3xl sm:text-4xl mt-16 mb-6'
+      ? 'text-[clamp(1.6rem,3vw,2.2rem)] mt-14 mb-5'
       : level === 3
-        ? 'text-2xl sm:text-3xl mt-12 mb-4'
-        : 'text-xl sm:text-2xl mt-8 mb-3'
+        ? 'text-[clamp(1.3rem,2.4vw,1.7rem)] mt-11 mb-4'
+        : 'text-[clamp(1.1rem,2vw,1.35rem)] mt-8 mb-3'
 
   return (
     <Tag
       id={id}
-      className={`group scroll-mt-28 font-semibold tracking-tight text-black leading-tight ${size}`}
+      className={`display group scroll-mt-28 ${size}`}
     >
       {children}
       <a
         href={`#${id}`}
-        className="ml-2 align-middle text-black/20 opacity-0 transition-opacity duration-200 hover:text-black/50 group-hover:opacity-100 no-underline"
+        className="ml-2 align-middle text-rule opacity-0 transition-opacity duration-200 hover:text-accent-lo group-hover:opacity-100 no-underline"
         aria-label={text ? `Link to section: ${text}` : 'Link to this section'}
       >
         #
@@ -66,37 +66,37 @@ function buildComponents(highlighted: Record<string, string>): PortableTextCompo
       h3: ({ children }) => <Heading level={3}>{children}</Heading>,
       h4: ({ children }) => <Heading level={4}>{children}</Heading>,
       normal: ({ children }) => (
-        <p className="mb-6 text-lg sm:text-xl font-light leading-relaxed text-black/80">
+        <p className="mb-6 max-w-[68ch] text-[1.0625rem] leading-[1.75] text-ink/85">
           {children}
         </p>
       ),
       blockquote: ({ children }) => (
-        <blockquote className="my-8 border-l-4 border-black/20 pl-6 text-lg sm:text-xl font-light italic leading-relaxed text-black/60">
+        <blockquote className="my-9 border-l-2 border-accent pl-6 text-[1.1rem] italic leading-relaxed text-stone">
           {children}
         </blockquote>
       ),
     },
     list: {
-      bullet: ({ children }) => <ul className="my-8 space-y-3 pl-6 list-disc">{children}</ul>,
-      number: ({ children }) => <ol className="my-8 space-y-3 pl-6 list-decimal">{children}</ol>,
+      bullet: ({ children }) => <ul className="my-8 max-w-[68ch] list-disc space-y-3 pl-6">{children}</ul>,
+      number: ({ children }) => <ol className="my-8 max-w-[68ch] list-decimal space-y-3 pl-6">{children}</ol>,
     },
     listItem: {
       bullet: ({ children }) => (
-        <li className="pl-2 text-lg sm:text-xl font-light leading-relaxed text-black/80 marker:text-black/40">
+        <li className="pl-2 text-[1.0625rem] leading-[1.7] text-ink/85 marker:text-accent-lo">
           {children}
         </li>
       ),
       number: ({ children }) => (
-        <li className="pl-2 text-lg sm:text-xl font-light leading-relaxed text-black/80 marker:font-semibold marker:text-black/40">
+        <li className="pl-2 text-[1.0625rem] leading-[1.7] text-ink/85 marker:font-medium marker:text-accent-lo">
           {children}
         </li>
       ),
     },
     marks: {
-      strong: ({ children }) => <strong className="font-semibold text-black">{children}</strong>,
+      strong: ({ children }) => <strong className="font-[520] text-ink">{children}</strong>,
       em: ({ children }) => <em className="italic">{children}</em>,
       code: ({ children }) => (
-        <code className="rounded-md bg-black/[0.06] px-1.5 py-0.5 font-mono text-[0.875em] text-black/90">
+        <code className="bg-paper-2 px-1.5 py-0.5 font-mono text-[0.85em] text-ink">
           {children}
         </code>
       ),
@@ -104,7 +104,7 @@ function buildComponents(highlighted: Record<string, string>): PortableTextCompo
         const href: string = value?.href ?? '#'
         const isExternal = /^https?:\/\//.test(href)
         const className =
-          'underline decoration-black/25 decoration-2 underline-offset-2 transition-colors hover:decoration-black/60'
+          'underline decoration-accent decoration-[1.5px] underline-offset-[3px] transition-colors hover:text-accent-lo'
 
         if (isExternal) {
           return (
@@ -125,8 +125,8 @@ function buildComponents(highlighted: Record<string, string>): PortableTextCompo
         const html = highlighted[value._key]
         if (!html) return null
         return (
-          <figure className="group relative my-8 overflow-hidden rounded-2xl border border-black/10">
-            <figcaption className="flex items-center justify-between border-b border-white/5 bg-[#22272e] px-4 py-2.5">
+          <figure className="group relative my-9 overflow-hidden rule-t rule-b">
+            <figcaption className="flex items-center justify-between bg-[#22272e] px-4 py-2.5">
               <span className="font-mono text-xs text-white/60">
                 {value.filename || languageLabel(value.language)}
               </span>
@@ -135,7 +135,7 @@ function buildComponents(highlighted: Record<string, string>): PortableTextCompo
             {/* Shiki emits its own <pre> carrying both the theme background and
                 token colours, so nothing here may override them. */}
             <div
-              className="overflow-x-auto text-sm leading-relaxed [&_pre]:m-0 [&_pre]:px-5 [&_pre]:py-4"
+              className="article-code"
               dangerouslySetInnerHTML={{ __html: html }}
             />
           </figure>
@@ -145,7 +145,7 @@ function buildComponents(highlighted: Record<string, string>): PortableTextCompo
         if (!value?.asset) return null
         return (
           <figure className="my-10">
-            <div className="overflow-hidden rounded-2xl border border-black/5 bg-black/[0.02]">
+            <div className="overflow-hidden bg-paper-2">
               <Image
                 src={urlForImage(value).width(1600).url()}
                 alt={value.alt}
@@ -156,7 +156,7 @@ function buildComponents(highlighted: Record<string, string>): PortableTextCompo
               />
             </div>
             {value.caption ? (
-              <figcaption className="mt-3 text-center text-sm font-light italic text-black/50">
+              <figcaption className="meta mt-3 normal-case tracking-normal">
                 {value.caption}
               </figcaption>
             ) : null}
@@ -166,14 +166,14 @@ function buildComponents(highlighted: Record<string, string>): PortableTextCompo
       callout: ({ value }: { value: CalloutValue }) => {
         const { Icon, ring, icon } = CALLOUT_TONES[value.tone ?? 'note']
         return (
-          <aside className={`my-8 flex gap-4 rounded-2xl border p-5 sm:p-6 ${ring}`}>
+          <aside className={`my-9 flex max-w-[68ch] gap-4 border p-5 sm:p-6 ${ring}`}>
             <Icon size={20} strokeWidth={2} className={`mt-0.5 shrink-0 ${icon}`} />
             <div>
               {value.title ? (
-                <p className="mb-1 font-semibold text-black">{value.title}</p>
+                <p className="meta meta-ink mb-2">{value.title}</p>
               ) : null}
               {value.body ? (
-                <p className="text-base font-light leading-relaxed text-black/70">{value.body}</p>
+                <p className="text-[0.95rem] leading-relaxed text-stone">{value.body}</p>
               ) : null}
             </div>
           </aside>
