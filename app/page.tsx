@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 
+import HeroGallery from '@/components/HeroGallery'
 import Reveal from '@/components/Reveal'
 import { FaqStructuredData } from '@/components/StructuredData'
 import { faqs, identity, notes, platforms, profiles } from '@/lib/person'
@@ -46,7 +47,7 @@ export default async function Home() {
         </div>
 
         <div className="py-[clamp(3rem,9vh,6.5rem)]">
-          <h1 className="display text-[clamp(3.2rem,13vw,10.5rem)] uppercase">
+          <h1 className="display text-[clamp(2.6rem,9vw,7rem)] uppercase">
             <span className="block">Godwill</span>
             <span className="block">Barasa</span>
           </h1>
@@ -77,6 +78,8 @@ export default async function Home() {
             </div>
           </div>
         </div>
+
+        <HeroGallery />
 
         <div className="rule-t flex flex-wrap items-baseline justify-between gap-3 py-4">
           <p className="meta">Software engineer</p>
