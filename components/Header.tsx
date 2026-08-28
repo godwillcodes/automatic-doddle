@@ -8,8 +8,8 @@ import { site } from '@/lib/site'
 
 const NAV = [
   { index: '01', label: 'Work', href: '/#work' },
-  { index: '02', label: 'Writing', href: '/#writing' },
-  { index: '03', label: 'Archive', href: '/blog' },
+  { index: '02', label: 'Notes', href: '/#writing' },
+  { index: '03', label: 'Writing', href: '/#archive' },
   { index: '04', label: 'Contact', href: '/contact' },
 ]
 

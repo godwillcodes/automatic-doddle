@@ -84,6 +84,22 @@ export const platforms: Platform[] = [
   },
 ]
 
+/**
+ * Why the technical archive sits on this domain.
+ *
+ * The engineering writing was reading as a second, unrelated identity: deep
+ * M-Pesa material under a page that describes a studio founder. It is the same
+ * work. SpaceYako's founding decision is a payments decision, and every
+ * platform here takes money or refuses to. Saying so connects the cluster to
+ * the person instead of leaving it stranded on the same domain.
+ */
+export const archive = {
+  heading: 'The engineering record',
+  lede: 'Long-form technical writing, published here rather than on the studio site. Mostly M-Pesa and the Daraja API, because in Kenya the payment rail is where platforms actually break.',
+  bridge:
+    'SpaceYako runs on a payments decision: agents pay to list, seekers never pay, and no money moves between users. Getting that right means knowing exactly how M-Pesa behaves when it fails. These are the notes from doing it.',
+}
+
 export interface Note {
   title: string
   line: string

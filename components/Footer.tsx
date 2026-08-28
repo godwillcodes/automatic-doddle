@@ -6,7 +6,7 @@ import { profiles } from '@/lib/person'
 const NAV = [
   { label: 'Work', href: '/#work' },
   { label: 'Writing', href: '/#writing' },
-  { label: 'Archive', href: '/blog' },
+  { label: 'Archive', href: '/#archive' },
   { label: 'Contact', href: '/contact' },
 ]
 

@@ -5,7 +5,7 @@ import ArticleBody, { extractHeadings, toReadableText } from '@/components/artic
 import BlogPostLayout from '@/components/BlogPostLayout'
 import { getPostBySlug, getPostSlugs, getRelatedPosts } from '@/lib/sanity/queries'
 import { urlForOpenGraph } from '@/lib/sanity/client'
-import { absoluteUrl, site } from '@/lib/site'
+import { absoluteUrl, site, siteUrl } from '@/lib/site'
 
 /**
  * Falls back to hourly regeneration so a Studio publish reaches the site even
@@ -95,14 +95,13 @@ export default async function BlogPostPage({
     wordCount: post.readingTime * 200,
     timeRequired: `PT${post.readingTime}M`,
     inLanguage: 'en',
-    author: {
-      '@type': 'Person',
-      name: post.author.name,
-      url: site.url,
-      jobTitle: post.author.jobTitle,
-      sameAs: post.author.sameAs,
-    },
-    publisher: { '@type': 'Person', name: post.author.name, url: site.url },
+    /* Reference the one Person node by @id rather than describing him again.
+       An inline copy is a second, anonymous node: the crawler cannot tell it
+       is the same person, so the articles' authority pools separately from
+       the entity instead of accruing to it. The node itself is emitted on
+       every page by PersonGraph in the root layout, so this resolves here. */
+    author: { '@id': `${siteUrl}/#person` },
+    publisher: { '@id': `${siteUrl}/#person` },
     mainEntityOfPage: { '@type': 'WebPage', '@id': url },
     url,
     keywords: post.keywords?.join(', '),

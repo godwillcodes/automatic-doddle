@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 
 import BlogList from '@/components/BlogList'
 import { getAllPosts } from '@/lib/sanity/queries'
-import { absoluteUrl, site } from '@/lib/site'
+import { absoluteUrl, site, siteUrl } from '@/lib/site'
 
 /**
  * Falls back to hourly regeneration so a Studio publish reaches the site even
@@ -39,7 +39,12 @@ export default async function BlogPage() {
     name: title,
     description,
     url: absoluteUrl('/blog'),
-    author: { '@type': 'Person', name: site.author.name, url: site.url },
+    author: { '@id': `${siteUrl}/#person` },
+    publisher: { '@id': `${siteUrl}/#person` },
+    /* The archive is about the person, not merely written by him. This is the
+       edge that makes the cluster accrue to the entity. */
+    about: { '@id': `${siteUrl}/#person` },
+    isPartOf: { '@id': `${siteUrl}/#website` },
     blogPost: posts.map((post) => ({
       '@type': 'BlogPosting',
       headline: post.title,

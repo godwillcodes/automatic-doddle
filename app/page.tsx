@@ -4,7 +4,7 @@ import Link from 'next/link'
 import HeroGallery from '@/components/HeroGallery'
 import Reveal from '@/components/Reveal'
 import { FaqStructuredData } from '@/components/StructuredData'
-import { faqs, identity, notes, platforms, profiles } from '@/lib/person'
+import { archive, faqs, identity, notes, platforms, profiles } from '@/lib/person'
 import { getAllPosts, getNow } from '@/lib/sanity/queries'
 import { absoluteUrl, lockAndMercer, site } from '@/lib/site'
 
@@ -214,27 +214,67 @@ export default async function Home() {
           ))}
         </ul>
 
-        {posts.length > 0 && (
-          <Reveal className="rule-t pb-[clamp(2rem,4vw,3rem)] pt-6">
-            <p className="prose-body text-sm">
-              Longer technical pieces, on payments and performance, are in{' '}
-              <Link
-                href="/blog"
-                className="underline decoration-accent decoration-[1.5px] underline-offset-[3px] transition-colors hover:text-accent-lo"
-              >
-                the archive on this site
-              </Link>
-              .
-            </p>
-          </Reveal>
-        )}
       </section>
+
+      {/* The engineering archive, connected to the work rather than stranded
+          on the same domain. */}
+      {posts.length > 0 && (
+        <section
+          id="archive"
+          aria-label="Engineering record"
+          className="mx-auto max-w-7xl scroll-mt-20 px-6 sm:px-8"
+        >
+          <div className="sec-head rule-t">
+            <Reveal>
+              <SectionLabel number="04" label="The engineering record" />
+              <h2 className="display mt-4 text-[clamp(1.9rem,4.5vw,3.4rem)]">
+                {archive.heading}
+              </h2>
+              <p className="prose-body mt-4">{archive.lede}</p>
+              <p className="prose-body">{archive.bridge}</p>
+            </Reveal>
+          </div>
+
+          <ul>
+            {posts.slice(0, 4).map((post, index) => (
+              <Reveal
+                key={post.slug}
+                as="li"
+                delay={Math.min(index * 0.04, 0.16)}
+                className="rule-t"
+              >
+                <Link
+                  href={`/blog/${post.slug}`}
+                  className="group grid gap-2 py-5 sm:grid-cols-[1fr_auto] sm:items-baseline sm:gap-6"
+                >
+                  <span>
+                    <span className="display block text-[clamp(1.1rem,2vw,1.45rem)] transition-colors group-hover:text-stone">
+                      {post.title}
+                    </span>
+                    <span className="prose-body mt-1 block text-sm">{post.excerpt}</span>
+                  </span>
+                  <span className="meta sm:text-right">
+                    {post.category.title}
+                    <span className="mt-1 block">{post.readingTime} min</span>
+                  </span>
+                </Link>
+              </Reveal>
+            ))}
+          </ul>
+
+          <Reveal className="rule-t pb-[clamp(2rem,4vw,3rem)] pt-6">
+            <Link href="/blog" className="meta meta-ink">
+              All {posts.length} pieces <span className="text-accent-lo">→</span>
+            </Link>
+          </Reveal>
+        </section>
+      )}
 
       {/* FAQ, visible and marked up. */}
       <section aria-label="Questions" className="mx-auto max-w-7xl px-6 sm:px-8">
         <div className="sec-head rule-t">
           <Reveal>
-            <SectionLabel number="04" label="In brief" />
+            <SectionLabel number="05" label="In brief" />
           </Reveal>
         </div>
         <dl className="grid gap-x-10 gap-y-8 pb-[clamp(2rem,4vw,3rem)] sm:grid-cols-2">
@@ -251,7 +291,7 @@ export default async function Home() {
       <section id="contact-closing" aria-label="Contact" className="on-ink">
         <div className="mx-auto max-w-7xl px-6 sm:px-8">
           <div className="sec-head rule-t">
-            <SectionLabel number="05" label="Contact" />
+            <SectionLabel number="06" label="Contact" />
           </div>
 
           <Reveal>
