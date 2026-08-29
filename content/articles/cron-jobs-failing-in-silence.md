@@ -15,7 +15,7 @@ keywords:
 featured: false
 ---
 
-The nightly cron did everything right except the last thing.
+The nightly cron on [SpaceYako](https://www.spaceyako.com) did everything right except the last thing.
 
 Fourteen jobs. Each one wrapped so a failure could not take down its neighbours. Every error caught into a structured outcome. A line written to the log. The whole result recorded in the response body, neatly, with which jobs passed and which did not.
 
@@ -105,5 +105,7 @@ Every time I write something that runs without a person watching, I ask one thin
 If the honest answer is a log line, it is not handled. If the answer is that the failure is recorded somewhere searchable, it is not handled. If the answer is that a user will eventually complain, it is definitely not handled, because that means the detection mechanism is a person losing trust in the product.
 
 The uncomfortable version of this question is the one about absence. Not *what happens if this fails*, but *what happens if this simply never runs again*. A surprising amount of infrastructure has no answer to that at all, and it is the failure that lasts longest, because nothing anywhere is shaped like a complaint.
+
+Those fourteen jobs still run every night on [SpaceYako](https://www.spaceyako.com). They just tell somebody now when they do not.
 
 Mine went unnoticed because a batch that never runs looks exactly like a batch with nothing to report. That is a really hard thing to see, and the only reason I saw it at all was sitting down and asking, job by job, who finds out.

@@ -17,6 +17,8 @@ featured: false
 
 The code said five requests per minute. I believed it, because I had written it, and because the tests passed.
 
+This is on [SpaceYako](https://www.spaceyako.com), where the two endpoints behind that limiter are the ones that cost real money when they are abused.
+
 The tests passed because tests run in one process. Production does not.
 
 ## What "per minute" quietly meant

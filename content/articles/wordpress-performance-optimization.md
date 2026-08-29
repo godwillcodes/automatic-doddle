@@ -37,7 +37,7 @@ Field data, from the Chrome UX Report or your own real-user monitoring, tells yo
 
 When those two disagree, believe the field data and go find out why the lab is flattering you. Usually it is because the lab throttles a fast connection while your audience has an unreliable one, and unreliable is a different problem to slow.
 
-That distinction is why I ended up building a plugin that collects both and stores them in the same place, rather than picking one. A synthetic audit and a real-user reporter answer questions you cannot answer from either alone.
+That distinction is why I ended up building [a plugin](https://github.com/godwillcodes/WPSitePerformanceTracker) that collects both and stores them in the same place, rather than picking one. A synthetic audit and a real-user reporter answer questions you cannot answer from either alone.
 
 ## The three metrics, and what actually moves them
 

@@ -15,7 +15,7 @@ keywords:
 featured: false
 ---
 
-I found it by accident. I was on a call, sharing my screen, showing someone the property map. And there it was, running diagonally across every tile in pale grey letters: **API KEY REQUIRED**.
+I found it by accident. I was on a call, sharing my screen, showing someone the [SpaceYako](https://www.spaceyako.com) property map. And there it was, running diagonally across every tile in pale grey letters: **API KEY REQUIRED**.
 
 I had looked at that map a hundred times. So had the monitoring. Everything was green.
 
@@ -94,3 +94,5 @@ And I would not have found it from a dashboard. I found it because I happened to
 That is the thing I actually took from it. Instrumentation tells you about the failures you already imagined. It cannot tell you about the ones you did not, and the ones you did not imagine are the ones that run for weeks. The only defence I have found is boringly manual: look at the real product, on a real connection, with your own eyes, on a schedule. Not the staging build. Not the component in isolation. The thing a stranger sees.
 
 I do it every Friday now. It has caught two other things.
+
+The map in question, with a basemap that belongs to nobody but us, is on [spaceyako.com](https://www.spaceyako.com).

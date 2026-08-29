@@ -22,7 +22,7 @@ Most radio station websites lie about what is on air. Not deliberately. The sche
 
 That is a small credibility problem with a simple cause: the website and the broadcast are two separate systems that happen to describe the same thing, and one of them is maintained by hand.
 
-I migrated a station covering Western Kenya and the North Rift off WordPress, and the decision that mattered was making the site read the broadcast rather than describe it.
+I migrated [Khendo FM](https://www.khendofm.co.ke), a station covering Western Kenya and the North Rift, off WordPress, and the decision that mattered was making the site read the broadcast rather than describe it.
 
 ## Two different questions
 

@@ -22,7 +22,7 @@ Ninety-nine percent of the time it is quiet. Then a story gets picked up, and th
 
 The cruel part is where the spike lands. It arrives on the *newest* page. The one published four minutes ago, that has never been cached, whose author is still in the CMS fixing a typo in the second paragraph. Everything convenient about a content management system is working against you at precisely that moment.
 
-I rebuilt an independent Kenyan business publication as a server-rendered newsroom. This is what I learned about what actually falls over.
+I rebuilt [Business Report](https://www.businessreport.co.ke), an independent Kenyan business publication, as a server-rendered newsroom. This is what I learned about what actually falls over.
 
 ## The article is not the problem. The index is.
 

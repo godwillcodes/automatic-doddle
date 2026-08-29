@@ -15,7 +15,7 @@ keywords:
 featured: false
 ---
 
-On every agent profile there is a line that says something like *usually replies in about two hours*.
+On every agent profile on [SpaceYako](https://www.spaceyako.com) there is a line that says something like *usually replies in about two hours*.
 
 It is one of the most load-carrying sentences on the platform. Somebody deciding whether to send an enquiry about a flat is deciding whether this stranger will respond, and that number is most of the answer.
 
@@ -87,5 +87,7 @@ I got to these the slow way, by shipping one that failed all three.
 **Does it degrade to nothing, or to a lie?** Too little data has to produce silence. If a metric produces a confident-looking number from thin evidence, the failure mode is misleading a stranger.
 
 **Does it decay?** Somebody responsive last year and absent since should not still be showing last year's figure. This is the same property that makes [an expiring verification badge](/blog/building-spaceyako-verification) worth having: a signal that cannot get worse on its own is not a signal, it is a trophy.
+
+The response-time line, and the badges beside it, are live on agent profiles at [spaceyako.com](https://www.spaceyako.com).
 
 The general version of that principle is written up on the studio site as [a badge is only worth what removes it](https://www.lockandmercer.com/notes/a-badge-is-worth-what-removes-it), and I keep arriving back at it from different directions. Verification, response times, ratings. Every trust signal is a claim you are making to somebody who cannot check it themselves, and the only thing that makes such a claim worth anything is that it can be taken away.

@@ -15,7 +15,7 @@ keywords:
 featured: false
 ---
 
-The notification preferences table had three columns: email, SMS, push.
+The notification preferences table on [SpaceYako](https://www.spaceyako.com) had three columns: email, SMS, push.
 
 I did not choose those three. Nobody sat down and asked which channels Kenyans actually use. They arrived the way most defaults arrive, inherited from a template, from every SaaS codebase any of us had worked in before, from an unexamined assumption about how people receive things.
 
@@ -73,6 +73,6 @@ I now assume that any product I did not start from the market up carries default
 
 The audit worth running is not a code review. It is opening your own product on the device and the connection your users actually have, and asking, honestly, which parts of it were designed for somebody else.
 
-The map here is a good place to start looking. Half the defaults in a web application are a set of guesses about a person who does not exist in your market. Every one you fix is not localisation. It is the product finally being about the people using it.
+Half the defaults in a web application are guesses about a person who does not exist in your market. Every one you fix is not localisation. It is the product finally being about the people using it.
 
 For the general version of that constraint, applied to the network rather than the notification channel, there is [building for the connection people actually have](https://www.lockandmercer.com/notes/building-for-the-connection-people-actually-have).

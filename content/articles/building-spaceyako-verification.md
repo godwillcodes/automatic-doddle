@@ -18,7 +18,7 @@ featured: true
 
 House hunting in Nairobi runs on a specific dread. You send a viewing fee to somebody who sounds legitimate, and either the flat exists or it does not. Enough people have lost money that way that every new platform starts under suspicion, and no amount of reassuring copy fixes that, because the platform that took the last deposit had reassuring copy too.
 
-SpaceYako is the property platform I built and run. Three months of it have gone almost entirely into one question, and it is not search or maps: can a stranger check that a listing is telling the truth?
+[SpaceYako](https://www.spaceyako.com) is the property platform I built and run. Three months of it have gone almost entirely into one question, and it is not search or maps: can a stranger check that a listing is telling the truth?
 
 ## The structural decision comes first
 
