@@ -280,6 +280,10 @@ const CATEGORIES = {
     'Editorial Platforms',
     'Newsroom systems: publishing under deadline, archives that survive a migration, and pages that hold up when a story breaks.'
   ),
+  'Product Engineering': categoryDoc(
+    'Product Engineering',
+    'Building the product around the market it is actually in, rather than the defaults it inherited.'
+  ),
   'Trust Systems': categoryDoc(
     'Trust Systems',
     'Verification, fraud screening and the mechanisms that let a stranger check whether a listing is telling the truth.'

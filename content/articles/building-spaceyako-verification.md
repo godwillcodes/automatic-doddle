@@ -97,11 +97,11 @@ export function earbStanding(agent: EarbInput, now: Date = new Date()): EarbStan
 }
 ```
 
-Two things in there are load-bearing.
+Two things in there are doing real work.
 
 **`lapsed` is a state, not an absence.** Collapsing it into `unverified` throws away the fact that this agent was checked and has since fallen out of standing, which is a different thing to tell a buyer and a different thing to chase the agent about.
 
-**Missing expiry means lapsed, not verified.** This is the branch that decides whether the system is honest. An annual certificate with no renewal date on file is exactly the case we cannot vouch for, and the tempting default — treat it as fine, we did check them once — is how boolean verification systems quietly become decorative. Unknown resolves against the badge.
+**Missing expiry means lapsed, not verified.** This is the branch that decides whether the system is honest. An annual certificate with no renewal date on file is exactly the case we cannot vouch for, and the tempting default, treat it as fine, we did check them once, is how boolean verification systems quietly become decorative. Unknown resolves against the badge.
 
 Because standing is computed from the expiry date rather than stored as a flag, nobody has to remember to remove anything. The badge disappears when the certificate does. That is the only version of verification I now consider worth building.
 
@@ -111,7 +111,7 @@ There is a second, weaker signal: `agents.isVerified`, which means an admin look
 
 The codebase is explicit that these must stay separate in the interface, and the reason is that merging them launders the weak signal into the strong one. A buyer reading a single "Verified" badge cannot tell whether it means *we saw their ID* or *the national regulator says they may legally practise*. Those support completely different decisions about whether to hand somebody a deposit.
 
-There is also a legacy `licenseNumber` column: free text, validated by nothing, entered by the agent. It is display-only, and treating it as proof would be worse than not showing it at all — a number that looks official and means nothing is an invitation to trust the wrong thing.
+There is also a legacy `licenseNumber` column: free text, validated by nothing, entered by the agent. It is display-only, and treating it as proof would be worse than not showing it at all, a number that looks official and means nothing is an invitation to trust the wrong thing.
 
 ## Screening advises, it does not decide
 
@@ -131,9 +131,9 @@ Text duplicate detection stays in SQL, as trigram similarity against existing de
 
 **I under-specified `lapsed`.** The first version had verified and unverified, and the expiry date existed only to send renewal reminders. It took someone asking "what does the badge say the day after a certificate expires" to notice the answer was "it still says verified". The fix was small. Noticing was the work.
 
-**I put authorization where I could not enforce it.** There is a migration in the repository that enables row-level security with *zero policies*, purely to close Supabase's anonymous PostgREST surface. The application connects as the table owner and bypasses RLS entirely. It is deliberate and it is documented, but it means the database will not catch an authorization mistake for you — every check has to be in application code, and a code review is the only thing standing behind it. I would rather that were belt and braces.
+**I put authorization where I could not enforce it.** There is a migration in the repository that enables row-level security with *zero policies*, purely to close Supabase's anonymous PostgREST surface. The application connects as the table owner and bypasses RLS entirely. It is deliberate and it is documented, but it means the database will not catch an authorization mistake for you, every check has to be in application code, and a code review is the only thing standing behind it. I would rather that were belt and braces.
 
-**Migrations nearly took down a deploy.** They run inside every build. Through Supabase's session pooler, which caps at fifteen connections, a migration races live traffic and can take the whole deploy with it. It now uses a direct, non-pooled connection and retries only on transient pool contention, failing fast on anything real. That distinction — retry the transient, never retry the genuine error — is the whole of the fix.
+**Migrations nearly took down a deploy.** They run inside every build. Through Supabase's session pooler, which caps at fifteen connections, a migration races live traffic and can take the whole deploy with it. It now uses a direct, non-pooled connection and retries only on transient pool contention, failing fast on anything real. That distinction, retry the transient, never retry the real error, is the whole of the fix.
 
 ## What I would tell someone building the same thing
 

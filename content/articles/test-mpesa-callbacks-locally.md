@@ -19,7 +19,7 @@ Daraja's callback is a plain outbound HTTPS POST from Safaricom's infrastructure
 
 The standard answer is ngrok. It works. It is also the slowest possible development loop, because the free tier hands you a new subdomain on every restart, and every new subdomain means editing your `CallBackURL`, restarting the dev server, and pushing another test payment before you can see whether your handler works.
 
-There are better options depending on what you are actually trying to test. Most of the time you are not testing Safaricom — you are testing your own handler — and that needs no tunnel at all.
+There are better options depending on what you are actually trying to test. Most of the time you are not testing Safaricom, you are testing your own handler, and that needs no tunnel at all.
 
 ## Option 1: replay recorded payloads (start here)
 
@@ -132,7 +132,7 @@ it('does not throw when metadata is absent', async () => {
 
 ## Option 2: a stable tunnel
 
-When you do need Safaricom to actually call you — verifying your payload shape against the real thing, or debugging a URL-reachability problem — you want a tunnel with a URL that does not change.
+When you do need Safaricom to actually call you, verifying your payload shape against the real thing, or debugging a URL-reachability problem, you want a tunnel with a URL that does not change.
 
 Cloudflare Tunnel gives you a permanent hostname on a domain you already own, for free:
 
@@ -183,13 +183,13 @@ function resolveCallbackUrl() {
 }
 ```
 
-Preview deployments are usually protected by default, which will block Safaricom as effectively as a firewall. You have to exempt the callback path from deployment protection or the request never lands — this is the same class of problem covered in [why your callback never arrives](/blog/mpesa-callback-not-received).
+Preview deployments are usually protected by default, which will block Safaricom as effectively as a firewall. You have to exempt the callback path from deployment protection or the request never lands, this is the same class of problem covered in [why your callback never arrives](/blog/mpesa-callback-not-received).
 
 Use a separate sandbox shortcode for previews. Pointing a preview branch at your production shortcode is a mistake you make once.
 
 ## Option 4: a local Daraja stub
 
-If you are building something with a lot of payment states — retries, partial refunds, split payments — the sandbox becomes the bottleneck. It is slow, occasionally down, and cannot produce most of the failure modes you need to handle.
+If you are building something with a lot of payment states, retries, partial refunds, split payments, the sandbox becomes the bottleneck. It is slow, occasionally down, and cannot produce most of the failure modes you need to handle.
 
 At that point, stub it. Run a small server that speaks Daraja's shape and calls your callback on a timer:
 

@@ -180,7 +180,7 @@ Note the initial state comes from the server, so the first paint already has rea
 
 ## Schedule as the fallback, not the source
 
-Stations still want a schedule page, and it is genuinely useful: it is the only thing that can tell you what is on at eight tonight.
+Stations still want a schedule page, and it is useful: it is the only thing that can tell you what is on at eight tonight.
 
 But the schedule should never be what the site consults to say what is on *now*. Live state wins; schedule fills the gap:
 

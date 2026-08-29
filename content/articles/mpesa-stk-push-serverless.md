@@ -2,7 +2,7 @@
 title: "Running M-Pesa STK Push on Serverless Without Losing Payments"
 metaTitle: "M-Pesa STK Push on Serverless: What Breaks"
 slug: mpesa-stk-push-serverless
-excerpt: "Serverless removes the long-lived process that most M-Pesa integrations quietly assume. Here is what breaks — token caches, in-memory state, background work after the response — and what to do instead."
+excerpt: "Serverless removes the long-lived process that most M-Pesa integrations quietly assume. Token caches, in-memory state, background work after the response: here is what breaks, and what to do instead."
 date: "2026-04-01"
 category: "Mobile Money"
 targetKeyword: "mpesa stk push serverless"
@@ -15,7 +15,7 @@ keywords:
 featured: false
 ---
 
-Every M-Pesa tutorial I have read assumes a server. Not explicitly — it just quietly relies on things a long-running Node process gives you for free: a module-level variable that persists, a `setTimeout` that survives the response, an in-memory map of pending transactions.
+Every M-Pesa tutorial I have read assumes a server. Not explicitly, it just quietly relies on things a long-running Node process gives you for free: a module-level variable that persists, a `setTimeout` that survives the response, an in-memory map of pending transactions.
 
 Deploy that same code to Vercel, Netlify, or Lambda and most of it still appears to work. That is the dangerous part. The failures are intermittent, load-dependent, and show up as payments that mysteriously didn't get credited.
 
@@ -29,9 +29,9 @@ The standard token cache is a module-level variable:
 let cached: { token: string; expiresAt: number } | null = null
 ```
 
-On a single Node process this is exactly right — one token, reused for an hour.
+On a single Node process this is exactly right, one token, reused for an hour.
 
-On serverless, each concurrent instance gets its own module scope. Ten instances means ten independent caches and ten calls to Daraja's OAuth endpoint. Under a traffic spike — which for a Kenyan e-commerce site means the hour after a payday SMS blast — you can get hundreds.
+On serverless, each concurrent instance gets its own module scope. Ten instances means ten independent caches and ten calls to Daraja's OAuth endpoint. Under a traffic spike, which for a Kenyan e-commerce site means the hour after a payday SMS blast, you can get hundreds.
 
 Daraja's auth endpoint is rate-limited. When you cross it, `getAccessToken()` starts throwing, and every STK Push fails at exactly the moment you have the most customers trying to pay.
 
@@ -67,7 +67,7 @@ export async function getAccessToken(): Promise<string> {
 
 Redis works equally well if you already have one. The important property is that the cache outlives any single invocation.
 
-There is a mild thundering-herd risk on expiry — several instances miss at once and all fetch. In practice this is a handful of extra requests once an hour, which is well inside the limit. If it bothers you, jitter the expiry per instance by a few seconds.
+There is a mild thundering-herd risk on expiry, several instances miss at once and all fetch. In practice this is a handful of extra requests once an hour, which is well inside the limit. If it bothers you, jitter the expiry per instance by a few seconds.
 
 ## 2. Work after the response does not happen
 
@@ -86,7 +86,7 @@ export async function POST(request: Request) {
 }
 ```
 
-On a server, those promises resolve after the response is flushed. On serverless, the runtime may freeze or terminate the instance the moment you return. Sometimes the email sends. Sometimes it doesn't. It depends on whether another request kept the instance warm long enough — which is why this bug reproduces on staging almost never and on production constantly.
+On a server, those promises resolve after the response is flushed. On serverless, the runtime may freeze or terminate the instance the moment you return. Sometimes the email sends. Sometimes it doesn't. It depends on whether another request kept the instance warm long enough, which is why this bug reproduces on staging almost never and on production constantly.
 
 Two correct approaches. If the work is short, use `waitUntil` to tell the platform to keep the instance alive:
 
@@ -116,7 +116,7 @@ A common design keeps pending pushes in a `Map`, so the polling endpoint can ans
 
 On serverless, the instance that handled the STK Push is almost never the instance that receives the callback, and neither is likely to be the one that answers the poll. Three requests, three instances, three empty maps.
 
-Everything must go through shared storage. Write the pending row before returning from the initiate endpoint — and note that on serverless the callback can genuinely beat your own response, because they are running on different machines:
+Everything must go through shared storage. Write the pending row before returning from the initiate endpoint, and note that on serverless the callback can really beat your own response, because they are running on different machines:
 
 ```typescript app/api/payments/mpesa/route.ts
 export async function POST(request: Request) {
@@ -149,13 +149,13 @@ await db.payment.upsert({
 })
 ```
 
-An orphaned `PAID` row with a null `orderId` is recoverable — the reconciliation sweep will match it up. A dropped callback is not.
+An orphaned `PAID` row with a null `orderId` is recoverable, the reconciliation sweep will match it up. A dropped callback is not.
 
 ## 4. Cold starts eat your callback window
 
 Safaricom does not wait long for your callback endpoint to respond, and it retries a limited number of times before giving up.
 
-A cold start on a function with a heavy dependency tree — an ORM, a validation library, a mailer, an analytics SDK — can take a meaningful fraction of that window before your code runs at all. Add a cold database connection and you can exceed it.
+A cold start on a function with a heavy dependency tree, an ORM, a validation library, a mailer, an analytics SDK, can take a meaningful fraction of that window before your code runs at all. Add a cold database connection and you can exceed it.
 
 Keep the callback route as thin as you can make it:
 
@@ -174,7 +174,7 @@ export async function POST(request: Request) {
 }
 ```
 
-Everything expensive — parsing, validating, settling, emailing — moves to the consumer, which has no deadline. The callback route does one insert and returns.
+Everything expensive, parsing, validating, settling, emailing, moves to the consumer, which has no deadline. The callback route does one insert and returns.
 
 Fluid Compute helps here, because instances are reused across concurrent requests rather than one-per-request, so warm invocations are the common case. It does not eliminate cold starts, so the thin handler is still worth having.
 
@@ -184,7 +184,7 @@ Also make sure your database connections are pooled somewhere outside the functi
 
 It is worth saying what serverless does *not* change, because it is easy to over-engineer in response to the above.
 
-The Daraja protocol is identical. Token, push, callback, query — same endpoints, same payloads, same result codes. The [integration guide](/blog/mpesa-daraja-api-nextjs) applies unchanged.
+The Daraja protocol is identical. Token, push, callback, query, same endpoints, same payloads, same result codes. The [integration guide](/blog/mpesa-daraja-api-nextjs) applies unchanged.
 
 Idempotency was already mandatory. Duplicate callbacks are Safaricom's behaviour, not the platform's, and a `UNIQUE` constraint on the receipt number works the same everywhere. If you followed [the reconciliation design](/blog/mpesa-idempotency-reconciliation), you are already correct under concurrency, which is most of what serverless demands.
 

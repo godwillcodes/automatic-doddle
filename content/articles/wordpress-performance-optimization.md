@@ -2,7 +2,7 @@
 title: "WordPress Core Web Vitals: Fixing LCP, INP and CLS at the Source"
 metaTitle: "WordPress Core Web Vitals: A Practical Fix Guide"
 slug: wordpress-performance-optimization
-excerpt: "A field guide to WordPress performance that starts with measurement, not plugins: caching layers, database bloat, image pipelines and the INP work that actually moves the needle."
+excerpt: "A site that took 43 seconds to load taught me that almost everything written about WordPress performance is a list of plugins. The actual work is finding which layer is lying to you."
 date: "2024-12-20"
 category: "Performance"
 targetKeyword: "wordpress core web vitals optimization"
@@ -17,449 +17,110 @@ keywords:
 featured: false
 ---
 
-Let me tell you about the worst client call I've ever had.
+The phone rang at 2am. The client was not calm.
 
-It was 2 AM. My phone rang. The client was in full panic mode: "THE WEBSITE IS DOWN! WE'RE LOSING THOUSANDS OF DOLLARS PER MINUTE!"
+I expected a 500, or a database that had fallen over. Instead the site was up. It was just taking 43 seconds to render the homepage. Forty-three seconds. Long enough to make coffee and come back and still be waiting.
 
-I
+Forty-seven plugins. No caching of any kind. Images straight off a phone camera at full resolution. A database that had never been cleaned in four years of daily publishing.
 
- stumbled to my laptop, barely awake, expecting to see error 500s or a database connection failure. Nope. The site was "up." It was just loading so slowly that it might as well have been down. **43 seconds** to load the homepage. Forty. Three. Seconds.
+That night taught me more about performance than any article I had read, mostly because it taught me that almost everything written about WordPress performance is wrong in the same way. It hands you a list of plugins to install. The real work is figuring out which layer is lying to you, and no plugin can do that.
 
-That's enough time to make coffee. Order a pizza. Question your life choices.
+## Measure before you touch anything
 
-The culprit? A WordPress site that had been neglected for months, running 47 plugins, with zero caching, unoptimized images the size of small planets, and a database that looked like a digital hoarder's nightmare.
+I know. Nobody wants to hear this at 2am with a client on the phone. Do it anyway, because the alternative is spending a night optimising something that was never the problem.
 
-That night taught me everything I needed to know about WordPress performance. Let me save you from similar 2 AM panic calls.
+The number you get from a synthetic test is not the number your users get. A test run from a fast connection in Virginia against a site whose audience is on 3G in Eldoret is measuring a different website. You need both, and they answer different questions.
 
-## The Reality Check: Is Your WordPress Site Slow?
+Lab data, from Lighthouse or PageSpeed Insights, tells you what a page *can* do under controlled conditions. It is reproducible, which makes it useful for comparing before and after.
 
-First, let's establish what "slow" actually means. According to [Google's Core Web Vitals](https://web.dev/vitals/), your site should:
+Field data, from the Chrome UX Report or your own real-user monitoring, tells you what a page *did* for actual visitors on actual devices. It is noisy and it is the truth.
 
-- Load in under 2.5 seconds (Largest Contentful Paint)
-- Respond to user input within 100ms (First Input Delay)
-- Have minimal layout shift (Cumulative Layout Shift < 0.1)
+When those two disagree, believe the field data and go find out why the lab is flattering you. Usually it is because the lab throttles a fast connection while your audience has an unreliable one, and unreliable is a different problem to slow.
 
-"But Godwill," you might say, "my site loads fine for me!"
+That distinction is why I ended up building a plugin that collects both and stores them in the same place, rather than picking one. A synthetic audit and a real-user reporter answer questions you cannot answer from either alone.
 
-Of course it does. You have:
-- A fast computer
-- High-speed internet
-- The site cached in your browser
-- No distractions like children, pets, or existential dread
+## The three metrics, and what actually moves them
 
-Your actual users? They're on a 3G connection in a taxi, trying to load your site on a phone that's three generations old, while simultaneously arguing with their spouse about whether pineapple belongs on pizza. (It doesn't, by the way. Fight me.)
+Core Web Vitals get treated as a single score to chase. They are three separate problems with almost nothing in common, and lumping them together is how people spend a week on the wrong one.
 
-## The Performance Audit: Finding Your Bottlenecks
+**LCP** asks when the biggest visible thing finished rendering. On a WordPress site it is almost always the hero image or the headline, and it is almost always slow for one of three reasons: the server took too long to send the HTML, the image is enormous, or a render-blocking stylesheet sat in front of it.
 
-Before we fix anything, we need to know what's broken. Here are my go-to tools:
+**INP** asks how long the page takes to respond when somebody interacts with it. This is the one that punishes plugin sprawl, because every plugin that binds a listener or runs on every page load is competing for the same main thread. A page can score beautifully on LCP and still feel broken to touch.
 
-### 1. Google PageSpeed Insights
+**CLS** asks how much the layout jumped around while loading. Images without dimensions, ads and embeds injected after paint, and fonts that swap and reflow the text.
 
-Head to [PageSpeed Insights](https://pagespeed.web.dev/) and test your site. The report will make you cry, but that's okay. We're here to fix it.
+The reason this matters practically: the fix for one is frequently irrelevant to the others. Adding a CDN helps LCP and does nothing for INP. Deferring JavaScript helps INP and can hurt CLS if it delays something that reserves space. Chasing "performance" as one number leads you to make changes that trade one metric for another and feel like progress.
 
-### 2. GTmetrix
+## Caching is layered, and most sites cache one layer
 
-[GTmetrix](https://gtmetrix.com/) gives you a waterfall chart showing exactly where your site spends time loading. It's like a medical scan for your website, except less expensive and you don't have to wear a hospital gown.
+When people say they added caching, they usually mean they installed one plugin. There are at least four distinct layers, and they fail independently.
 
-### 3. Query Monitor Plugin
+Page caching stores the finished HTML so PHP never runs for most visitors. This is the single biggest win on a content site and the one most likely to be missing.
 
-Install [Query Monitor](https://wordpress.org/plugins/query-monitor/) to see which plugins and themes are slow queries to your database. It's like having X-ray vision for WordPress performance issues.
+Object caching keeps the results of database queries in memory, via Redis or Memcached. This is what saves you when a page really has to be dynamic.
 
-## The Low-Hanging Fruit: Quick Wins
+Opcode caching keeps compiled PHP in memory. Usually on by default now, worth checking, invisible when it is missing.
 
-Let's start with changes that take 15 minutes but deliver massive results.
+Browser caching tells the visitor's browser to keep static assets so a second visit does not refetch everything.
 
-### 1. Install a Caching Plugin (Please, For the Love of All That Is Holy)
+The failure I see most often is a site with page caching that is quietly not caching anything, because a plugin is setting a session cookie on every request and the cache is correctly refusing to serve a shared copy to what looks like a logged-in user. The plugin is installed. The dashboard says active. The cache hit rate is near zero and nobody is looking at the hit rate.
 
-If you're not caching, you're basically rebuilding your entire site from scratch for every single visitor. That's like baking a fresh cake every time someone wants a slice.
+Check the hit rate. An installed cache and a working cache are different things, and only one of them shows up in a dashboard.
 
-My top picks:
-- **[WP Rocket](https://wp-rocket.me/)** (Paid, but worth every penny)
-- **[W3 Total Cache](https://wordpress.org/plugins/w3-total-cache/)** (Free, slightly complex)
-- **[WP Super Cache](https://wordpress.org/plugins/wp-super-cache/)** (Free, beginner-friendly)
+## The database gets fat quietly
 
-Here's my WP Rocket config that's never let me down:
+WordPress keeps every revision of every post, forever, by default. A page edited two hundred times is two hundred rows. Multiply that across four years of publishing and the posts table stops fitting comfortably in memory.
+
+Add expired transients that nothing cleans up, orphaned metadata from plugins that were deleted without removing their rows, and spam comments in the tens of thousands.
 
 ```php
-// wp-config.php additions for WP Rocket
+// In wp-config.php. Caps revisions rather than disabling them, because
+// somebody will eventually need to undo an edit and losing that is worse
+// than the rows cost.
+define('WP_POST_REVISIONS', 5);
 
-// Enable Redis object caching
-define('WP_REDIS_HOST', 'localhost');
-define('WP_REDIS_PORT', 6379);
-define('WP_CACHE', true);
-
-// Increase memory limit
-define('WP_MEMORY_LIMIT', '256M');
-define('WP_MAX_MEMORY_LIMIT', '512M');
+// Empty the trash weekly instead of the default thirty days.
+define('EMPTY_TRASH_DAYS', 7);
 ```
 
-### 2. Optimize Your Images (Before They Kill Your Site)
+Cap it going forward first, then clean up what exists, and take a backup before the cleanup. This is destructive work and it is done on production, usually at speed, usually while someone is anxious. Deleting the wrong rows at 3am is a worse night than the one you are already having.
 
-Remember that client call at 2 AM? Their homepage had a 12MB hero image. For perspective, that's roughly the file size of the entire original DOOM game.
+## Images are almost always the biggest single win
 
-**Action plan:**
+On most WordPress sites I have looked at, images are more than half the page weight, and on the worst ones they are almost all of it.
 
-1. Install [ShortPixel](https://shortpixel.com/) or [Imagify](https://imagify.io/)
-2. Bulk optimize existing images
-3. Set up automatic optimization for new uploads
-4. Serve images in WebP format
+Serve modern formats. WebP is broadly supported now and typically saves a quarter to a third against a comparable JPEG. AVIF saves more where you can use it.
 
-```php
-// functions.php - Force WebP image generation
-
-add_filter('wp_generate_attachment_metadata', 'generate_webp_images');
-
-function generate_webp_images($metadata) {
-    $upload_dir = wp_upload_dir();
-    $file_path = trailingslashit($upload_dir['basedir']) . $metadata['file'];
-    
-    // Generate WebP version
-    $image = imagecreatefromstring(file_get_contents($file_path));
-    if ($image !== false) {
-        $webp_path = preg_replace('/\.(jpg|jpeg|png)$/i', '.webp', $file_path);
-        imagewebp($image, $webp_path, 80);
-        imagedestroy($image);
-    }
-    
-    return $metadata;
-}
-```
-
-### 3. Lazy Load Everything
-
-Why load images that users can't even see yet? That's like preparing dinner for guests who haven't arrived.
-
-```php
-// functions.php - Enable native lazy loading
-
-add_filter('wp_lazy_loading_enabled', '__return_true');
-
-// For older browsers, use a JavaScript fallback
-add_action('wp_enqueue_scripts', 'enqueue_lazy_load_script');
-
-function enqueue_lazy_load_script() {
-    wp_enqueue_script(
-        'lazysizes',
-        'https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.3.2/lazysizes.min.js',
-        array(),
-        '5.3.2',
-        true
-    );
-}
-```
-
-## The Database: Your Site's Junk Drawer
-
-Your WordPress database is like that one drawer in your kitchen. You know the one. Full of random stuff you threw in there "just in case." Old batteries, expired coupons, that weird key that doesn't open anything.
-
-Let's clean it up.
+Serve the right size. WordPress generates multiple sizes and then themes routinely ignore them and load the full-resolution original into a 400 pixel container. The visitor downloads four megabytes to display something the size of a postcard.
 
-### 1. Delete Post Revisions (The Digital Hoarders)
+Lazy load below the fold, and be careful not to lazy load the hero, because lazy loading your LCP element makes LCP worse, which is a really counterintuitive way to make a page slower with an optimisation.
 
-WordPress saves every draft of every post. Forever. That blog post you edited 47 times? All 47 versions are still there, taking up space and slowing down queries.
+Always set dimensions. An image without width and height is a layout shift waiting for the network.
 
-```php
-// wp-config.php - Limit post revisions
+The client from the 2am call had a 12MB hero image. One image. Fixing that alone took the load time from 43 seconds to about 12, before anything else was touched. It is not the interesting work but it is frequently the biggest number.
 
-define('WP_POST_REVISIONS', 3); // Keep only 3 revisions
-// OR
-define('WP_POST_REVISIONS', false); // Disable completely if you're brave
-```
+That problem annoyed me enough that I eventually built [a compressor that treats "smallest acceptable file" as a search problem](/blog/building-pixelpress) rather than a quality slider you guess at.
 
-To clean existing revisions:
+## Plugins are a performance budget you spend without noticing
 
-```sql
--- Run this in phpMyAdmin or your database tool
--- BACKUP YOUR DATABASE FIRST!
+Forty-seven plugins is not automatically bad. Forty-seven plugins that each add a stylesheet, a script and a database query to every page load is a site that cannot be fast no matter what you cache.
 
-DELETE FROM wp_posts 
-WHERE post_type = 'revision';
+The honest audit is uncomfortable and worth doing. Deactivate everything, measure, then reactivate one at a time and measure again. Tedious, and it is the only way to find the one plugin costing you two seconds. Most teams skip it and install a caching plugin to paper over the plugin they should have removed.
 
--- Optimize tables after deletion
-OPTIMIZE TABLE wp_posts;
-```
+Ask of each one whether it earns its cost, whether it loads on pages that do not use it, and whether the same job could be a few lines in the theme.
 
-### 2. Clean Up Transients
+## What I would do first, in order
 
-Transients are WordPress's way of temporarily storing data. Except they're not always so temporary. They're more like house guests who show up for the weekend and are still there six months later.
+Cap revisions and empty the trash, because it takes two minutes and it stops the bleeding.
 
-```php
-// Use WP-CLI to clean transients (the easy way)
-// Run in terminal:
-// wp transient delete --all
+Fix the largest image on the most visited page, because it is usually the single biggest number.
 
-// Or use this plugin code
-add_action('wp_scheduled_delete', 'delete_expired_transients');
+Turn on page caching and then verify the hit rate rather than trusting the dashboard.
 
-function delete_expired_transients() {
-    global $wpdb;
-    
-    $time = time();
-    $sql = "DELETE FROM {$wpdb->options} 
-            WHERE option_name LIKE '\_transient\_timeout\_%' 
-            AND option_value < {$time}";
-    
-    $wpdb->query($sql);
-    
-    // Clean up orphaned transients
-    $sql = "DELETE FROM {$wpdb->options}
-            WHERE option_name LIKE '\_transient\_%'
-            AND option_name NOT LIKE '\_transient\_timeout\_%'
-            AND option_name NOT IN (
-                SELECT REPLACE(option_name, '_timeout', '') 
-                FROM {$wpdb->options} 
-                WHERE option_name LIKE '\_transient\_timeout\_%'
-            )";
-    
-    $wpdb->query($sql);
-}
-```
+Audit plugins properly, one at a time, with measurements.
 
-### 3. Optimize Database Tables
+Then measure again in the field, not the lab, and see whether real people got a faster site.
 
-Over time, MySQL tables get fragmented like a hard drive. Running optimization is like defragging:
+The order matters because the first three are cheap and large, and the fourth is expensive and precise. Doing the expensive precise work first is how a performance project consumes a week and produces a graph nobody can feel.
 
-```sql
--- Optimize all WordPress tables
-OPTIMIZE TABLE 
-    wp_posts,
-    wp_postmeta,
-    wp_options,
-    wp_comments,
-    wp_commentmeta,
-    wp_users,
-    wp_usermeta,
-    wp_terms,
-    wp_term_relationships,
-    wp_term_taxonomy;
-```
-
-Or use [WP-Optimize](https://wordpress.org/plugins/wp-optimize/) plugin to do this with a click.
-
-## The Plugin Audit: Breaking Up With Toxic Plugins
-
-Not all plugins are created equal. Some are efficient, well-coded angels. Others are bloated, query-heavy demons that will destroy your site's performance.
-
-Here's how to identify the bad actors:
-
-### 1. Use Query Monitor
-
-Install Query Monitor and look for:
-- Plugins making excessive database queries
-- Slow queries (> 0.05 seconds)
-- Plugins loading scripts on every page (when they're only needed on one)
-
-### 2. The Deactivation Test
-
-Deactivate plugins one by one and test your site speed after each. It's tedious, but it works.
-
-Pro tip: Do this on a staging site, not production. Learning this the hard way is not fun.
-
-### 3. The "Do I Really Need This?" Question
-
-For every plugin, ask yourself:
-- Is this functionality used regularly?
-- Could this be done with a code snippet instead?
-- Does this plugin have good reviews and recent updates?
-
-I once audited a site with 73 active plugins. Seventy. Three. We got it down to 21, and the site speed improved by 67%.
-
-## The Theme: Sometimes It's Not You, It's Them
-
-Your theme might be beautiful, but if it's poorly coded, it's like driving a sports car with the parking brake on.
-
-### Signs Your Theme Is The Problem:
-
-1. **Bloat**: Comes with 47 demo sites and features you'll never use
-2. **jQuery dependency**: Modern sites shouldn't rely heavily on jQuery
-3. **Inline styles**: CSS should be in files, not scattered throughout the HTML
-4. **No updates**: Last updated in 2019? Run.
-
-### The Solution:
-
-Consider switching to a lightweight theme:
-- **[GeneratePress](https://generatepress.com/)** - Fast, modular, developer-friendly
-- **[Astra](https://wpastra.com/)** - Lightweight, integrates well with page builders
-- **[Kadence](https://www.kadencewp.com/)** - Modern, performance-focused
-
-Or go headless:
-- Use WordPress as a headless CMS with a Next.js or Gatsby frontend
-- This is what I did for that 2 AM client (after fixing the immediate issues)
-- Learn more about [headless WordPress](https://developer.wordpress.org/rest-api/using-the-rest-api/frequently-asked-questions/#what-is-a-headless-cms)
-
-## Advanced Optimizations: When You Want To Get Fancy
-
-### 1. Implement A CDN
-
-A Content Delivery Network serves your static files from servers close to your users. It's like having pizza shops in every neighborhood instead of one central location.
-
-Top picks:
-- **[Cloudflare](https://www.cloudflare.com/)** - Free tier is excellent
-- **[BunnyCDN](https://bunny.net/)** - Fast and affordable
-- **[StackPath](https://www.stackpath.com/)** - Premium option
-
-```php
-// functions.php - Rewrite URLs to CDN
-
-add_filter('wp_get_attachment_url', 'cdn_replace_url');
-add_filter('wp_get_attachment_image_src', 'cdn_replace_url');
-
-function cdn_replace_url($url) {
-    $cdn_url = 'https://cdn.yoursite.com';
-    $site_url = get_site_url();
-    
-    return str_replace($site_url, $cdn_url, $url);
-}
-```
-
-### 2. Enable Gzip Compression
-
-Gzip compresses your files before sending them to browsers. It's like vacuum-sealing clothes—same content, much smaller package.
-
-```apache
-# .htaccess - Enable Gzip compression
-
-<IfModule mod_deflate.c>
-    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/x-javascript application/xml application/xhtml+xml application/rss+xml application/atom_xml image/svg+xml
-</IfModule>
-```
-
-### 3. Preload Critical Resources
-
-Tell the browser what it needs before it even asks:
-
-```php
-// functions.php - Preload critical resources
-
-add_action('wp_head', 'preload_critical_assets', 1);
-
-function preload_critical_assets() {
-    ?>
-    <link rel="preload" href="<?php echo get_stylesheet_uri(); ?>" as="style">
-    <link rel="preload" href="<?php echo get_template_directory_uri(); ?>/fonts/main.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="dns-prefetch" href="//www.google-analytics.com">
-    <?php
-}
-```
-
-### 4. Implement Redis Object Caching
-
-Redis caches database queries in memory. It's insanely fast.
-
-```php
-// wp-config.php - Enable Redis
-
-define('WP_REDIS_HOST', '127.0.0.1');
-define('WP_REDIS_PORT', 6379);
-define('WP_REDIS_DATABASE', 0);
-define('WP_CACHE_KEY_SALT', 'yoursite.com');
-```
-
-Install the [Redis Object Cache](https://wordpress.org/plugins/redis-cache/) plugin, and you're golden.
-
-## The Hosting Factor: Sometimes You Need To Move Out
-
-Your hosting can make or break performance. Shared hosting for $3/month might seem like a deal, but you get what you pay for.
-
-### When To Upgrade:
-
-- Site consistently slow despite optimization
-- Shared hosting with hundreds of neighbors
-- Limited resources (CPU, RAM, storage)
-- No SSD storage (seriously, it's 2024)
-
-### Where To Go:
-
-**Managed WordPress Hosting** (My recommendations):
-- **[Kinsta](https://kinsta.com/)** - Premium, excellent support, Google Cloud infrastructure
-- **[WP Engine](https://wpengine.com/)** - Industry standard, great for agencies
-- **[Cloudways](https://www.cloudways.com/)** - Flexible, affordable, great performance
-
-**VPS/Cloud** (If you're technical):
-- **[DigitalOcean](https://www.digitalocean.com/)** with [RunCloud](https://runcloud.io/)
-- **[Vultr](https://www.vultr.com/)** with [Ploi](https://ploi.io/)
-- **[AWS Lightsail](https://aws.amazon.com/lightsail/)** for AWS integration
-
-## The Results: What To Expect
-
-After implementing these optimizations, here's what typically happens:
-
-**Before:**
-- Load time: 8-15 seconds
-- PageSpeed score: 35/100
-- Bounce rate: 68%
-- Conversions: 1.2%
-
-**After:**
-- Load time: 1.5-2.5 seconds
-- PageSpeed score: 85-95/100
-- Bounce rate: 38%
-- Conversions: 3.8%
-
-That 2 AM client? After our optimization sprint:
-- Load time dropped from 43 seconds to 2.1 seconds
-- Server costs decreased by 40% (fewer resources needed)
-- Conversions increased by 180%
-- No more 2 AM panic calls (priceless)
-
-## The Maintenance Plan: Staying Fast
-
-Performance optimization isn't a one-time thing. It's like going to the gym—you can't just go once and expect to stay fit forever.
-
-### Monthly Checklist:
-
-- [ ] Run PageSpeed Insights test
-- [ ] Check for plugin updates
-- [ ] Review and delete unused plugins
-- [ ] Clean up database (revisions, transients, spam)
-- [ ] Check uptime and response times
-- [ ] Review error logs
-- [ ] Test site on real devices
-
-### Quarterly Deep Dive:
-
-- [ ] Full plugin audit
-- [ ] Theme update/optimization review
-- [ ] CDN performance analysis
-- [ ] Mobile performance testing
-- [ ] Core Web Vitals deep dive
-
-## The Truth About Performance
-
-Here's what nobody tells you: perfect performance scores don't matter if your site doesn't convert.
-
-I've seen sites with 100/100 PageSpeed scores that didn't make money, and sites with 65/100 scores that were wildly profitable. The goal isn't perfection—it's **fast enough that users don't notice and stay long enough to convert**.
-
-That said, every 100ms improvement in load time can increase conversions by 1%. So yes, it matters. A lot.
-
-## The Emergency Checklist: When Your Site Is Down RIGHT NOW
-
-If you're reading this during a crisis (hey, welcome to the 2 AM club!):
-
-1. **Check if it's actually down**: Use [Down For Everyone Or Just Me](https://downforeveryoneorjustme.com/)
-2. **Disable all plugins**: Via FTP, rename the plugins folder
-3. **Switch to default theme**: Via FTP or database
-4. **Check error logs**: cPanel or via FTP in `/wp-content/debug.log`
-5. **Increase PHP memory**: Edit `wp-config.php`, increase `WP_MEMORY_LIMIT`
-6. **Contact your host**: Sometimes it's their infrastructure
-
-## Resources For Going Deeper
-
-Want to become a WordPress performance wizard? Check these out:
-
-- [WP Rocket Blog](https://wp-rocket.me/blog/) - Regular performance tips
-- [WordPress Performance Optimization Guide](https://wordpress.org/support/article/optimization/) - Official documentation
-- [Web.dev WordPress Guide](https://web.dev/wordpress/) - Google's recommendations
-- [Query Monitor Plugin](https://querymonitor.com/) - For debugging
-- [GTmetrix](https://gtmetrix.com/) - Performance testing tool
-
----
-
-WordPress doesn't have to be slow. With the right optimizations, it can be blazingly fast—fast enough that your users never think about performance, they just enjoy using your site.
-
-And you? You get to sleep soundly, knowing that your phone won't ring at 2 AM with a panicking client.
-
-Well, probably. There's always something. But at least it won't be performance. 😴
-
-*P.S. If you're still reading this after 15 minutes, your WordPress site is probably loading slowly right now. Go fix it!*
+And the thing I would tell the version of myself answering that phone at 2am: the site was not broken. It was neglected, in five separate places, each of which was somebody's reasonable decision at the time. Performance work is rarely one heroic fix. It is finding five ordinary compromises and undoing them in the right order.

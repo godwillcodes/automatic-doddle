@@ -28,11 +28,11 @@ I have built this integration four times across three companies. This is the ver
 
 Daraja is Safaricom's public API layer over M-Pesa. For accepting money from a customer, you care about exactly three endpoints:
 
-- `POST /oauth/v1/generate` — exchange your consumer key and secret for a bearer token
-- `POST /mpesa/stkpush/v1/processrequest` — push a PIN prompt to a customer's phone
-- `POST /mpesa/stkpushquery/v1/query` — ask Safaricom what happened to a push
+- `POST /oauth/v1/generate`, exchange your consumer key and secret for a bearer token
+- `POST /mpesa/stkpush/v1/processrequest`, push a PIN prompt to a customer's phone
+- `POST /mpesa/stkpushquery/v1/query`, ask Safaricom what happened to a push
 
-And one endpoint you have to provide: the **callback URL**, which Safaricom posts the result to. That callback is where every integration lives or dies, and it gets its own article — [why your M-Pesa callback never arrives](/blog/mpesa-callback-not-received) covers the failure modes in detail.
+And one endpoint you have to provide: the **callback URL**, which Safaricom posts the result to. That callback is where every integration lives or dies, and it gets its own article, [why your M-Pesa callback never arrives](/blog/mpesa-callback-not-received) covers the failure modes in detail.
 
 The critical mental model: **STK Push is asynchronous and the HTTP response tells you nothing about payment.** A `ResponseCode` of `"0"` means "Safaricom accepted your request to show a prompt." It does not mean the customer paid. It does not mean the customer even saw the prompt. Treating that 200 as a payment is the single most common bug in production M-Pesa code.
 
@@ -76,7 +76,7 @@ Throwing at module load is deliberate. A missing passkey should break your deplo
 
 The OAuth endpoint returns a token valid for 3599 seconds. Requesting a fresh one on every payment is slow and, at volume, will get you rate-limited.
 
-The subtlety is the expiry margin. If you cache for the full 3599 seconds, you will eventually send a request with a token that expires in flight. Expire it early — 60 seconds of margin costs you nothing:
+The subtlety is the expiry margin. If you cache for the full 3599 seconds, you will eventually send a request with a token that expires in flight. Expire it early. 60 seconds of margin costs you nothing:
 
 ```typescript lib/mpesa/token.ts
 import { mpesaConfig } from './config'
@@ -114,7 +114,7 @@ export async function getAccessToken(): Promise<string> {
 }
 ```
 
-A module-level variable is fine on a long-lived Node process. On serverless it is a per-instance cache that survives warm invocations and rebuilds on cold ones — acceptable, but see [running STK Push on serverless](/blog/mpesa-stk-push-serverless) for where that assumption gets you into trouble.
+A module-level variable is fine on a long-lived Node process. On serverless it is a per-instance cache that survives warm invocations and rebuilds on cold ones, acceptable, but see [running STK Push on serverless](/blog/mpesa-stk-push-serverless) for where that assumption gets you into trouble.
 
 ## Phone numbers: normalise ruthlessly
 
@@ -222,7 +222,7 @@ export async function initiateStkPush(params: {
 
 Two details that cost me hours the first time:
 
-**`AccountReference` and `TransactionDesc` have length limits** — 12 and 13 characters respectively. Exceed them and you get a generic `400` with no useful message. Truncate defensively.
+**`AccountReference` and `TransactionDesc` have length limits**. 12 and 13 characters respectively. Exceed them and you get a generic `400` with no useful message. Truncate defensively.
 
 **`Amount` must be a whole number.** Send `199.50` and the request fails. `Math.ceil` rather than `Math.round`, because rounding a customer's bill down is a bug that only ever costs you money.
 
@@ -285,11 +285,11 @@ export async function POST(request: Request) {
 
 That comment about ordering is not theoretical. Safaricom's callback has arrived before my own HTTP response finished serialising, on a fast connection, more than once. If the pending row does not exist yet, the callback handler has nothing to update and silently drops a real payment.
 
-The `max(150_000)` reflects the M-Pesa per-transaction ceiling. Validate it yourself rather than letting Daraja reject it — the error you generate will be far more useful than the one it returns.
+The `max(150_000)` reflects the M-Pesa per-transaction ceiling. Validate it yourself rather than letting Daraja reject it, the error you generate will be far more useful than the one it returns.
 
 ## Receiving the result
 
-The callback is a `POST` from Safaricom with a nested payload. It is unauthenticated, so anyone who finds the URL can post to it — which is why the handler below trusts nothing in the body except as a lookup key:
+The callback is a `POST` from Safaricom with a nested payload. It is unauthenticated, so anyone who finds the URL can post to it, which is why the handler below trusts nothing in the body except as a lookup key:
 
 ```typescript app/api/payments/mpesa/callback/route.ts
 import { NextResponse } from 'next/server'
@@ -326,15 +326,15 @@ export async function POST(request: Request) {
 }
 ```
 
-`CallbackMetadata` is only present on success. On failure the payload has `ResultCode` and `ResultDesc` and nothing else — reading `Item` unguarded is how most integrations throw on the first cancelled payment.
+`CallbackMetadata` is only present on success. On failure the payload has `ResultCode` and `ResultDesc` and nothing else, reading `Item` unguarded is how most integrations throw on the first cancelled payment.
 
 The result codes you will actually see:
 
-- `0` — paid
-- `1` — insufficient balance
-- `1032` — customer pressed cancel
-- `1037` — no response from the phone; often unreachable or the prompt timed out
-- `2001` — wrong PIN
+- `0`, paid
+- `1`, insufficient balance
+- `1032`, customer pressed cancel
+- `1037`, no response from the phone; often unreachable or the prompt timed out
+- `2001`, wrong PIN
 
 `1032` and `1037` are the common ones and they are not errors in your system. Surface them as "payment cancelled" and "we couldn't reach your phone", not as a 500.
 
@@ -384,7 +384,7 @@ export function usePaymentStatus(checkoutRequestId: string | null) {
 
 The 90-second stop matters. Without it, a user who ignores the prompt leaves a poller running until they close the tab.
 
-And `timeout` is not `failed`. A timed-out push can still be paid — the customer may have entered their PIN just as you gave up, and the callback will land afterwards. Show "we're still confirming this payment", let the callback settle it, and never mark an order failed on the client's say-so.
+And `timeout` is not `failed`. A timed-out push can still be paid, the customer may have entered their PIN just as you gave up, and the callback will land afterwards. Show "we're still confirming this payment", let the callback settle it, and never mark an order failed on the client's say-so.
 
 ## What I would tell my past self
 
@@ -394,8 +394,8 @@ And `timeout` is not `failed`. A timed-out push can still be paid — the custom
 
 **Log the entire callback body, raw, forever.** When finance asks about a specific transaction eight months from now, the raw payload is the only thing that will settle it. Storage is cheaper than the argument.
 
-**Someone will pay twice.** Not often, but at any volume it happens — a double-tap, a retried request, a duplicated callback. Decide now whether your system refunds, credits, or absorbs it, because deciding during the incident goes badly.
+**Someone will pay twice.** Not often, but at any volume it happens, a double-tap, a retried request, a duplicated callback. Decide now whether your system refunds, credits, or absorbs it, because deciding during the incident goes badly.
 
-If you are starting from zero, the next thing to get right is your callback endpoint, because nothing else works until that does. [Start there](/blog/mpesa-callback-not-received) — and if you are on Vercel, Netlify, or anything else without a long-lived server, read [the serverless notes](/blog/mpesa-stk-push-serverless) before you design the flow.
+If you are starting from zero, the next thing to get right is your callback endpoint, because nothing else works until that does. [Start there](/blog/mpesa-callback-not-received), and if you are on Vercel, Netlify, or anything else without a long-lived server, read [the serverless notes](/blog/mpesa-stk-push-serverless) before you design the flow.
 
 Everything above is collection. The rest of the money's lifecycle has its own articles: [getting the shortcode approved for production](/blog/mpesa-daraja-production-go-live), [paying money back out with B2C](/blog/mpesa-b2c-payouts), and [refunds and reversals](/blog/mpesa-refunds-and-reversals).

@@ -20,7 +20,7 @@ Here is a bug I shipped.
 
 An e-commerce client took M-Pesa payments. The callback handler found the order, marked it paid, and incremented the customer's loyalty balance. Straightforward, worked fine, ran for months.
 
-Then Safaricom had a slow afternoon, retried a batch of callbacks, and about forty customers got their loyalty points twice. The orders were fine — marking an already-paid order paid is harmless. The `balance += points` was not.
+Then Safaricom had a slow afternoon, retried a batch of callbacks, and about forty customers got their loyalty points twice. The orders were fine, marking an already-paid order paid is harmless. The `balance += points` was not.
 
 The fix took ten minutes. Working out which forty customers, and by how much, took two days, because I had no record of *which* callback had caused which balance change.
 
@@ -28,7 +28,7 @@ That is what this article is about: not the ten-minute fix, but the design that 
 
 ## Assume every callback arrives more than once
 
-Safaricom retries when it doesn't get a clean `200`. Your load balancer retries. A deploy mid-request retries. At any volume, duplicate delivery is not an edge case — it is a Tuesday.
+Safaricom retries when it doesn't get a clean `200`. Your load balancer retries. A deploy mid-request retries. At any volume, duplicate delivery is not an edge case, it is a Tuesday.
 
 The guarantee you get is *at least once*, never *exactly once*. So the handler has to be idempotent: processing the same callback five times must leave the system in the same state as processing it once.
 
@@ -55,7 +55,7 @@ This is the bug I shipped. Two duplicate callbacks arriving concurrently both re
 
 The reliable version pushes uniqueness into a constraint, where concurrency cannot argue with it.
 
-M-Pesa gives you two natural keys. `CheckoutRequestID` identifies the push you initiated. `MpesaReceiptNumber` identifies the money that actually moved. Use the receipt as your idempotency key — it is the one that exists only when a real transaction happened.
+M-Pesa gives you two natural keys. `CheckoutRequestID` identifies the push you initiated. `MpesaReceiptNumber` identifies the money that actually moved. Use the receipt as your idempotency key, it is the one that exists only when a real transaction happened.
 
 ```sql
 CREATE TABLE mpesa_transaction (
@@ -127,7 +127,7 @@ export async function settleFromCallback(callback: ParsedCallback) {
 
 Everything that must happen exactly once lives inside the same transaction as the unique insert. If the insert fails, nothing else commits. There is no window.
 
-Note `amount_cents` as a `bigint`. M-Pesa amounts are whole shillings, so you may not think you need minor units — but the moment you apply a percentage fee or split a payment, floats will cost you cents that finance will find. Store integers.
+Note `amount_cents` as a `bigint`. M-Pesa amounts are whole shillings, so you may not think you need minor units, but the moment you apply a percentage fee or split a payment, floats will cost you cents that finance will find. Store integers.
 
 ## Keep a ledger, not just a balance
 
@@ -158,7 +158,7 @@ FROM ledger_entry
 WHERE account_id = $1;
 ```
 
-This costs you a `SUM` on read, which you can cache or roll up into monthly snapshots when it becomes a real cost. What you get is the ability to answer "why is this number what it is" with a query instead of an archaeology project — and to reverse exactly one bad entry without recomputing anything.
+This costs you a `SUM` on read, which you can cache or roll up into monthly snapshots when it becomes a real cost. What you get is the ability to answer "why is this number what it is" with a query instead of an archaeology project, and to reverse exactly one bad entry without recomputing anything.
 
 The second unique constraint means the same receipt can never produce two credits for the same account, even if the code that writes it is wrong.
 
@@ -194,11 +194,11 @@ export async function reconcileDay(date: Date) {
 }
 ```
 
-**Missing** — Safaricom has it, you don't. A lost callback. This is money you were paid and did not credit, and it is the bucket that generates support tickets. It should be auto-recoverable: you have the receipt, so settle it through the same idempotent path a callback would have taken.
+**Missing**. Safaricom has it, you don't. A lost callback. This is money you were paid and did not credit, and it is the bucket that generates support tickets. It should be auto-recoverable: you have the receipt, so settle it through the same idempotent path a callback would have taken.
 
-**Phantom** — you have it, Safaricom doesn't. This should be empty. If it isn't, either you are reading the wrong shortcode or something is writing transactions that never happened. Alert loudly; do not auto-resolve.
+**Phantom**, you have it, Safaricom doesn't. This should be empty. If it isn't, either you are reading the wrong shortcode or something is writing transactions that never happened. Alert loudly; do not auto-resolve.
 
-**Mismatched** — the amounts disagree. Almost always a rounding or currency-unit bug on your side. Also alert; never auto-correct, because the correction is a judgement call.
+**Mismatched**, the amounts disagree. Almost always a rounding or currency-unit bug on your side. Also alert; never auto-correct, because the correction is a judgement call.
 
 Alert on the counts, not just on failures:
 

@@ -2,7 +2,7 @@
 title: "Building PixelPress: Client-Side Image Compression with Next.js and Sharp"
 metaTitle: "Building PixelPress: Image Compression in Next.js"
 slug: building-pixelpress
-excerpt: "How I built an image compressor that runs in the browser, keeps files private, and still beats server-side tools on output size. Architecture, trade-offs and the parts that went wrong."
+excerpt: "A 12MB hero image on a client's homepage sent me down a two-week hole. The result treats smallest acceptable file as a search problem instead of a quality slider you guess at."
 date: "2024-12-21"
 category: "Engineering"
 targetKeyword: "nextjs image compression sharp"
@@ -17,487 +17,111 @@ keywords:
 featured: false
 ---
 
-The year was 2024, and I was sitting in a coffee shop in Nairobi, watching my client's website load at the speed of a sleepy tortoise. The culprit? A 12MB hero image that someone thought would "look amazing" on the homepage. Spoiler alert: it didn't look amazing when users bounced after 10 seconds of staring at a loading spinner.
+Somebody uploaded a 12MB photograph to a homepage because it looked good on their monitor. The site went from usable to unusable, and I spent an evening explaining to a client why their brand-new website was slower than the one it replaced.
 
-That frustrating afternoon sparked the idea for PixelPress—a tool that would make image compression so simple that even my most design-obsessed clients couldn't mess it up.
+What bothered me afterwards was not the image. It was that the tools I reached for to fix it all asked me the same useless question: what quality setting do you want?
 
-## The Problem: Why Another Image Compression Tool?
+I do not want a quality setting. Nobody has ever wanted a quality setting. What I want is the smallest file this picture can survive being. The quality number is a knob I have to guess at repeatedly until I stop being able to see the damage, which is a search I was performing by hand, badly, several times a week.
 
-Look, I know what you're thinking. "Godwill, there are literally hundreds of image compression tools out there. Do we really need another one?"
+So I built the thing that does the search.
 
-Fair question. Here's the thing: most tools fall into two camps:
-1. **Online tools** that work great but send your images to someone else's server (privacy concerns, anyone?)
-2. **Desktop apps** that are powerful but require installation and don't integrate with modern workflows
+## The actual problem with a quality slider
 
-I wanted something different—a web app that could compress images **client-side** (your images never leave your browser), achieve **maximum compression** without destroying quality, and integrate seamlessly into a developer's workflow.
+Sharp exposes quality as a number from 1 to 100. It is not a percentage of anything meaningful. The relationship between that number and the resulting file size depends entirely on the image.
 
-Plus, I wanted to learn more about the [Sharp image processing library](https://sharp.pixelplumbing.com/) and push Next.js to its limits. Two birds, one stone.
+A photograph of a busy street has detail everywhere and compresses reluctantly. A product shot on a white background is mostly flat and collapses to almost nothing. Quality 70 on one might be 400KB and on the other 40KB. There is no setting you can pick in advance that is right for both.
 
-## Architecture Decisions: Why Next.js and Sharp?
+So what actually happens in practice is a manual loop. Export at 80. Look at it. Too big. Export at 60. Look at it. Now the sky has banding. Export at 70. Repeat.
 
-### Next.js: The Obvious Choice
+That is a search algorithm being executed by a human with their eyes, and humans are slow at it and inconsistent between sessions. The insight, such as it is: if you can state the target as a size rather than a quality, the machine can do the search properly.
 
-Next.js was a no-brainer for this project. The framework's [Image Optimization API](https://nextjs.org/docs/basic-features/image-optimization) is already phenomenal, but I wanted to go deeper. Here's what Next.js brought to the table:
+## Binary search over quality
 
-1. **API Routes**: Perfect for handling image processing on the server
-2. **Serverless Functions**: Each compression job runs in isolation
-3. **React Server Components**: Reduced JavaScript bundle for faster initial loads
-4. **Edge Runtime**: Deploy compression endpoints close to users globally
-
-### Sharp: The Heavy Lifter
-
-[Sharp](https://sharp.pixelplumbing.com/) is, hands down, the fastest image processing library in the Node.js ecosystem. Built on top of libvips, it's 4-5x faster than ImageMagick and uses significantly less memory.
-
-But here's where things got interesting—I wanted to use Sharp in the browser too.
-
-**Plot twist**: Sharp is a native Node.js module. It doesn't run in browsers.
-
-*Cue the dramatic music.*
-
-## The Technical Challenges (And How I Almost Gave Up)
-
-### Challenge #1: Running Sharp in the Browser
-
-My initial idea was simple: process everything client-side using Sharp compiled to WebAssembly.
-
-Reality check: Sharp's native dependencies are complex, and compiling them to WASM would result in a massive bundle. We're talking 10MB+ just for the compression library.
-
-**The Solution**: A hybrid approach.
+Given a target size, the search is straightforward. Encode at the midpoint, check the result, and halve the interval in whichever direction the answer was wrong.
 
 ```typescript
-// Client-side: Handle UI and basic operations
-// components/ImageUploader.tsx
-
-'use client'
-
-import { useState } from 'react'
-import { uploadAndCompress } from '@/lib/compression'
-
-export function ImageUploader() {
-  const [compressing, setCompressing] = useState(false)
-  const [result, setResult] = useState(null)
-
-  const handleUpload = async (file: File) => {
-    setCompressing(true)
-    
-    // Send to API route for server-side compression
-    const formData = new FormData()
-    formData.append('image', file)
-    
-    const response = await fetch('/api/compress', {
-      method: 'POST',
-      body: formData,
-    })
-    
-    const data = await response.json()
-    setResult(data)
-    setCompressing(false)
-  }
-
-  return (
-    // ... UI components
-  )
-}
-```
-
-```typescript
-// Server-side: Use Sharp for actual compression
-// app/api/compress/route.ts
-
-import { NextRequest, NextResponse } from 'next/server'
-import sharp from 'sharp'
-
-export async function POST(request: NextRequest) {
-  const formData = await request.formData()
-  const image = formData.get('image') as File
-  const buffer = Buffer.from(await image.arrayBuffer())
-
-  // The magic happens here
-  const compressed = await sharp(buffer)
-    .resize(1920, undefined, {
-      withoutEnlargement: true,
-      fit: 'inside'
-    })
-    .webp({ quality: 80, effort: 6 })
-    .toBuffer()
-
-  const originalSize = buffer.length
-  const compressedSize = compressed.length
-  const savings = ((originalSize - compressedSize) / originalSize * 100).toFixed(2)
-
-  return NextResponse.json({
-    original: originalSize,
-    compressed: compressedSize,
-    savings: `${savings}%`,
-    data: compressed.toString('base64')
-  })
-}
-```
-
-This hybrid approach gave me the best of both worlds: a snappy UI with the power of native image processing.
-
-### Challenge #2: Achieving Maximum Compression
-
-Here's a dirty secret about image compression: the difference between "good" and "great" compression often comes down to understanding **psychovisual optimization**.
-
-Humans are weird. We're really good at noticing certain types of image degradation but completely blind to others. For example:
-- We notice banding in gradients instantly
-- We barely notice 20% quality reduction in busy, textured areas
-
-I spent weeks tweaking Sharp's compression parameters, creating test images, and conducting A/B tests with real users. Here's what I learned:
-
-**The "Sweet Spot" Formula**:
-
-```typescript
-// lib/compression-profiles.ts
-
-export const compressionProfiles = {
-  // For photos with lots of detail
-  photo: {
-    webp: { quality: 82, effort: 6, smartSubsample: true },
-    avif: { quality: 65, effort: 9 },
-    jpeg: { quality: 85, mozjpeg: true },
-  },
-  
-  // For graphics, screenshots, diagrams
-  graphic: {
-    webp: { quality: 90, effort: 6, lossless: false },
-    avif: { quality: 75, effort: 9 },
-    png: { compressionLevel: 9, effort: 10 },
-  },
-  
-  // Maximum compression (use with caution)
-  aggressive: {
-    webp: { quality: 70, effort: 6, smartSubsample: true },
-    avif: { quality: 50, effort: 9 },
-    jpeg: { quality: 75, mozjpeg: true },
-  },
-}
-```
-
-The `effort` parameter is crucial—it determines how much CPU time Sharp spends finding the optimal compression. Higher effort = smaller files but slower processing.
-
-### Challenge #3: Handling Multiple Formats Intelligently
-
-Modern browsers support different image formats:
-- **WebP**: Widely supported, great compression (30-40% smaller than JPEG)
-- **AVIF**: Better compression than WebP (50% smaller!) but slower encoding
-- **JPEG/PNG**: Universal fallbacks
-
-I built a smart format selector that considers:
-1. Browser support (detected client-side)
-2. Image type (photo vs graphic)
-3. Size requirements
-4. Processing time budget
-
-```typescript
-// lib/format-selector.ts
-
-export async function selectOptimalFormat(
-  buffer: Buffer,
-  targetSize?: number
-): Promise<{ format: string; buffer: Buffer }> {
-  const results = await Promise.all([
-    compressToWebP(buffer),
-    compressToAVIF(buffer),
-    compressToJPEG(buffer),
-  ])
-
-  // Sort by file size
-  results.sort((a, b) => a.buffer.length - b.buffer.length)
-
-  // If we have a target size, find the first format that hits it
-  if (targetSize) {
-    const suitable = results.find(r => r.buffer.length <= targetSize)
-    if (suitable) return suitable
-  }
-
-  // Otherwise, return the smallest
-  return results[0]
-}
-```
-
-## The Performance Optimization Rabbit Hole
-
-Once the core compression was working, I obsessed over performance. Here's what made the biggest difference:
-
-### 1. Streaming for Large Images
-
-Instead of loading entire images into memory, I used Sharp's streaming capabilities:
-
-```typescript
-import { pipeline } from 'stream'
-import { promisify } from 'util'
-
-const pipelineAsync = promisify(pipeline)
-
-export async function compressStream(
-  inputStream: ReadableStream,
-  outputStream: WritableStream
-) {
-  await pipelineAsync(
-    inputStream,
-    sharp()
-      .resize(2000, 2000, { fit: 'inside', withoutEnlargement: true })
-      .webp({ quality: 80 }),
-    outputStream
-  )
-}
-```
-
-This reduced memory usage by 70% for large images.
-
-### 2. Parallel Processing with Worker Threads
-
-For bulk compression, I leveraged Node.js worker threads:
-
-```typescript
-// lib/batch-compressor.ts
-
-import { Worker } from 'worker_threads'
-import os from 'os'
-
-export async function compressBatch(images: Buffer[]): Promise<Buffer[]> {
-  const numWorkers = os.cpus().length
-  const chunkSize = Math.ceil(images.length / numWorkers)
-  
-  const workers = Array.from({ length: numWorkers }, (_, i) => {
-    const chunk = images.slice(i * chunkSize, (i + 1) * chunkSize)
-    return new Worker('./compression-worker.js', {
-      workerData: { images: chunk }
-    })
-  })
-
-  const results = await Promise.all(
-    workers.map(worker => new Promise((resolve, reject) => {
-      worker.on('message', resolve)
-      worker.on('error', reject)
-    }))
-  )
-
-  return results.flat()
-}
-```
-
-This cut processing time for 100+ images from 45 seconds to 8 seconds. *Chef's kiss.*
-
-### 3. Caching with Redis
-
-To avoid reprocessing the same images, I implemented smart caching:
-
-```typescript
-// lib/cache.ts
-
-import { createHash } from 'crypto'
-import Redis from 'ioredis'
-
-const redis = new Redis(process.env.REDIS_URL)
-
-export async function getCachedCompression(
-  buffer: Buffer,
-  options: CompressionOptions
-): Promise<Buffer | null> {
-  const hash = createHash('sha256')
-    .update(buffer)
-    .update(JSON.stringify(options))
-    .digest('hex')
-
-  const cached = await redis.getBuffer(`compress:${hash}`)
-  return cached
-}
-
-export async function setCachedCompression(
-  buffer: Buffer,
-  options: CompressionOptions,
-  result: Buffer
-): Promise<void> {
-  const hash = createHash('sha256')
-    .update(buffer)
-    .update(JSON.stringify(options))
-    .digest('hex')
-
-  // Cache for 7 days
-  await redis.setex(`compress:${hash}`, 604800, result)
-}
-```
-
-Cache hit rate after one week: 73%. Feels good, man.
-
-## The Unexpected Lessons
-
-### 1. Users Care About Privacy (A Lot)
-
-When I first launched PixelPress, I had a simple tagline: "Compress your images fast."
-
-Usage was... meh.
-
-Then I changed it to: "Your images never leave your browser. Ever."
-
-Signups increased by 300%. Turns out, people *really* don't want their vacation photos going through random servers. Who knew?
-
-### 2. The "Export for Web" Button Changed Everything
-
-Initially, PixelPress just compressed and downloaded images. But users kept asking: "Can you make this smaller?" "What about this format?" "Can I batch these?"
-
-So I built an "Export for Web" wizard that:
-- Suggests optimal formats based on image content
-- Provides multiple quality presets with visual previews
-- Shows side-by-side comparisons
-- Estimates page load time impact
-
-This feature alone increased user retention by 50%. People love having options (but not too many options—I learned that the hard way after building a version with 47 different settings. Nobody used it.).
-
-### 3. Error Messages Matter More Than You Think
-
-My favorite error message in PixelPress:
-
-> **"This image is already pretty tiny!"**  
-> Your image is only 15KB. Compressing it further might actually make it *larger* due to format overhead. That's like putting a paperclip in a shipping container. Let's call this one done! 🎉
-
-Compare that to the original error: `Error: Output buffer exceeds input size.`
-
-Guess which one made users smile instead of closing the tab?
-
-## Real-World Impact
-
-Three months after launch, PixelPress has:
-- Compressed over 2 million images
-- Saved users an estimated 14TB of bandwidth
-- Reduced average page load times by 2.3 seconds for sites using it
-- Made me realize I should have charged for it from day one (whoops)
-
-The most rewarding moment? A developer from Nigeria messaged me saying PixelPress helped him build faster sites for clients with limited mobile data. In markets where every megabyte costs real money, optimized images aren't a nice-to-have—they're essential.
-
-## The Code You Can Actually Use
-
-Want to build something similar? Here's the core compression function that powers PixelPress:
-
-```typescript
-// lib/smart-compress.ts
-
-import sharp from 'sharp'
-
-interface CompressionResult {
-  buffer: Buffer
-  format: string
-  originalSize: number
-  compressedSize: number
-  savings: number
-}
-
-export async function smartCompress(
+/**
+ * Search the quality range for the smallest encode that still lands within
+ * tolerance of the target. Bounded iterations because encoding is the
+ * expensive part and the last few bytes are never worth another pass.
+ */
+async function findQuality(
   input: Buffer,
-  options: {
-    maxWidth?: number
-    maxHeight?: number
-    quality?: number
-    format?: 'auto' | 'webp' | 'avif' | 'jpeg' | 'png'
-  } = {}
-): Promise<CompressionResult> {
-  const {
-    maxWidth = 1920,
-    maxHeight = 1920,
-    quality = 80,
-    format = 'auto'
-  } = options
+  targetBytes: number,
+  { tolerance = 0.05, maxIterations = 8 } = {}
+) {
+  let low = 1
+  let high = 100
+  let best: { quality: number; output: Buffer } | null = null
 
-  const originalSize = input.length
-  const image = sharp(input)
-  const metadata = await image.metadata()
+  for (let i = 0; i < maxIterations; i += 1) {
+    const quality = Math.round((low + high) / 2)
+    const output = await sharp(input).webp({ quality }).toBuffer()
 
-  // Resize if necessary
-  if (metadata.width > maxWidth || metadata.height > maxHeight) {
-    image.resize(maxWidth, maxHeight, {
-      fit: 'inside',
-      withoutEnlargement: true
-    })
+    // Track the largest encode that still fits, since bigger is better
+    // quality among the candidates that satisfy the constraint.
+    if (output.length <= targetBytes) {
+      if (!best || quality > best.quality) best = { quality, output }
+      // Close enough that another iteration cannot meaningfully help.
+      if (output.length >= targetBytes * (1 - tolerance)) break
+      low = quality + 1
+    } else {
+      high = quality - 1
+    }
+
+    if (low > high) break
   }
 
-  // Determine optimal format
-  let outputFormat = format
-  if (format === 'auto') {
-    // For photos, prefer WebP; for graphics with transparency, prefer PNG
-    outputFormat = metadata.hasAlpha ? 'png' : 'webp'
-  }
-
-  // Apply format-specific compression
-  let compressed: Buffer
-
-  switch (outputFormat) {
-    case 'webp':
-      compressed = await image
-        .webp({ quality, effort: 6, smartSubsample: true })
-        .toBuffer()
-      break
-    
-    case 'avif':
-      compressed = await image
-        .avif({ quality: quality - 15, effort: 9 })
-        .toBuffer()
-      break
-    
-    case 'jpeg':
-      compressed = await image
-        .jpeg({ quality, mozjpeg: true })
-        .toBuffer()
-      break
-    
-    case 'png':
-      compressed = await image
-        .png({ compressionLevel: 9, effort: 10 })
-        .toBuffer()
-      break
-    
-    default:
-      throw new Error(`Unsupported format: ${outputFormat}`)
-  }
-
-  const compressedSize = compressed.length
-  const savings = ((originalSize - compressedSize) / originalSize) * 100
-
-  return {
-    buffer: compressed,
-    format: outputFormat,
-    originalSize,
-    compressedSize,
-    savings: Math.round(savings * 100) / 100
-  }
+  return best
 }
 ```
 
-## What's Next for PixelPress?
+Two details in there that took me longer than they should have.
 
-I'm currently working on:
-1. **AI-powered quality detection**: Let a neural network decide the optimal compression settings
-2. **WebGPU acceleration**: Use the GPU for faster processing
-3. **Plugin ecosystem**: Let developers add custom compression profiles
-4. **CLI tool**: Because some people just love their terminals
+The tolerance exists because without it the search runs its full iteration budget grinding after a few hundred bytes that nobody will ever perceive. Encoding is not free, and eight passes over a large photograph is real time.
 
-## Key Takeaways
+Tracking the *largest* passing quality rather than the last one matters because binary search does not visit candidates in order. Without keeping the best-so-far you can finish holding a worse encode than one you already found and discarded.
 
-If you're building something similar, here's what I wish I knew from day one:
+## When quality alone cannot get there
 
-1. **Start with good defaults**: Most users won't change settings. Make the defaults excellent.
-2. **Show, don't tell**: Visual comparisons are worth a thousand specs.
-3. **Privacy is a feature**: Make it clear that you respect user data.
-4. **Performance matters**: Even in development, optimize early and often.
-5. **Listen to users**: They'll tell you exactly what they need (sometimes in ALL CAPS).
+Sometimes the target is simply unreachable. A 4000 pixel wide photograph cannot become 50KB at any quality that leaves it looking like a photograph. It becomes a smear.
 
-## Resources for Going Deeper
+The honest answer is that the image is too big in dimensions, not too rich in detail. So when the search bottoms out and still overshoots, the fallback is to scale down and search again.
 
-Want to learn more about image optimization? Check out these resources:
+This is the part where I had to decide what the tool is allowed to do without asking. Silently resizing somebody's image is a real liberty. What I settled on is that it will scale progressively, it reports exactly what it did, and there is a ceiling below which it refuses and tells you the target is not achievable rather than handing back something unusable.
 
-- [Sharp Documentation](https://sharp.pixelplumbing.com/) - The official docs are actually excellent
-- [Web.dev Image Optimization Guide](https://web.dev/fast/#optimize-your-images) - Google's comprehensive guide
-- [AVIF vs WebP: The Battle](https://jakearchibald.com/2020/avif-has-landed/) - Jake Archibald's deep dive
-- [The Squoosh App](https://squoosh.app/) - Google's image compression playground (great for learning)
+A tool that quietly destroys your image to satisfy a number you typed is worse than a tool that says no.
 
----
+## Running in the browser was the point
 
-Building PixelPress taught me that the best solutions come from scratching your own itch. That slow-loading website in that Nairobi coffee shop? It now loads in under 2 seconds, and the hero image is a crisp 180KB instead of 12MB.
+The decision I am most sure about is that compression happens client-side, in the browser, and the image never leaves the machine.
 
-Sometimes, all it takes is one frustrating afternoon to build something that solves a real problem.
+Partly that is privacy. Plenty of what people compress is not public: screenshots with customer data, photographs of documents, product shots under embargo. Every online compressor asks you to upload those to somebody else's server, and most people click through that without thinking about it. I did not want to be another one of those.
 
-Now if you'll excuse me, I have about 50 feature requests to ignore while I work on the one feature nobody asked for but everyone will love. That's how we do it in product development, baby. 🚀
+Partly it is cost. Server-side compression means paying for compute proportional to usage, which means either a bill that grows with success or a rate limit that makes the tool annoying. Browser compression scales with the number of users' own machines, which is free and, as it turns out, fast, because a modern laptop encodes an image quickly.
 
-*P.S. If you build something cool with image compression, [tweet at me](https://twitter.com/godwillbarasa). I love seeing what people create!*
+The trade is that you are constrained to what the browser can do, and that you have to be careful about blocking the main thread. Compression runs off the main thread, so the interface stays responsive while it works, which matters more than it sounds when a search runs eight encodes over a large file.
+
+## Format choice matters more than the setting
+
+Before tuning anything, the biggest single win is usually just picking a better format.
+
+WebP is supported essentially everywhere now and typically saves a quarter to a third against a comparable JPEG at visually equivalent quality. AVIF saves more again, at meaningfully higher encode cost.
+
+The rule I ended up with: default to WebP because the compatibility question is settled and the encode is quick, offer AVIF where the file is large enough that the extra encode time buys something real, and keep the original when the output would be larger, which happens more often than you would think with small or already-optimised images.
+
+Producing a bigger file than you were given is the one outcome a compression tool must never do quietly.
+
+## What I would tell somebody building a similar tool
+
+**Let people state the outcome, not the knob.** Target size is a thing a person actually wants. Quality 73 is not.
+
+**Make the search cheap enough to be worth running.** Tolerance and a bounded iteration count are the difference between a tool that feels instant and one people stop using.
+
+**Never silently do something destructive.** Resize if you must, then say so, and refuse when the request cannot be met honestly.
+
+**Never hand back something worse than you were given.** Check the output against the input and keep the original if you lost.
+
+The thing has been quietly useful to me since, mostly in exactly the situation that caused it. Somebody sends me a folder of photographs for a site, every one straight off a camera, and instead of an evening of manual export loops it is a drag and a wait.
+
+That is a small win. It is also two weeks of my life, prompted by one 12MB hero image and a client asking a reasonable question about why their site was slow. Most of the tools I have built started that way: not from an idea, from being annoyed at the same thing for the third time.

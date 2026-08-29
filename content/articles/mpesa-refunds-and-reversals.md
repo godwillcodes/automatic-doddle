@@ -134,7 +134,7 @@ Now the ledger reads as a history rather than a state: money came in on one rece
 
 The one that will bite you eventually: somebody pays the right shortcode with the wrong account reference, or pays twice, or pays for something already cancelled. You have money that does not correspond to an order.
 
-The instinct is to reverse it immediately, which is usually right, but only after you are sure it is genuinely unmatched. The reconciliation sweep is what tells you that, and it is worth being conservative about the difference between "unmatched" and "not matched yet":
+The instinct is to reverse it immediately, which is usually right, but only after you are sure it is really unmatched. The reconciliation sweep is what tells you that, and it is worth being conservative about the difference between "unmatched" and "not matched yet":
 
 ```typescript
 /**

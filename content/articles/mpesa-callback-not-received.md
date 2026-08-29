@@ -23,7 +23,7 @@ This is the most common failure in M-Pesa integrations, and it is almost never a
 
 ## First: is it actually missing?
 
-Before debugging the network, rule out the boring answer — that the callback arrived and your code threw.
+Before debugging the network, rule out the boring answer, that the callback arrived and your code threw.
 
 If your handler throws before it writes anything, Safaricom's POST still happened. From the outside that is indistinguishable from a missing callback, and it is a five-minute fix rather than a two-day one.
 
@@ -53,7 +53,7 @@ export async function POST(request: Request) {
 }
 ```
 
-If that line never appears in your logs, the request genuinely is not reaching you. Read on.
+If that line never appears in your logs, the request really is not reaching you. Read on.
 
 ## The causes, roughly in order of how often I've hit them
 
@@ -74,7 +74,7 @@ If that does not return `200` from outside your network, Safaricom cannot reach 
 
 ### 2. HTTP instead of HTTPS, or a non-standard port
 
-The callback URL must be `https://` on port 443. Plain HTTP is rejected. So is `https://example.com:8443`. Safaricom does not tell you this — the STK Push succeeds, the customer pays, and the callback is simply never attempted.
+The callback URL must be `https://` on port 443. Plain HTTP is rejected. So is `https://example.com:8443`. Safaricom does not tell you this, the STK Push succeeds, the customer pays, and the callback is simply never attempted.
 
 ### 3. Your endpoint redirects
 
@@ -89,13 +89,13 @@ Common sources: apex-to-www redirects, trailing-slash normalisation, and locale 
 curl -sI -X POST https://yourdomain.co.ke/api/payments/mpesa/callback | head -1
 ```
 
-In Next.js, watch for `trailingSlash: true` in `next.config.ts` — it will redirect `/api/callback` to `/api/callback/` and break every callback you receive.
+In Next.js, watch for `trailingSlash: true` in `next.config.ts`, it will redirect `/api/callback` to `/api/callback/` and break every callback you receive.
 
 ### 4. Something in front of your app is blocking it
 
 A WAF, bot protection, or rate limiter sees an unauthenticated POST with a JSON body from an unfamiliar Kenyan IP range and does exactly what you configured it to do.
 
-Cloudflare's Bot Fight Mode is a repeat offender here. So is Vercel's firewall if you have added a rule that challenges non-browser traffic. The request never reaches your function, so there is nothing in your application logs — you have to look at the edge logs.
+Cloudflare's Bot Fight Mode is a repeat offender here. So is Vercel's firewall if you have added a rule that challenges non-browser traffic. The request never reaches your function, so there is nothing in your application logs, you have to look at the edge logs.
 
 Exempt the callback path explicitly:
 
@@ -110,13 +110,13 @@ export const config: VercelConfig = {
 }
 ```
 
-And in your firewall, allowlist the path rather than an IP range — Safaricom's egress addresses are not contractually stable.
+And in your firewall, allowlist the path rather than an IP range. Safaricom's egress addresses are not contractually stable.
 
 ### 5. You changed the URL but not in the right place
 
 The callback URL is sent **per request**, in the STK Push payload. It is not a dashboard setting for STK Push.
 
-If you registered a URL in the Daraja portal and assumed that was enough, your pushes are still going wherever `CallBackURL` in your payload points — which, in a lot of codebases, is a value someone hardcoded during a sandbox spike and never removed.
+If you registered a URL in the Daraja portal and assumed that was enough, your pushes are still going wherever `CallBackURL` in your payload points, which, in a lot of codebases, is a value someone hardcoded during a sandbox spike and never removed.
 
 ```typescript
 // Read it from config. Never inline it, and never let the two diverge.
@@ -133,7 +133,7 @@ Safaricom retries a failed callback a small number of times and then stops. If y
 
 This is why the handler above returns `200` unconditionally. Acknowledge first, process second. A payload you failed to process is recoverable from your logs; a callback Safaricom has given up on is gone.
 
-If your processing is heavy — sending email, generating a PDF, calling a fulfilment API — do not do it inline. Acknowledge, enqueue, and process out of band:
+If your processing is heavy, sending email, generating a PDF, calling a fulfilment API, do not do it inline. Acknowledge, enqueue, and process out of band:
 
 ```typescript
 export async function POST(request: Request) {
@@ -150,13 +150,13 @@ export async function POST(request: Request) {
 
 ### 7. The customer never completed it
 
-Not every missing callback is missing. `ResultCode: 1037` means the prompt was never answered — phone off, out of coverage, or the user ignored it until it expired. You do get a callback for this, but if your handler only processes `ResultCode === 0` and logs nothing else, it looks identical to silence.
+Not every missing callback is missing. `ResultCode: 1037` means the prompt was never answered, phone off, out of coverage, or the user ignored it until it expired. You do get a callback for this, but if your handler only processes `ResultCode === 0` and logs nothing else, it looks identical to silence.
 
 Handle every result code, even if handling means recording it and moving on.
 
 ## The safety net you need regardless
 
-Every cause above is fixable. None of them are preventable in perpetuity — Safaricom has outages, your host has outages, and eventually a callback is genuinely lost.
+Every cause above is fixable. None of them are preventable in perpetuity. Safaricom has outages, your host has outages, and eventually a callback is really lost.
 
 So do not build a system that requires callbacks to be reliable. Build one that is *faster* when they work and still correct when they don't.
 
@@ -228,7 +228,7 @@ export const config: VercelConfig = {
 }
 ```
 
-Two important constraints. The query endpoint is rate-limited far more aggressively than STK Push, so batch and cap it — `take: 50` above, not the whole backlog. And a push that is still genuinely in flight returns a "processing" state rather than a result, so do not fail a payment just because the query was inconclusive.
+Two important constraints. The query endpoint is rate-limited far more aggressively than STK Push, so batch and cap it, `take: 50` above, not the whole backlog. And a push that is still really in flight returns a "processing" state rather than a result, so do not fail a payment just because the query was inconclusive.
 
 ## The order to check things
 
