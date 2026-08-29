@@ -1,8 +1,10 @@
 import type { Metadata } from 'next'
 
 import BlogList from '@/components/BlogList'
+import StructuredData from '@/components/StructuredData'
+import { blogGraph } from '@/lib/seo/graph'
 import { getAllPosts } from '@/lib/sanity/queries'
-import { absoluteUrl, site, siteUrl } from '@/lib/site'
+import { absoluteUrl, site } from '@/lib/site'
 
 /**
  * Falls back to hourly regeneration so a Studio publish reaches the site even
@@ -33,33 +35,10 @@ export const metadata: Metadata = {
 export default async function BlogPage() {
   const posts = await getAllPosts()
 
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'Blog',
-    name: title,
-    description,
-    url: absoluteUrl('/blog'),
-    author: { '@id': `${siteUrl}/#person` },
-    publisher: { '@id': `${siteUrl}/#person` },
-    /* The archive is about the person, not merely written by him. This is the
-       edge that makes the cluster accrue to the entity. */
-    about: { '@id': `${siteUrl}/#person` },
-    isPartOf: { '@id': `${siteUrl}/#website` },
-    blogPost: posts.map((post) => ({
-      '@type': 'BlogPosting',
-      headline: post.title,
-      description: post.excerpt,
-      datePublished: post.publishedAt,
-      url: absoluteUrl(`/blog/${post.slug}`),
-    })),
-  }
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <StructuredData graph={blogGraph(title, description, posts)} />
       <BlogList posts={posts} />
     </>
   )

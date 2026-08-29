@@ -1,4 +1,6 @@
 import Contact from '@/components/Contact'
+import StructuredData from '@/components/StructuredData'
+import { contactGraph } from '@/lib/seo/graph'
 import { Metadata } from 'next'
 
 import { absoluteUrl, site } from '@/lib/site'
@@ -24,6 +26,9 @@ export const metadata: Metadata = {
 export default function ContactPage() {
   return (
     <div className="bg-paper">
+      <StructuredData
+        graph={contactGraph(metadata.title as string, metadata.description as string)}
+      />
       <Contact />
     </div>
   )

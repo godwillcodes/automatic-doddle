@@ -3,9 +3,11 @@ import { notFound } from 'next/navigation'
 
 import ArticleBody, { extractHeadings, toReadableText } from '@/components/article/ArticleBody'
 import BlogPostLayout from '@/components/BlogPostLayout'
+import StructuredData from '@/components/StructuredData'
+import { articleGraph } from '@/lib/seo/graph'
 import { getPostBySlug, getPostSlugs, getRelatedPosts } from '@/lib/sanity/queries'
 import { urlForOpenGraph } from '@/lib/sanity/client'
-import { absoluteUrl, site, siteUrl } from '@/lib/site'
+import { absoluteUrl, site } from '@/lib/site'
 
 /**
  * Falls back to hourly regeneration so a Studio publish reaches the site even
@@ -84,49 +86,28 @@ export default async function BlogPostPage({
   const headings = extractHeadings(post.body)
   const readableText = toReadableText(post.body)
   const url = absoluteUrl(`/blog/${post.slug}`)
+  const ogImage = post.coverImage
+    ? urlForOpenGraph(post.coverImage)
+    : absoluteUrl(`/blog/${post.slug}/opengraph-image`)
 
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'BlogPosting',
-    headline: post.title,
-    description: post.excerpt,
-    datePublished: post.publishedAt,
-    dateModified: post.updatedAt ?? post.publishedAt,
-    wordCount: post.readingTime * 200,
-    timeRequired: `PT${post.readingTime}M`,
-    inLanguage: 'en',
-    /* Reference the one Person node by @id rather than describing him again.
-       An inline copy is a second, anonymous node: the crawler cannot tell it
-       is the same person, so the articles' authority pools separately from
-       the entity instead of accruing to it. The node itself is emitted on
-       every page by PersonGraph in the root layout, so this resolves here. */
-    author: { '@id': `${siteUrl}/#person` },
-    publisher: { '@id': `${siteUrl}/#person` },
-    mainEntityOfPage: { '@type': 'WebPage', '@id': url },
-    url,
-    keywords: post.keywords?.join(', '),
-    articleSection: post.category.title,
-  }
-
-  const breadcrumbs = {
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
-    itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Home', item: site.url },
-      { '@type': 'ListItem', position: 2, name: 'Blog', item: absoluteUrl('/blog') },
-      { '@type': 'ListItem', position: 3, name: post.title, item: url },
-    ],
-  }
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbs) }}
+      <StructuredData
+        graph={articleGraph({
+          slug: post.slug,
+          title: post.title,
+          excerpt: post.excerpt,
+          publishedAt: post.publishedAt,
+          updatedAt: post.updatedAt,
+          category: post.category.title,
+          keywords: post.keywords,
+          // Counted from the prose actually rendered, rather than inferred
+          // from reading time, which was a guess dressed as a measurement.
+          wordCount: readableText.trim().split(/\s+/).filter(Boolean).length,
+          readingTime: post.readingTime,
+          imageUrl: ogImage,
+        })}
       />
       <BlogPostLayout
         post={post}

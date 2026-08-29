@@ -3,7 +3,8 @@ import Link from 'next/link'
 
 import HeroGallery from '@/components/HeroGallery'
 import Reveal from '@/components/Reveal'
-import { FaqStructuredData } from '@/components/StructuredData'
+import StructuredData from '@/components/StructuredData'
+import { homeGraph } from '@/lib/seo/graph'
 import { archive, faqs, identity, notes, platforms, profiles } from '@/lib/person'
 import { getAllPosts, getNow } from '@/lib/sanity/queries'
 import { absoluteUrl, lockAndMercer, site } from '@/lib/site'
@@ -37,7 +38,7 @@ export default async function Home() {
 
   return (
     <div className="bg-paper">
-      <FaqStructuredData entries={faqs} />
+      <StructuredData graph={homeGraph(faqs)} />
 
       {/* Identity. Above the fold, in the initial document. */}
       <section aria-label="Identity" className="mx-auto max-w-7xl px-6 sm:px-8">

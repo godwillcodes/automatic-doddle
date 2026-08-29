@@ -4,7 +4,6 @@ import { Archivo, IBM_Plex_Mono } from 'next/font/google'
 import './globals.css'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
-import { PersonGraph } from '@/components/StructuredData'
 import { primaryPhotograph } from '@/lib/person'
 import { absoluteUrl, site, siteUrl } from '@/lib/site'
 
@@ -90,7 +89,6 @@ export default function RootLayout({
       <body
         className="bg-paper text-ink antialiased"
       >
-        <PersonGraph />
         <a
           href="#main-content"
           className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[200] focus:bg-ink focus:px-4 focus:py-2 focus:text-paper"
