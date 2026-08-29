@@ -2,7 +2,7 @@
 title: "M-Pesa Refunds and Reversals: Undoing a Payment You Already Took"
 metaTitle: "M-Pesa Refunds and Reversals in Production"
 slug: mpesa-refunds-and-reversals
-excerpt: "There are two ways to give money back and they are not interchangeable. One rewinds the original transaction, one sends a new payment. Picking the wrong one leaves your ledger describing something that did not happen."
+excerpt: "Somebody paid for a listing we had to take down. Giving the money back turned out to be a harder decision than taking it, because M-Pesa offers two ways to do it and they leave completely different records."
 date: "2026-05-20"
 category: "Mobile Money"
 targetKeyword: "mpesa reversal api"
@@ -15,29 +15,31 @@ keywords:
 featured: false
 ---
 
-Every platform that takes money eventually has to give some back. A duplicate charge. An order that cannot be fulfilled. A listing taken down after the agent paid for it.
+An agent paid to list a property. The listing turned out to be one we had to take down. So we owed him his money back, which felt like the simplest thing in the world until I opened the Daraja docs and found two different ways to do it.
 
-M-Pesa gives you two mechanisms for that, and most teams reach for whichever they find first. They are not equivalent, they leave different records, and the wrong choice produces a ledger that describes something which did not happen.
+I picked one, more or less at random, because they looked equivalent. They are not equivalent. Three months later, reconciling the books, I was looking at a ledger that described a transaction that had never happened.
 
-## Reversal and payout are different operations
+## Two mechanisms that are not the same thing
 
-**Reversal** rewinds a specific transaction. You give Daraja the original receipt number and it puts that transaction back. The customer sees a reversal against the original payment. Your books show the original payment undone.
+**Reversal** rewinds a specific transaction. You hand Daraja the original receipt number and it puts that payment back. The customer sees a reversal against what they paid. Your books show the original payment undone.
 
-**B2C payout** sends fresh money to a phone number. It has no relationship to the original payment as far as M-Pesa is concerned. The customer sees a payment arriving from you. Your books show a payment in and a separate payment out.
+**B2C payout** sends new money to a phone number. As far as M-Pesa is concerned it has no relationship to the original payment at all. The customer sees money arriving from you. Your books show a payment in, and a separate payment out.
 
-The distinction matters for three practical reasons.
+Same amount, same person, same intent. Completely different records.
 
-Reversal only works on a transaction you actually received, within whatever window Safaricom applies, and it returns the exact amount. You cannot part-reverse. A partial refund is a payout, always.
+Three things force the choice, and it is worth knowing them before you are in the situation rather than during it.
 
-Reversal moves the money back through the same rail it came in on, so it does not consume your B2C float. A payout does, which means a busy refund day and a low float can leave you unable to refund.
+Reversal only works on a transaction you actually received, inside whatever window Safaricom applies, and it returns the exact amount. You cannot part-reverse. Any partial refund is a payout, always, no exceptions.
 
-And reversal requires the original `TransactionID`, which is the `MpesaReceiptNumber` from the callback. If you did not store it, you cannot reverse. That is the strongest practical argument for [logging the entire callback payload](/blog/mpesa-idempotency-reconciliation) rather than the fields you thought you needed.
+Reversal returns the money down the rail it arrived on, so it does not touch your B2C float. A payout does. That means a busy refund day plus a low float leaves you unable to refund anybody, which is a very uncomfortable thing to discover on the day it happens.
 
-The rule I use: **full refund of a payment we received, promptly, is a reversal. Everything else is a payout.** Partial amounts, goodwill credit, anything outside the window, anything where the original receipt is missing.
+And reversal needs the original `TransactionID`, which is the `MpesaReceiptNumber` from the callback. No receipt, no reversal. That single fact is the strongest argument I know for [storing the entire callback payload](/blog/mpesa-idempotency-reconciliation) rather than the four fields you thought you needed at the time.
 
-## Reversal, in practice
+The rule I settled on: a full refund of a payment we received, promptly, is a reversal. Everything else is a payout. Partial amounts, goodwill credit, anything outside the window, anything where the receipt is missing.
 
-Reversal uses the same initiator credentials as B2C, so the `SecurityCredential` work in [the payouts guide](/blog/mpesa-b2c-payouts) applies unchanged, and Reversal needs its own whitelisting on the shortcode.
+## Reversal in practice
+
+Reversal uses the same initiator credentials as B2C, so all the `SecurityCredential` work from [the payouts guide](/blog/mpesa-b2c-payouts) applies unchanged. And like B2C, Reversal needs its own whitelisting on the shortcode. Going live for STK Push does not give it to you.
 
 ```typescript lib/mpesa/reversal.ts
 import { mpesaConfig } from './config'
@@ -92,15 +94,15 @@ export async function reverseTransaction(params: {
 }
 ```
 
-That misspelled field name is real. `RecieverIdentifierType` is what the API expects, and spelling it correctly gets your request rejected. It is worth a comment in the code, because the next person to read it will assume it is a mistake and fix it.
+That misspelling is real and it is not yours. `RecieverIdentifierType` is what the API expects. Spell it correctly and your request is rejected. Leave the comment in, because the next person to read that line will assume it is a typo and helpfully fix it, and then spend an hour wondering why reversals stopped working.
 
-Like B2C, the response only confirms the request was accepted. The outcome arrives on `ResultURL`, asynchronously, and the same rule applies: **only an explicit failure means failed.** A timeout means ask again.
+As with B2C, the response only tells you the request was accepted. The outcome lands on `ResultURL`, asynchronously, and the same rule holds: only an explicit failure means failed. A timeout means ask again later.
 
 ## The ledger is where refunds actually go wrong
 
-The code is the easy part. The bookkeeping is what causes the argument three months later.
+The code above is the easy part. The bookkeeping is what produces the argument three months later, and mine did.
 
-The temptation is to treat a refund as an edit: find the original entry, negate it, or mark it refunded and move on. That erases the fact that a payment ever happened, which is precisely the record you need when someone disputes the refund itself.
+The instinct is to treat a refund as an edit. Find the original entry, negate it, or set a flag and move on. That erases the fact that a payment ever happened, which is exactly the record you need when somebody disputes the refund itself.
 
 A refund is a new event. It gets its own entry:
 
@@ -126,15 +128,17 @@ await db.$transaction(async (tx) => {
 })
 ```
 
-Now the ledger reads as a history rather than a state: money came in on one receipt, went out on another, and the balance is the sum. Both events are true, and both are still there. The `reverses` column carries the relationship without destroying either side of it.
+Now the ledger reads as history rather than state. Money came in on one receipt, went out on another, and the balance is the sum of both. Both events are true and both are still there. The `reverses` column carries the relationship without destroying either side of it.
 
-`refundedAt` on the payment is a derived convenience for querying. The ledger remains the source of truth. If they ever disagree, the ledger is right.
+`refundedAt` on the payment is a convenience for querying. The ledger is the source of truth, and if the two ever disagree, the ledger is right and the flag is a bug.
 
-## Reversing what you never received
+I learned this the expensive way. My first version marked the payment refunded and adjusted a balance. When the agent came back weeks later asking why he had been charged at all, I could show him a payment marked refunded and nothing else. No record of what we sent back, when, or on what receipt. I believed him, refunded again, and paid twice for one mistake.
 
-The one that will bite you eventually: somebody pays the right shortcode with the wrong account reference, or pays twice, or pays for something already cancelled. You have money that does not correspond to an order.
+## Reversing what you never should have received
 
-The instinct is to reverse it immediately, which is usually right, but only after you are sure it is really unmatched. The reconciliation sweep is what tells you that, and it is worth being conservative about the difference between "unmatched" and "not matched yet":
+This one will happen to you. Somebody pays the right shortcode with the wrong account reference. Somebody pays twice. Somebody pays for a listing that was cancelled an hour earlier. You are holding money that corresponds to nothing.
+
+The instinct is to reverse it straight away, and that is usually right, but only once you are sure it is really unmatched rather than not matched yet.
 
 ```typescript
 /**
@@ -153,23 +157,23 @@ export async function findOrphanedPayments() {
 }
 ```
 
-An hour is generous, and generous is correct here. Automatically reversing a payment that was about to be matched turns a race condition into a customer who paid, got reversed, and no longer trusts you.
+An hour is generous and generous is correct. Automatically reversing a payment that was about to be matched turns a harmless race condition into a customer who paid, got their money thrown back at them, and now believes your platform is broken. That is a much worse outcome than a payment sitting unmatched for sixty minutes.
 
-I do not auto-reverse orphans. The sweep flags them, a person looks, and the reversal is a decision. The volume is low enough that this is cheap, and the cost of getting it wrong automatically is high enough that it is worth a human.
+I do not auto-reverse orphans. The sweep flags them, a person looks, and the reversal is a decision somebody makes. The volume is low enough that this costs almost nothing, and the cost of doing it wrong automatically is somebody's trust.
 
-## What to build before you need it
+## Build this before you need it
 
-Refunds are always urgent when they happen, and nobody builds them calmly. A few things are much cheaper to have in advance:
+Refunds are always urgent when they arrive, and nobody designs them calmly under pressure. A few things are far cheaper to have in place beforehand.
 
-**Store the receipt number on every payment.** Without it there is no reversal, only a payout, and payouts cost float.
+Store the receipt number on every single payment, because without it reversal is impossible and you are forced into a payout that costs float.
 
-**Store the raw callback.** The full payload settles disputes that a normalised row cannot.
+Store the raw callback, because the full payload settles disputes that a tidy normalised row cannot.
 
-**Decide the reversal window before you are in one.** Whatever Safaricom's limit is, pick your own policy inside it and encode it, so the answer is a rule rather than an argument.
+Decide your reversal window before you are inside one. Whatever Safaricom's limit is, pick your own policy inside it and write it down, so the answer is a rule rather than an argument between two people under pressure.
 
-**Make refunds idempotent on the same receipt-number constraint as payments.** Refunding twice is the same class of bug as crediting twice, and the same `UNIQUE` constraint prevents it.
+Make refunds idempotent on the same receipt-number constraint as payments. Refunding twice is exactly the same class of bug as crediting twice, and the same `UNIQUE` constraint prevents both.
 
-**Log who authorised it.** Not for the code. For the conversation six months later about why this particular refund was issued.
+And log who authorised it. Not for the code. For the conversation six months later about why this particular refund was issued, which will happen, and which you will not remember.
 
 ---
 

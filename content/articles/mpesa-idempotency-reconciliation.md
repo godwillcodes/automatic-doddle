@@ -16,7 +16,9 @@ keywords:
 featured: false
 ---
 
-Here is a bug I shipped.
+Forty customers got their loyalty points twice, and it took me two days to work out which forty.
+
+Here is the bug I shipped.
 
 An e-commerce client took M-Pesa payments. The callback handler found the order, marked it paid, and incremented the customer's loyalty balance. Straightforward, worked fine, ran for months.
 

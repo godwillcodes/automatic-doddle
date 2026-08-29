@@ -2,7 +2,7 @@
 title: "A Newsroom Site That Survives the Story That Breaks It"
 metaTitle: "Newsroom Caching: Surviving a Traffic Spike"
 slug: newsroom-traffic-spike-caching
-excerpt: "A news site's traffic is not a curve, it is a series of cliffs. The architecture that serves a quiet Tuesday is not the one that survives the afternoon a story lands, and the difference is mostly cache strategy."
+excerpt: "A news site's traffic is not a curve, it is a cliff. And the spike lands on the newest page, the one that was published four minutes ago and whose author is still editing it."
 date: "2026-05-27"
 category: "Editorial Platforms"
 targetKeyword: "news website traffic spike caching"
@@ -16,25 +16,27 @@ keywords:
 featured: false
 ---
 
-Most web applications have traffic that looks like a wave. A news site has traffic that looks like a cliff. Ninety-nine percent of the time it is quiet, and then one story gets picked up and the same page that was serving forty people a minute is serving forty thousand.
+Most web applications have traffic shaped like a wave. A news site has traffic shaped like a cliff.
 
-The uncomfortable part is that the spike arrives on the *newest* page: the one that was published minutes ago, has never been cached, and whose author is still editing it. Everything convenient about a CMS-backed site works against you at exactly that moment.
+Ninety-nine percent of the time it is quiet. Then a story gets picked up, and the page that was serving forty people a minute is serving forty thousand.
 
-I rebuilt an independent Kenyan business publication as a server-rendered newsroom. This is what the cache strategy has to do.
+The cruel part is where the spike lands. It arrives on the *newest* page. The one published four minutes ago, that has never been cached, whose author is still in the CMS fixing a typo in the second paragraph. Everything convenient about a content management system is working against you at precisely that moment.
+
+I rebuilt an independent Kenyan business publication as a server-rendered newsroom. This is what I learned about what actually falls over.
 
 ## The article is not the problem. The index is.
 
-A single article page is easy. It is one document, it barely changes after publication, and any cache will hold it.
+A single article page is easy. One document, barely changes after publication, any cache will hold it happily.
 
-What falls over is everything around it. The homepage, the section fronts, the "latest" rail, the related-articles block, the story count in the navigation. Those are the pages that change every time anything is published, and they are also the pages the spike lands on when people arrive from a social link and then click through.
+What falls over is everything around it. The homepage. The section fronts. The latest rail. The related-articles block. The story count in the navigation. Those are the pages that change every time anything is published, and they are also the pages the spike hits when somebody arrives from a social link and then clicks through to see what else you have.
 
-So the shape of the problem is: **articles are cacheable for a long time, listings are cacheable for a short time, and the spike hits both.**
+So the shape of the problem is this: articles are cacheable for a long time, listings are cacheable for a short time, and the spike hits both at once.
 
-The mistake is to pick one revalidation window for the whole site. Too long and the newsroom publishes into a void for ten minutes. Too short and every listing page recomputes constantly under exactly the load you cannot afford it.
+The mistake almost everyone makes, including me, is picking one revalidation window for the whole site. Too long and the newsroom publishes into a void for ten minutes, which editors will not tolerate and should not have to. Too short and every listing page recomputes constantly under exactly the load you cannot afford it.
 
 ## Cache by how the content actually changes
 
-Split it by lifecycle rather than by route:
+Split by lifecycle, not by route.
 
 ```typescript app/articles/[slug]/page.tsx
 /**
@@ -61,7 +63,7 @@ export async function generateStaticParams() {
 export const revalidate = 60
 ```
 
-Then invalidate on the event, not on the clock:
+Then invalidate on the event rather than the clock:
 
 ```typescript app/api/revalidate/route.ts
 import { revalidateTag } from 'next/cache'
@@ -83,13 +85,13 @@ export async function POST(request: Request) {
 }
 ```
 
-The revalidation window is now a safety net rather than the mechanism. In normal operation the webhook makes publishing instant. If the webhook fails, the site is stale for sixty seconds instead of stale forever, which is the right failure mode for a newsroom: degraded, not broken.
+Now the revalidation window is a safety net rather than the mechanism. Normally the webhook makes publishing instant. If the webhook fails, the site is stale for sixty seconds instead of stale forever, which is the right failure mode for a newsroom: degraded, not broken.
 
 ## Serve stale rather than serve nothing
 
-The single most valuable header on a news site is `stale-while-revalidate`.
+The single most valuable header on a news site is `stale-while-revalidate`, and it took an incident for me to understand why.
 
-Under a spike, the difference between a cache that blocks on revalidation and one that serves stale content while it refreshes is the difference between a slow site and a down site. Blocking means every request that arrives during a revalidation queues behind it. At forty thousand a minute, that queue is the outage.
+Under a spike, the difference between a cache that blocks during revalidation and one that serves stale content while refreshing in the background is the difference between a slow site and a site that is down. Blocking means every request arriving during a revalidation queues behind it. At forty thousand requests a minute, that queue *is* the outage.
 
 ```typescript
 return new Response(body, {
@@ -102,21 +104,21 @@ return new Response(body, {
 })
 ```
 
-The long `stale-while-revalidate` is deliberate. It is not saying the content may be a day old; it is saying that if the origin is unreachable for a day, keep serving readers rather than showing them an error. During an incident that is the behaviour you want, and it costs nothing when things are healthy.
+The long stale window is deliberate and it is not saying the content may be a day old. It is saying that if the origin becomes unreachable for a day, keep serving readers rather than showing them an error page. During an incident that is exactly the behaviour you want, and it costs nothing when everything is healthy.
 
 ## The editor is a load pattern
 
-Here is the thing about newsroom software that general-purpose caching advice misses: someone is editing the article while it is being read by forty thousand people.
+Here is the thing general caching advice never mentions, because it does not apply to most software: somebody is editing the article while forty thousand people are reading it.
 
-A typo gets fixed. A headline gets sharpened. A correction goes on. Each of those is a write during peak read load, and each one invalidates the hottest page on the site.
+A typo gets fixed. A headline gets sharpened. A correction goes on the bottom. Each of those is a write during peak read load, and each one invalidates the hottest page on the site.
 
-If a publish invalidates broadly, an editor fixing three typos in a minute triggers three full rebuilds of the fronts during the spike. The CMS becomes a denial of service against the site it publishes.
+If a publish invalidates broadly, an editor fixing three typos in a minute triggers three full rebuilds of every front page during the spike. Your CMS becomes a denial of service attack against the site it publishes.
 
-Two mitigations, both cheap:
+Two mitigations, both cheap.
 
-**Scope invalidation tightly.** A body edit touches `article:${slug}` only. Nothing about the fronts changed, because the headline and the ordering did not. Only a change to what appears *in* a listing should invalidate listings.
+Scope invalidation tightly. A body edit touches `article:${slug}` and nothing else. The headline did not change and the ordering did not change, so nothing about the fronts is stale. Only a change to what appears *in* a listing should invalidate listings.
 
-**Debounce it.** Editors save constantly. Collapsing invalidations for the same document inside a short window turns ten saves into one rebuild, and nobody can perceive the difference.
+And debounce it. Editors save constantly, far more often than any reader needs to see:
 
 ```typescript
 /**
@@ -138,27 +140,30 @@ export function scheduleInvalidation(tag: string, ms = 5000) {
 }
 ```
 
-That in-memory map is per-instance, which is fine for debouncing and wrong for anything that must be exactly once. If you need the guarantee, move it to shared storage. For collapsing editor saves, best effort is really enough.
+That map is per-instance, which is fine for debouncing and wrong for anything requiring an exactly-once guarantee. If you need the guarantee, move it to shared storage. For collapsing editor saves, best effort is genuinely enough.
 
 ## What actually breaks under load
 
-From watching it happen rather than from theory.
+From watching it happen, not from theory.
 
-**The related-articles query.** It is a per-article query, it is usually the most expensive one on the page, and it is almost always cached with the article rather than separately. Under a spike on one article, that single query runs on every cache miss. Precompute related articles at publish time and store them on the document. It is a denormalisation, and it is worth it.
+**The related-articles query.** It is per-article, it is usually the most expensive query on the page, and it is almost always cached alongside the article rather than separately. Under a spike on one article that single query runs on every cache miss. Precompute related articles at publish time and store them on the document. It is a denormalisation and it is worth it.
 
-**The image origin.** Everyone caches HTML and forgets that a lead image is fetched by every reader too. If images resize on demand, the first spike is a bill and the second is a timeout. Resize on upload, cache aggressively, and never let a query string become part of the cache key by accident.
+**The image origin.** Everyone caches HTML and forgets that the lead image is fetched by every single reader too. If images resize on demand, your first spike is a bill and your second is a timeout. Resize on upload, cache hard, and never let a query string sneak into the cache key.
 
-**Analytics and embeds.** A third-party script on the article page is a third-party dependency in your critical path. When a story goes wide, the embed provider is getting your spike too, and they may handle it worse than you do. Load them after the content, and make sure a failure degrades the page rather than blocking it.
+**Analytics and embeds.** A third-party script on the article page is a third-party dependency in your critical path. When a story goes wide, the embed provider is receiving your spike too, and they may handle it worse than you do. Load them after the content, and make sure a failure degrades the page instead of blocking it.
 
-**The newsletter signup.** It is a write endpoint on the busiest page. It will get more traffic in an hour than in the previous month. Rate limit it before you need to.
+**The newsletter signup.** It is a write endpoint sitting on your busiest page, and during a spike it will receive more traffic in an hour than in the previous month. Rate limit it before you need to, not after.
 
-## What I would do first
+## Where I would start
 
-If a newsroom site is already live and the question is where to start:
+If a newsroom site is already live and you are wondering what to do first.
 
-1. **Split revalidation by content type.** Articles long, fronts short. This is a one-line change per route and the biggest single win.
-2. **Add `stale-while-revalidate` everywhere.** It converts the worst failure mode into a mild one.
-3. **Precompute related articles at publish.** It removes the most expensive query from the hottest path.
-4. **Scope your invalidation tags.** Then watch what an editor actually does during a live story, because it will not be what you assumed.
+Split revalidation by content type. Articles long, fronts short. One line per route and it is the biggest single win available.
 
-None of this is exotic. It is mostly deciding, per piece of content, how stale it is allowed to be, and then being honest that the answer for a front page is not the answer for a three-year-old article. Newsrooms that fall over usually have one number applied to everything.
+Add `stale-while-revalidate` everywhere, because it converts the worst failure mode into a mild one for almost no effort.
+
+Precompute related articles at publish, which removes the most expensive query from the hottest path.
+
+Scope your invalidation tags, and then go and watch what an editor actually does during a live story. It will not be what you assumed. Mine saved eleven times in four minutes while a story was climbing, and every one of those saves was rebuilding the homepage.
+
+None of this is clever. It is mostly deciding, per piece of content, how stale it is allowed to be, and then being honest that the answer for a front page is not the answer for a three-year-old article. Newsrooms that fall over usually have one number applied to everything, and that number was chosen once, quickly, by somebody who was thinking about a different kind of website.

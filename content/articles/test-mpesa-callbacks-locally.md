@@ -2,7 +2,7 @@
 title: "Testing M-Pesa Callbacks Locally Without ngrok"
 metaTitle: "Test M-Pesa Callbacks Locally (No ngrok)"
 slug: test-mpesa-callbacks-locally
-excerpt: "Safaricom cannot reach localhost, and rotating tunnel URLs make it worse. Four ways to develop against Daraja callbacks properly, including a replay harness that needs no tunnel at all."
+excerpt: "I spent an afternoon restarting a tunnel, editing a URL, sending a shilling, and waiting. Twelve times. Then I worked out that most callback development needs no tunnel at all."
 date: "2026-03-25"
 category: "Mobile Money"
 targetKeyword: "test mpesa callback locally"
@@ -15,17 +15,19 @@ keywords:
 featured: false
 ---
 
-Daraja's callback is a plain outbound HTTPS POST from Safaricom's infrastructure to yours. Which means the moment you try to develop against it on a laptop, you hit the obvious wall: Safaricom cannot reach `http://localhost:3000`.
+Restart ngrok. Copy the new subdomain. Paste it into the environment file. Restart the dev server. Trigger a push. Pick up the test phone. Enter the PIN. Wait. Watch the handler throw on line 40. Fix line 40.
 
-The standard answer is ngrok. It works. It is also the slowest possible development loop, because the free tier hands you a new subdomain on every restart, and every new subdomain means editing your `CallBackURL`, restarting the dev server, and pushing another test payment before you can see whether your handler works.
+Then do all of it again, because ngrok has handed you a different subdomain.
 
-There are better options depending on what you are actually trying to test. Most of the time you are not testing Safaricom, you are testing your own handler, and that needs no tunnel at all.
+I did that twelve times in one afternoon. Somewhere around the ninth I stopped and asked what I was actually testing, and the answer was embarrassing: I was testing my own JSON parsing, over the public internet, through a tunnel, using a real phone and real money, at roughly two minutes per attempt.
 
-## Option 1: replay recorded payloads (start here)
+Safaricom was not the thing under test. My handler was. And my handler does not need the internet.
 
-Ninety percent of callback development is "given this payload, does my handler do the right thing?" That question does not require the internet.
+## Start here: replay recorded payloads
 
-Capture a few real payloads once, commit them as fixtures, and replay them against your local server on demand.
+Most callback development is one question. Given this payload, does my handler do the right thing? That question does not require a network at all.
+
+Capture a few real payloads once, commit them as fixtures, and replay them whenever you like.
 
 ```json fixtures/mpesa/success.json
 {
@@ -61,9 +63,11 @@ Capture a few real payloads once, commit them as fixtures, and replay them again
 }
 ```
 
-Note what is missing from the second one: there is no `CallbackMetadata` at all. That asymmetry is the single most common cause of a callback handler throwing in production, and you will never see it if you only ever test the happy path.
+Look hard at the second one. There is no `CallbackMetadata` at all.
 
-A tiny replay script:
+That asymmetry has broken more production integrations than anything else in the Daraja surface, and it is invisible if you only ever test the happy path. Your handler reaches for `CallbackMetadata.Item`, gets `undefined`, and throws. Not on the first payment. On the first payment somebody cancels, which is usually a real customer, usually on a Saturday.
+
+A tiny replay script closes that loop in milliseconds:
 
 ```javascript scripts/replay-callback.mjs
 import fs from 'node:fs'
@@ -88,17 +92,18 @@ console.log(response.status, await response.text())
 ```
 
 ```bash
-# Replay against a pending payment you just created.
 node scripts/replay-callback.mjs success ws_CO_191220191020363925
 node scripts/replay-callback.mjs cancelled ws_CO_191220191020363925
 
-# And prove idempotency while you're there.
+# The valuable one: send the same success twice.
 node scripts/replay-callback.mjs success ws_CO_191220191020363925
 ```
 
-That third command is the valuable one. Running the same success payload twice should leave your database in exactly the state it was in after the first run. If it doesn't, you have the duplicate-crediting bug described in [M-Pesa reconciliation](/blog/mpesa-idempotency-reconciliation), and you just found it in two seconds without spending a shilling.
+That third command is worth more than the other two combined. Running the same success payload twice should leave your database exactly as it was after the first run. If a balance moves, you have the duplicate-crediting bug from [reconciliation and idempotency](/blog/mpesa-idempotency-reconciliation), and you just found it in two seconds without spending a shilling or touching the internet.
 
-Wire the same fixtures into your test suite and the loop disappears entirely:
+I found mine that way, months after shipping it, on a Tuesday morning with a coffee. The alternative was finding it the way I actually did the first time, which was a spreadsheet, two days, and forty customers with the wrong balance.
+
+Wire the fixtures into the test suite and the loop disappears permanently:
 
 ```typescript app/api/payments/mpesa/callback/route.test.ts
 import { POST } from './route'
@@ -130,18 +135,20 @@ it('does not throw when metadata is absent', async () => {
 })
 ```
 
-## Option 2: a stable tunnel
+Two tests. They run in under a second, and between them they cover the two failures that account for most production callback incidents.
 
-When you do need Safaricom to actually call you, verifying your payload shape against the real thing, or debugging a URL-reachability problem, you want a tunnel with a URL that does not change.
+## When you do need a tunnel, make the URL permanent
 
-Cloudflare Tunnel gives you a permanent hostname on a domain you already own, for free:
+Sometimes Safaricom really does need to reach you: verifying a payload shape against the real thing, or debugging why a callback is not arriving. For that you want a tunnel whose URL does not change, because the changing URL is the entire source of the pain.
+
+Cloudflare Tunnel gives you a permanent hostname on a domain you already own, free:
 
 ```bash
 brew install cloudflared
 cloudflared tunnel login
 cloudflared tunnel create mpesa-dev
 
-# Map a stable subdomain to the tunnel, once.
+# Map a stable subdomain to the tunnel, once and never again.
 cloudflared tunnel route dns mpesa-dev mpesa-dev.yourdomain.co.ke
 ```
 
@@ -155,21 +162,15 @@ ingress:
   - service: http_status:404
 ```
 
-```bash
-cloudflared tunnel run mpesa-dev
-```
+Now `MPESA_CALLBACK_URL` is a constant. It survives restarts, it goes into your environment file once, and every teammate can have their own subdomain instead of fighting over one tunnel.
 
-Now `MPESA_CALLBACK_URL=https://mpesa-dev.yourdomain.co.ke/api/payments/mpesa/callback` is a constant. It survives restarts, it goes in `.env.local` once, and your teammates can each have their own subdomain.
+One trap that costs an afternoon: whatever tunnel you use, the public URL must not redirect. Cloudflare's "Always Use HTTPS" is fine. An apex-to-www rule on the same zone will silently break every callback, because Safaricom does not follow redirects. That failure and its siblings are catalogued in [why your callback never arrives](/blog/mpesa-callback-not-received).
 
-If you would rather not install anything, `ngrok` with a reserved domain on the paid tier does the same job, and Tailscale Funnel works if your team is already on Tailscale.
+## Preview deployments, if you already have them
 
-One caveat that costs people an afternoon: whatever tunnel you use, the public URL must not redirect. Cloudflare's "Always Use HTTPS" is fine, but an apex-to-www rule on the same zone will silently break the callback, because Safaricom does not follow redirects.
+Per-branch previews give you a public HTTPS URL for every pull request, which means real Safaricom traffic against real infrastructure with no local tunnel.
 
-## Option 3: preview deployments
-
-If you deploy per-branch previews, you already have a public HTTPS URL for every pull request. Point the callback at it and you get real Safaricom traffic against real infrastructure with no local tunnel at all.
-
-The catch is that the URL changes per deployment, so read it from the platform rather than hardcoding it:
+The URL changes per deployment, so read it from the platform instead of hardcoding it:
 
 ```typescript lib/mpesa/config.ts
 function resolveCallbackUrl() {
@@ -183,22 +184,20 @@ function resolveCallbackUrl() {
 }
 ```
 
-Preview deployments are usually protected by default, which will block Safaricom as effectively as a firewall. You have to exempt the callback path from deployment protection or the request never lands, this is the same class of problem covered in [why your callback never arrives](/blog/mpesa-callback-not-received).
+Two warnings. Preview deployments are usually protected by default, and that protection blocks Safaricom exactly as effectively as a firewall, so the callback path has to be exempt. And use a sandbox shortcode for previews. Pointing a branch at your production shortcode is a mistake you make once, and it is a memorable one.
 
-Use a separate sandbox shortcode for previews. Pointing a preview branch at your production shortcode is a mistake you make once.
+## A local stub, when the sandbox becomes the bottleneck
 
-## Option 4: a local Daraja stub
+If you are building something with a lot of payment states, the sandbox starts to hurt. It is slow, occasionally down, and cannot produce most of the failures you need to handle.
 
-If you are building something with a lot of payment states, retries, partial refunds, split payments, the sandbox becomes the bottleneck. It is slow, occasionally down, and cannot produce most of the failure modes you need to handle.
-
-At that point, stub it. Run a small server that speaks Daraja's shape and calls your callback on a timer:
+At that point, stub it. A small server that speaks Daraja's shape and calls your callback on a timer:
 
 ```javascript scripts/fake-daraja.mjs
 import { createServer } from 'node:http'
 
 const CALLBACK = 'http://localhost:3000/api/payments/mpesa/callback'
 const OUTCOMES = {
-  // Amount-driven so tests can request a specific outcome deterministically.
+  // Amount-driven so a test can request a specific outcome deterministically.
   1: { ResultCode: 0, ResultDesc: 'Success' },
   2: { ResultCode: 1032, ResultDesc: 'Request cancelled by user' },
   3: { ResultCode: 1037, ResultDesc: 'DS timeout. Cannot be reached' },
@@ -233,29 +232,22 @@ createServer((req, res) => {
     setTimeout(() => post(payload), 2500)
   })
 }).listen(4000, () => console.log('fake daraja on :4000'))
-
-const post = (payload) =>
-  fetch(CALLBACK, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload),
-  }).catch((error) => console.error('callback failed', error))
 ```
 
-Then `MPESA_ENV=stub` points `baseUrl` at `http://localhost:4000` and your whole payment flow runs offline, in about four seconds, with duplicate callbacks on every run.
+Paying two shillings to test a cancellation beats remembering to press the right button on a handset. And sending the callback twice on every run means duplicate handling is not a test you might write one day, it is a property of your development environment.
 
-Paying KES 2 to test a cancellation is a much better developer experience than remembering to press the right button on a test handset.
+## What I actually do now
 
-## What I actually use
+On a normal day, fixtures and the replay script. Milliseconds, no internet, covers every handler change.
 
-On a normal day: fixtures and the replay script. It covers every handler change and runs in milliseconds.
+When adding a new Daraja endpoint, Cloudflare Tunnel against sandbox exactly once, to confirm the real payload matches my fixture. Then I update the fixture and go back to replaying.
 
-When adding a new Daraja endpoint: Cloudflare Tunnel against sandbox, once, to confirm the real payload shape matches my fixture. Then I update the fixture and go back to option 1.
-
-Before launch: real money through the production shortcode, KES 1 at a time, including a deliberate cancellation and a deliberate timeout. Sandbox will not show you those, and you want to have seen them before a customer does.
+Before launch, real money through the production shortcode, one shilling at a time, including a deliberate cancellation and a deliberate timeout. Sandbox will never show you either, and you want to have seen both before a customer does.
 
 The stub earns its keep on projects with complicated payment state. On a simple checkout it is more machinery than the problem deserves.
 
+The whole point is that the slow, expensive, real-money loop should be the last thing you do, not the loop you develop in. I spent an afternoon learning that. It should have taken twenty minutes of thinking.
+
 ---
 
-Part of a series on production M-Pesa integration: [the Next.js integration guide](/blog/mpesa-daraja-api-nextjs), [why callbacks go missing](/blog/mpesa-callback-not-received), and [idempotency and reconciliation](/blog/mpesa-idempotency-reconciliation).
+Part of a series on production M-Pesa integration: [the Next.js integration guide](/blog/mpesa-daraja-api-nextjs), [why callbacks go missing](/blog/mpesa-callback-not-received), [idempotency and reconciliation](/blog/mpesa-idempotency-reconciliation), and [getting approved for production](/blog/mpesa-daraja-production-go-live).

@@ -15,6 +15,8 @@ keywords:
 featured: false
 ---
 
+The payments worked perfectly in staging and dropped maybe one in fifty in production. It took me a week to accept that the difference was not load. It was that there was no longer a server.
+
 Every M-Pesa tutorial I have read assumes a server. Not explicitly, it just quietly relies on things a long-running Node process gives you for free: a module-level variable that persists, a `setTimeout` that survives the response, an in-memory map of pending transactions.
 
 Deploy that same code to Vercel, Netlify, or Lambda and most of it still appears to work. That is the dangerous part. The failures are intermittent, load-dependent, and show up as payments that mysteriously didn't get credited.

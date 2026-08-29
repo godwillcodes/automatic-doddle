@@ -16,6 +16,8 @@ keywords:
 featured: false
 ---
 
+The first payout I ever sent failed silently, and I found out from the person who had not been paid.
+
 Most M-Pesa writing stops at collection. STK Push, callbacks, reconciliation: money coming in. That is the half with a customer watching a screen, and the half every tutorial covers.
 
 Paying money out is a different problem. B2C has stricter credentials, an entirely separate approval on your shortcode, and no user on the other end to notice that nothing arrived. When a payout silently fails, the first person to find out is usually the recipient, and they find out by not being paid.

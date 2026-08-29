@@ -16,6 +16,8 @@ keywords:
 featured: false
 ---
 
+A listener emailed the station to say the website had been announcing the wrong presenter for three weeks. She knew, because she had been listening the whole time.
+
 Most radio station websites lie about what is on air. Not deliberately. The schedule was typed into a CMS months ago, the presenter swapped a slot in April, and nobody updated the page. The site says one thing and the speaker says another.
 
 That is a small credibility problem with a simple cause: the website and the broadcast are two separate systems that happen to describe the same thing, and one of them is maintained by hand.
