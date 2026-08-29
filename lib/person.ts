@@ -43,7 +43,8 @@ export const platforms: Platform[] = [
     url: 'https://www.spaceyako.com',
     account: [
       'The decision that shaped everything else: agents pay to list, seekers never pay, and no money moves between users. That rules out escrow, rules out disputes over deposits, and keeps the platform out of the flow of funds entirely.',
-      'Verification was the harder call. A badge sits against an agent only while it can be substantiated. The moment it cannot, it comes off. A verification that never gets withdrawn is decoration, not verification.',
+      'Verification was the harder call. Standing is computed from the expiry date on an agent\'s practising certificate rather than stored as a flag, so the badge disappears when the certificate does and nobody has to remember to remove it. A verification that never gets withdrawn is decoration, not verification.',
+      'What I got wrong first: the fraud here is not invented copy, it is stolen photographs. Text screening cannot see that at all. The fix was perceptual hashing, and the threshold is set by which mistake costs more rather than by accuracy.',
     ],
     caseStudy: `${lockAndMercer.url}/ventures/spaceyako`,
     caseStudyLabel: 'The venture, at Lock & Mercer',
@@ -97,7 +98,7 @@ export const archive = {
   heading: 'The engineering record',
   lede: 'Long-form technical writing, published here rather than on the studio site. Mostly M-Pesa and the Daraja API, because in Kenya the payment rail is where platforms actually break.',
   bridge:
-    'SpaceYako runs on a payments decision: agents pay to list, seekers never pay, and no money moves between users. Getting that right means knowing exactly how M-Pesa behaves when it fails. These are the notes from doing it.',
+    'Kenyan platforms live or die on the payment rail and on whether a stranger can believe what they are looking at. These are working notes on both: M-Pesa and the Daraja API in production, and the verification and screening that sits behind SpaceYako.',
 }
 
 export interface Note {
