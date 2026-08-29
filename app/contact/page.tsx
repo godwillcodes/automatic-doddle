@@ -15,9 +15,15 @@ export const metadata: Metadata = {
     title: 'Contact | Godwill Barasa',
     description: 'One address, and it reaches him rather than a studio inbox.',
     type: 'website',
+    // Explicit: a page-level `openGraph` replaces the parent object rather
+    // than merging, so omitting images drops the layout's og:image entirely.
+    images: [
+      { url: absoluteUrl('/opengraph-image'), width: 1200, height: 630, alt: 'Godwill Barasa' },
+    ],
   },
   twitter: {
-    card: 'summary',
+    card: 'summary_large_image',
+    images: [absoluteUrl('/opengraph-image')],
     title: 'Contact | Godwill Barasa',
     description: 'One address, and it reaches him rather than a studio inbox.',
   },

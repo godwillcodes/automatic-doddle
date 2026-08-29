@@ -28,8 +28,17 @@ export const metadata: Metadata = {
     title,
     description,
     siteName: site.name,
+    // Declared explicitly. Setting `openGraph` on a page replaces the parent
+    // object rather than merging into it, so omitting images here drops every
+    // og:image the root layout defines.
+    images: [{ url: absoluteUrl('/opengraph-image'), width: 1200, height: 630, alt: title }],
   },
-  twitter: { card: 'summary_large_image', title, description },
+  twitter: {
+    card: 'summary_large_image',
+    title,
+    description,
+    images: [absoluteUrl('/opengraph-image')],
+  },
 }
 
 export default async function BlogPage() {
