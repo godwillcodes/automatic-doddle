@@ -229,6 +229,73 @@ export async function GET() {
 
 A quiet reconciliation job that has never alerted is indistinguishable from one that is not running. Emit the counts every day, including zeroes, and put them on a dashboard.
 
+## Proving it under concurrency, not hoping
+
+A unique constraint is only as good as your belief that it is being hit. I wanted to see the race fail, so I wrote the test that fires the same callback at the handler from several directions at once.
+
+```typescript
+it('settles once when duplicate callbacks arrive concurrently', async () => {
+  await givenPendingPayment('ws_CO_191220191020363925')
+
+  // The naive read-then-write version passes this at concurrency 1 and
+  // fails here, which is exactly the shape of the production bug.
+  await Promise.all(
+    Array.from({ length: 8 }, () => post(successCallback))
+  )
+
+  const entries = await db.ledgerEntry.findMany({
+    where: { reference: 'NLJ7RT61SV' },
+  })
+  expect(entries).toHaveLength(1)
+})
+```
+
+Eight is arbitrary. What matters is that it is more than one and that they are genuinely in flight together. This test failed on my original implementation and passes on the constraint-based one, which is the only evidence worth having that the fix is real.
+
+Run it against a real Postgres rather than a mock. The whole mechanism is a database guarantee, and a mocked database will happily tell you the guarantee holds when it does not. Integration tests against a disposable container are worth the extra seconds here more than almost anywhere else.
+
+## Partial failure inside the transaction
+
+There is a case the happy path hides. The unique insert succeeds, the payment update succeeds, and then the ledger write throws because of some unrelated constraint.
+
+Because all three are inside one transaction, everything rolls back, including the row whose existence was supposed to record that you had processed this callback. Safaricom retries, and you process it again, correctly, from scratch. That is the behaviour you want and it is worth understanding why: the idempotency marker and the work it protects have to commit together or not at all. Split them across two transactions and you invent a state where the marker says done and the work never happened.
+
+Which is also the argument against a tempting optimisation. Writing the marker first, in its own quick transaction, and doing the settlement afterwards feels tidier and is wrong. The gap between the two is a window where a crash leaves you permanently unable to process a real payment, because your own marker is now lying to you.
+
+## When the SUM gets expensive
+
+Deriving a balance from a ledger is correct and it does not stay cheap forever. A busy account after a year is a lot of rows to add up on every read.
+
+The fix is a rollup, and the important property is that it must never become a second source of truth.
+
+```sql
+-- Closing balance per account per month. Derived, disposable, and
+-- rebuildable from the ledger at any time.
+CREATE TABLE ledger_month (
+  account_id    uuid        NOT NULL,
+  month         date        NOT NULL,
+  closing_cents bigint      NOT NULL,
+  computed_at   timestamptz NOT NULL DEFAULT now(),
+  PRIMARY KEY (account_id, month)
+);
+```
+
+Balance becomes the most recent closed month plus the entries since. If the rollup is ever wrong, you delete it and recompute, because every input still exists. That is the whole reason to keep the ledger append-only: the summary is allowed to be wrong, temporarily, because it is never the thing you trust.
+
+I would not build this on day one. I would build it the first time a balance query shows up in a slow-query log, and not before.
+
+## What to alert on, and what to swallow
+
+The reconciliation job produces three buckets and they deserve three different responses.
+
+Missing transactions, where Safaricom has a payment you do not, should be recovered automatically. You have the receipt, so push it through the same idempotent settlement path a callback would have used. Log the count. Do not page anybody at three in the morning for a lost callback the system just healed on its own.
+
+Phantom transactions, where you have a payment Safaricom does not, should page somebody. This bucket should be empty. If it is not, either you are reconciling against the wrong shortcode or something in your system is inventing transactions, and both of those are worth waking up for.
+
+Mismatched amounts should alert but never auto-correct. It is almost always a rounding or minor-unit bug on your side, and the correction is a judgement about which number is right. A machine guessing at that is how a small discrepancy becomes a large one.
+
+The thing I would add to any reconciliation job: emit the counts every single day, including the zeroes. A job that only speaks when something is wrong is indistinguishable from a job that has stopped running, and I have written about [what that silence costs](/blog/cron-jobs-failing-in-silence) elsewhere. A daily line saying nought, nought, nought is how you know the check is alive.
+
 ## Refunds are not negative payments
 
 One last trap. When you refund via B2C, the temptation is to write a negative amount against the original receipt.

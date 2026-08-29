@@ -98,6 +98,59 @@ WHERE (
 
 Twenty-six rather than twenty-four, because a job that drifts by an hour should not page anybody. Wide enough that normal variance is quiet, tight enough that a real stop gets caught the same day.
 
+## Per-job heartbeats, not one for the batch
+
+The batch-level heartbeat catches total absence. It does not catch a single job that has quietly stopped doing anything while its thirteen neighbours keep the batch looking healthy.
+
+That happened to me with listing expiry. The job ran, caught nothing, reported success, and had been selecting against a column that a migration had renamed. Zero rows processed is a legitimate outcome on a quiet day, so nothing looked wrong for a week.
+
+Recording an outcome per job rather than per batch makes the question answerable.
+
+```sql
+CREATE TABLE cron_run (
+  job          text        NOT NULL,
+  started_at   timestamptz NOT NULL,
+  completed_at timestamptz,
+  processed    integer,
+  error        text,
+  PRIMARY KEY (job, started_at)
+);
+```
+
+Now you can ask a much better question than "did it fail". You can ask which jobs have not completed since yesterday, and which have processed nothing for a suspiciously long time given what they do.
+
+The second one needs judgement per job. Viewing reminders processing zero rows on a Sunday is normal. Plan expiry processing zero rows for two weeks is not, because plans definitely expired in that fortnight. Encoding that expectation is more work than a generic alert and it is the difference between monitoring that watches the machinery and monitoring that watches the outcome.
+
+## Every job has to be safe to run twice
+
+The moment you add alerting you will start re-running failed jobs, usually by hand, usually in a hurry. So they have to be idempotent before the alerting is useful, or your fix becomes the incident.
+
+The pattern that makes this cheap is to select by state rather than by time.
+
+```typescript
+// Fragile: depends on this job having run exactly once yesterday.
+const expiring = await db.plan.findMany({
+  where: { expiresAt: { gte: yesterday, lt: today } },
+})
+
+// Safe: describes the work remaining, so running it twice is a no-op.
+const expiring = await db.plan.findMany({
+  where: { expiresAt: { lt: new Date() }, expiredHandledAt: null },
+})
+```
+
+The second version can run five times in an afternoon and do the right thing every time. It also self-heals: a job that failed for three days catches up on the fourth without anybody calculating a date range.
+
+## Do not page for everything
+
+The failure mode after fixing silence is the opposite one. Alert on everything and people stop reading the alerts, which returns you to where you started with more noise.
+
+What I page for: a job failing twice consecutively, because a single transient failure that recovers is not worth a human. Anything touching money or a statutory deadline, on the first failure, because the cost of being slow there is not symmetric. And the batch heartbeat going stale, because that is the failure that hides.
+
+What I record without paging: a single transient failure, a job processing zero rows on a day where that is plausible, and slow runs that still complete.
+
+The distinction I keep coming back to is whether a human can do anything useful right now. If the answer is no, it is a log line. Everything else is an alert, and the list should be short enough that people still read it at two in the morning.
+
 ## The question I ask now
 
 Every time I write something that runs without a person watching, I ask one thing: **if this fails tonight, what wakes somebody up?**

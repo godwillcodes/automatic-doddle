@@ -83,6 +83,59 @@ So now, for anything a visitor actually looks at, I ask a harder question than *
 
 None of that is exotic. It is mostly the difference between checking that the pipe is connected and checking what is coming out of it.
 
+## A taxonomy of the failures that pass their own checks
+
+After this I started collecting them, because once you know the shape you see it everywhere.
+
+**Right status, wrong body.** The watermarked tile. Also: an API that starts returning an empty array instead of results, a CDN serving a stale error page with a 200, a search endpoint that quietly matches nothing after an index rebuild.
+
+**Right body, wrong audience.** Content that renders correctly for you and not for a logged-out visitor, or on a device you do not own. Anything gated by a cookie you happen to have.
+
+**Right everything, wrong time.** A cache serving something that was correct yesterday. Nothing about the response is malformed; it is simply describing a world that has moved on.
+
+**Right output, no input.** A job that processes zero rows because its query stopped matching. Success and doing nothing look identical from the outside, which is the same failure as [a cron batch that never runs](/blog/cron-jobs-failing-in-silence).
+
+**Degraded but functional.** A rate limiter that fell back to a weaker implementation and kept serving. The system works. It is just not doing what it claims, which I wrote about after finding [a limit that was a speed bump](/blog/rate-limit-that-was-a-speed-bump).
+
+Every one of those returns a 200 to something. None of them is visible to a check that asks whether the request succeeded.
+
+## Checking content, cheaply
+
+You cannot perceptually hash everything and you do not need to. Three cheap assertions cover most of it.
+
+Assert on text that must be present. Not that the page returned 200, but that it contains the headline, or a price, or the word your product cannot function without. A shell that renders with an empty state passes a status check and fails this one.
+
+Assert on size bounds. A response that is suddenly a tenth of its usual length is almost always an error page or an empty result set wearing a success code.
+
+Assert on freshness where the content has a timestamp. If the newest item on a feed is four days old and the feed publishes daily, something upstream stopped, regardless of how healthy the endpoint looks.
+
+```typescript
+// A content check, not an uptime check. Slower, noisier, and it catches the
+// class of failure an uptime check is structurally blind to.
+async function checkFront() {
+  const response = await fetch(SITE)
+  if (!response.ok) return fail('status', response.status)
+
+  const html = await response.text()
+  if (html.length < 20_000) return fail('suspiciously-small', html.length)
+  if (!html.includes('data-latest-story')) return fail('no-content-marker')
+
+  return ok()
+}
+```
+
+These will produce false positives. A marketing change that renames a marker will page somebody. That is a cost worth paying, because the alternative is the failure mode I started with: weeks of confident green while every visitor saw something broken.
+
+## The Friday thing
+
+The ritual I mentioned is more specific than it sounds, because "look at the site" degrades into "glance at the homepage" within a fortnight.
+
+I open the real production URL, in a private window so no session or cookie is helping me, on a phone rather than the machine I built it on. Then I do the thing a visitor does. Search for something. Open a listing. Look at the map. Start the flow that makes money.
+
+It takes about four minutes. It has caught a broken map, a filter that silently returned nothing after an index change, and an image pipeline serving originals to mobile.
+
+None of those would have paged. All of them were embarrassing.
+
 ## Why this one stayed with me
 
 The uncomfortable arithmetic is that I do not know how long it ran. Days at least. Possibly weeks.

@@ -140,7 +140,7 @@ export function scheduleInvalidation(tag: string, ms = 5000) {
 }
 ```
 
-That map is per-instance, which is fine for debouncing and wrong for anything requiring an exactly-once guarantee. If you need the guarantee, move it to shared storage. For collapsing editor saves, best effort is genuinely enough.
+That map is per-instance, which is fine for debouncing and wrong for anything requiring an exactly-once guarantee. If you need the guarantee, move it to shared storage. For collapsing editor saves, best effort is enough.
 
 ## What actually breaks under load
 

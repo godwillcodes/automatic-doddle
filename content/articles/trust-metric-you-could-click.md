@@ -78,6 +78,52 @@ Nothing is a good answer. A visitor who sees no response-time line makes their o
 
 That is the part I would push hardest on with anyone building marketplace trust has. The instinct is to fill every field, because a sparse profile looks unfinished. But a trust signal you cannot stand behind is worse than a blank space, because the blank space is honest about your uncertainty and the number is not.
 
+## How much data is enough
+
+Deciding to show nothing is easy to say and needs a number.
+
+I settled on five qualifying responses before a figure appears, and a ninety-day window. Both are judgement calls rather than statistics, and I can defend them.
+
+Five, because below that a single outlier moves the number more than the pattern does. One enquiry answered in four days against two answered in ten minutes produces an average nobody should act on.
+
+Ninety days, because responsiveness is a current property, not a historical one. An agent who was fast in March and has been ignoring enquiries since June should not be trading on March.
+
+```typescript
+/**
+ * Derived on read, from qualifying events only, inside a rolling window.
+ * Returns null rather than a number when the evidence is thin, and the
+ * profile renders nothing at all in that case.
+ */
+export async function responseTime(agentId: string) {
+  const rows = await db.inquiry.findMany({
+    where: {
+      agentId,
+      responseTimeMinutes: { not: null },
+      createdAt: { gte: daysAgo(90) },
+    },
+    select: { responseTimeMinutes: true },
+  })
+
+  if (rows.length < 5) return null
+
+  // Median, not mean. One agent who vanished on holiday for a fortnight
+  // should not define how they are described for the next three months.
+  return median(rows.map((r) => r.responseTimeMinutes!))
+}
+```
+
+Median rather than mean matters more than the thresholds. A single two-week silence drags an average into uselessness while barely moving a median, and the median is a better answer to the question the visitor is actually asking, which is what usually happens rather than what happened on average.
+
+## Rounding is part of the honesty
+
+The last thing, and the one I nearly got wrong: the precision you display is a claim about your confidence.
+
+"Usually replies in 2h 14m" is false precision. It suggests a measurement far tighter than five data points over ninety days can support, and it invites a person to treat it as a promise.
+
+So it rounds into buckets that match how sure I am. Under an hour. A few hours. Within a day. More than a day. Four buckets, each one defensible, none of them implying more than the data holds.
+
+That was hard to accept, because the precise number is available and looks more impressive. But the precise number is a statement I cannot stand behind, and the whole point of the exercise was to stop making those.
+
 ## Three questions I now ask of any public metric
 
 I got to these the slow way, by shipping one that failed all three.

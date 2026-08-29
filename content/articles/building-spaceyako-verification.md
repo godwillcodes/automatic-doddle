@@ -129,23 +129,23 @@ Text duplicate detection stays in SQL, as trigram similarity against existing de
 
 ## What I got wrong first
 
-**I under-specified `lapsed`.** The first version had verified and unverified, and the expiry date existed only to send renewal reminders. It took someone asking "what does the badge say the day after a certificate expires" to notice the answer was "it still says verified". The fix was small. Noticing was the work.
+I under-specified `lapsed`. The first version had verified and unverified, and the expiry date existed only to send renewal reminders. It took someone asking "what does the badge say the day after a certificate expires" to notice the answer was "it still says verified". The fix was small. Noticing was the work.
 
-**I put authorization where I could not enforce it.** There is a migration in the repository that enables row-level security with *zero policies*, purely to close Supabase's anonymous PostgREST surface. The application connects as the table owner and bypasses RLS entirely. It is deliberate and it is documented, but it means the database will not catch an authorization mistake for you, every check has to be in application code, and a code review is the only thing standing behind it. I would rather that were belt and braces.
+I put authorization where I could not enforce it. There is a migration in the repository that enables row-level security with *zero policies*, purely to close Supabase's anonymous PostgREST surface. The application connects as the table owner and bypasses RLS entirely. It is deliberate and it is documented, but it means the database will not catch an authorization mistake for you, every check has to be in application code, and a code review is the only thing standing behind it. I would rather that were belt and braces.
 
-**Migrations nearly took down a deploy.** They run inside every build. Through Supabase's session pooler, which caps at fifteen connections, a migration races live traffic and can take the whole deploy with it. It now uses a direct, non-pooled connection and retries only on transient pool contention, failing fast on anything real. That distinction, retry the transient, never retry the real error, is the whole of the fix.
+Migrations nearly took down a deploy. They run inside every build. Through Supabase's session pooler, which caps at fifteen connections, a migration races live traffic and can take the whole deploy with it. It now uses a direct, non-pooled connection and retries only on transient pool contention, failing fast on anything real. That distinction, retry the transient, never retry the real error, is the whole of the fix.
 
 ## What I would tell someone building the same thing
 
-**Decide what money you refuse to touch, first.** It constrains every trust decision after it, and it is much harder to retrofit than to start with.
+Decide what money you refuse to touch, first. It constrains every trust decision after it, and it is much harder to retrofit than to start with.
 
-**Model the fraud that actually happens in your market.** Stolen photographs and lapsed licences are specific to this one. Generic trust-and-safety advice would have had me building a review system.
+Model the fraud that actually happens in your market. Stolen photographs and lapsed licences are specific to this one. Generic trust-and-safety advice would have had me building a review system.
 
-**Make every badge decay.** If a verification cannot expire without human action, it will eventually be wrong and nobody will notice. The withdrawal path is the product; the badge is just what it looks like when it has not fired.
+Make every badge decay. If a verification cannot expire without human action, it will eventually be wrong and nobody will notice. The withdrawal path is the product; the badge is just what it looks like when it has not fired.
 
-**Set thresholds by the cost of being wrong, not by accuracy.** Ten bits of Hamming distance is not the most accurate cut. It is the one where the expensive mistake is rare.
+Set thresholds by the cost of being wrong, not by accuracy. Ten bits of Hamming distance is not the most accurate cut. It is the one where the expensive mistake is rare.
 
-**Keep the model advisory.** Anything that can silently block a paying customer will eventually do it to the wrong one.
+Keep the model advisory. Anything that can silently block a paying customer will eventually do it to the wrong one.
 
 ---
 

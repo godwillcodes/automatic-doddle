@@ -137,6 +137,93 @@ it('does not throw when metadata is absent', async () => {
 
 Two tests. They run in under a second, and between them they cover the two failures that account for most production callback incidents.
 
+## Capturing the fixtures honestly
+
+The fixtures are only worth as much as their accuracy. A payload you typed from the documentation will drift from what Safaricom actually sends, and then your tests pass against a shape that does not exist.
+
+So capture them from real traffic, once, and never hand-edit them afterwards.
+
+```typescript app/api/payments/mpesa/callback/route.ts
+export async function POST(request: Request) {
+  const raw = await request.text()
+
+  // In sandbox and preview only. Writes the exact bytes Safaricom sent to a
+  // file you can commit as a fixture. Never in production: these payloads
+  // contain a real customer's phone number.
+  if (process.env.MPESA_CAPTURE_FIXTURES === 'true') {
+    const code = JSON.parse(raw)?.Body?.stkCallback?.ResultCode ?? 'unknown'
+    await fs.writeFile(`fixtures/mpesa/captured-${code}-${Date.now()}.json`, raw)
+  }
+
+  // ...
+}
+```
+
+Then push one shilling through for each outcome you want to record, and you have a fixture set that is true by construction. Redact the phone number before committing, and only the phone number, because changing anything structural defeats the point.
+
+The outcomes worth capturing are the ones sandbox cannot generate reliably: a successful payment, a cancellation at the PIN prompt, and a timeout where the customer never answers. Three files. They cover most of what will ever reach your handler.
+
+## The timeout case is the one people miss
+
+Everyone tests success. Most people eventually test cancellation. Almost nobody tests `1037`, which is what you get when the prompt was never answered because the phone was off or out of coverage.
+
+It matters because a timed-out push is not a failed payment. The customer can still enter their PIN as your timeout fires, and the callback arrives afterwards saying it succeeded. If your handler has already marked the order failed and released the stock, you now have a paid order you cannot fulfil.
+
+```typescript
+it('does not close out an order on timeout', async () => {
+  await givenPendingPayment('ws_CO_191220191020363925')
+
+  await post(timeoutCallback)   // ResultCode 1037
+
+  const payment = await db.payment.findUnique({
+    where: { checkoutRequestId: 'ws_CO_191220191020363925' },
+  })
+  // Unresolved, not failed. The reconciliation sweep decides later.
+  expect(payment?.status).toBe('PENDING')
+})
+```
+
+That test encodes a business rule that is easy to get wrong under pressure and impossible to notice from the happy path.
+
+## Catching contract drift
+
+Fixtures have one weakness: they freeze a shape that a third party controls. If Safaricom renames a field, your tests keep passing against last year's payload while production breaks.
+
+The cheap defence is a single scheduled test that runs against sandbox and asserts only the shape, not the values.
+
+```typescript
+it('sandbox still returns the callback shape we parse', async () => {
+  const result = await initiateStkPush(sandboxPush())
+  const callback = await waitForCallback(result.checkoutRequestId)
+
+  const items = callback.Body.stkCallback.CallbackMetadata?.Item ?? []
+  const names = items.map((i) => i.Name)
+
+  expect(names).toEqual(
+    expect.arrayContaining([
+      'Amount',
+      'MpesaReceiptNumber',
+      'TransactionDate',
+      'PhoneNumber',
+    ])
+  )
+})
+```
+
+Run it nightly rather than on every commit. It is slow, it depends on a service you do not control, and a failure is information rather than a broken build. Failing it in CI on a Tuesday afternoon because sandbox was down is how a useful check gets deleted.
+
+## Where this fits in CI
+
+The tiers matter, because mixing them makes the fast tests slow and the slow tests unreliable.
+
+Fixture replay is a unit test. No network, no database if you mock the settlement layer, runs in milliseconds, and belongs on every commit.
+
+Idempotency and settlement are integration tests. They need a real Postgres because the guarantee they verify is a database constraint. A disposable container that comes up before the suite and goes away afterwards keeps them honest without keeping a database around.
+
+The contract check is neither. It is a scheduled probe against somebody else's system, and it should page you rather than fail a build.
+
+The thing that makes all of this worth setting up: I can now change the callback handler and know within two seconds whether I have broken duplicate handling. Before, that answer cost a tunnel restart, a real payment, and about two minutes of waiting with a test phone in my hand.
+
 ## When you do need a tunnel, make the URL permanent
 
 Sometimes Safaricom really does need to reach you: verifying a payload shape against the real thing, or debugging why a callback is not arriving. For that you want a tunnel whose URL does not change, because the changing URL is the entire source of the pain.

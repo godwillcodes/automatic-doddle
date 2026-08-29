@@ -91,6 +91,74 @@ I went back and forth on whether to make this fatal in production, refusing to b
 
 But it has to be noisy. The rule I settled on: **anything that silently changes the security posture of the application gets an alert, not a log line.** If the app is now weaker than its own code claims, somebody needs to be told without going to look.
 
+## Choosing what to count by
+
+Once the store is shared, the next question is what a bucket is keyed on, and this is where most rate limiting is quietly useless.
+
+Keying on IP is the default and the weakest. Mobile carriers here put large numbers of subscribers behind shared addresses, so an IP-keyed limit either blocks a neighbourhood or is set so loose it stops nobody. It is the only key you have for genuinely anonymous traffic, so it stays, but as a blunt outer bound rather than the real control.
+
+Keying on the account is much stronger and only works when there is one. For an authenticated action it is the right key, and it is the one an attacker cannot rotate cheaply.
+
+For OTP the useful key is the **destination phone number**, not the sender. The abuse you are preventing is somebody else's handset ringing repeatedly, and the victim is identified by the number being sent to. An attacker rotating IPs and accounts still converges on the same target, and a per-destination ceiling stops the thing you actually care about.
+
+For dispute reports I key on the listing being reported as well as the reporter. One person filing many reports is suspicious. Many people reporting one listing is either a genuine problem or a coordinated attack, and either way it is worth a human looking rather than a silent block.
+
+```typescript
+// Several keys, each with its own ceiling. The tightest one that matches wins,
+// and the destination key is the one doing the real work.
+const KEYS = (req: OtpRequest) => [
+  { key: `otp:to:${req.phone}`, max: 3, window: '15m' },
+  { key: `otp:ip:${req.ip}`, max: 20, window: '15m' },
+  ...(req.userId ? [{ key: `otp:user:${req.userId}`, max: 5, window: '1h' }] : []),
+]
+```
+
+## Fixed windows leak at the boundary
+
+The simplest counter resets on a clock boundary, which means an attacker who understands that can send the full allowance at the end of one window and again at the start of the next. Two windows, double the traffic, in a few seconds.
+
+A sliding window fixes it by weighting the previous window rather than discarding it.
+
+```typescript
+/**
+ * Sliding window over two fixed buckets. Cheaper than storing timestamps per
+ * request, and it removes the boundary burst that makes a fixed window twice
+ * as permissive as it claims for a moment.
+ */
+async function slidingCount(key: string, windowMs: number) {
+  const now = Date.now()
+  const current = Math.floor(now / windowMs)
+  const elapsed = (now % windowMs) / windowMs
+
+  const [thisWindow, lastWindow] = await redis.mget(
+    `${key}:${current}`,
+    `${key}:${current - 1}`
+  )
+
+  return Number(thisWindow ?? 0) + Number(lastWindow ?? 0) * (1 - elapsed)
+}
+```
+
+Whether that precision is worth the extra read depends on what you are protecting. For a search endpoint, no. For something that sends an SMS on every request and costs money, yes.
+
+## Testing a limit you cannot test locally
+
+The awkward truth is that a rate limiter behaves correctly on a laptop and incorrectly in production, and it does so for reasons that only exist in production. So the only test that means anything runs against a deployed environment.
+
+```bash
+# Fire more than the limit at a real deployment and count the 429s.
+# Locally this always passes. That is the whole point.
+seq 1 30 | xargs -P 10 -I{} \
+  curl -s -o /dev/null -w "%{http_code}\n" \
+  -X POST https://staging.example.com/api/otp \
+  -H 'Content-Type: application/json' \
+  -d '{"phone":"254700000000"}' | sort | uniq -c
+```
+
+If you see thirty 200s, the limiter is not doing anything. If you see roughly your ceiling in 200s and the rest 429, it works. Run it with parallelism, because sequential requests will pass a broken per-instance limiter quite happily.
+
+I run this after every deploy that touches the limiter, and once a month regardless, because the failure I am guarding against is a configuration change nobody connected to rate limiting.
+
 ## The general shape
 
 This is the same failure I keep finding in my own work, wearing a different costume each time.

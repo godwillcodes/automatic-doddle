@@ -247,14 +247,14 @@ Set the floor at something meaningful, like a few days of typical payout volume,
 
 ## What I would tell somebody starting
 
-**Confirm B2C is whitelisted on the shortcode before writing code.** It is the single most common cause of a day lost to debugging something that was never broken.
+Confirm B2C is whitelisted on the shortcode before writing code. It is the single most common cause of a day lost to debugging something that was never broken.
 
-**Generate the SecurityCredential once, from the production certificate, and treat it as a secret.** Anyone with it can move your money.
+Generate the SecurityCredential once, from the production certificate, and treat it as a secret. Anyone with it can move your money.
 
-**Own your idempotency key.** Collection hands you one; payouts do not.
+Own your idempotency key. Collection hands you one; payouts do not.
 
-**Never fail a payout on silence.** Explicit failures only.
+Never fail a payout on silence. Explicit failures only.
 
-**Alert on float.** It is a dependency, not an accounting detail.
+Alert on float. It is a dependency, not an accounting detail.
 
 The collection side of this is covered in [the Daraja integration guide](/blog/mpesa-daraja-api-nextjs), and the ledger discipline that makes payouts auditable is in [idempotency and reconciliation](/blog/mpesa-idempotency-reconciliation). When a payout needs to be undone rather than retried, that is [reversals](/blog/mpesa-refunds-and-reversals), which is its own problem.
