@@ -2,6 +2,14 @@ import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
   images: {
+    /**
+     * Sanity figures bypass the Vercel optimizer entirely — see the loader.
+     * Sanity has already resized and format-negotiated them, and re-encoding
+     * a finished image bills a transformation per variant per width for no
+     * visual gain. Local files (/photographs) still use the optimizer via the
+     * loader's explicit fallback.
+     */
+    loaderFile: './lib/sanity/imageLoader.ts',
     formats: ['image/avif', 'image/webp'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
@@ -34,6 +42,22 @@ const nextConfig: NextConfig = {
 
   async headers() {
     return [
+      {
+        /**
+         * The photographs are not content-hashed, so Next serves them with no
+         * Cache-Control and every visit revalidates. A day of browser cache
+         * with a week of stale-while-revalidate trims repeat-visit requests;
+         * a replaced photograph still shows within a day. The optimizer's own
+         * cache is governed by minimumCacheTTL, which is longer and wins.
+         */
+        source: '/photographs/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=86400, stale-while-revalidate=604800',
+          },
+        ],
+      },
       {
         // Security headers only. The previous config also sent
         // `Cache-Control: no-store` on `/:path*`, which matched the hashed
