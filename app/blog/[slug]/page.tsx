@@ -10,11 +10,15 @@ import { urlForOpenGraph } from '@/lib/sanity/client'
 import { absoluteUrl, site } from '@/lib/site'
 
 /**
- * Falls back to hourly regeneration so a Studio publish reaches the site even
- * if the Sanity webhook at /api/revalidate is not configured. The webhook
- * makes it immediate.
+ * Four hours, not the hourly window the index pages use. Every regeneration
+ * re-runs Shiki across the article's code blocks, which makes these the most
+ * CPU-expensive renders on the site — and an article body changes only when a
+ * published piece is corrected. New articles don't arrive through this window
+ * at all: dynamicParams is false, so a new slug needs a deploy regardless.
+ * The webhook at /api/revalidate still makes corrections immediate once it is
+ * configured; until then a fix takes at most four hours to appear.
  */
-export const revalidate = 3600
+export const revalidate = 14400
 
 
 export const dynamicParams = false
