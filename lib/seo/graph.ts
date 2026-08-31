@@ -65,6 +65,8 @@ function personNode(withImages: boolean): Node {
           '@type': 'ImageObject',
           url: absoluteUrl(primaryPhotograph.src),
           caption: primaryPhotograph.alt,
+          creator: personRef,
+          ...imageCredit,
         },
   }
 }
@@ -83,6 +85,17 @@ function websiteNode(): Node {
   }
 }
 
+/**
+ * creditText and copyrightNotice on every ImageObject: Google's image
+ * metadata treatment reads them as the visible credit line, and Search
+ * Console flags their absence. Both are plain statements of fact here —
+ * the photographs are the person's own.
+ */
+const imageCredit = {
+  creditText: site.author.name,
+  copyrightNotice: `© ${site.author.name}`,
+} as const
+
 function imageNodes(): Node[] {
   return photographs.map((photo, index) => ({
     '@type': 'ImageObject',
@@ -96,6 +109,7 @@ function imageNodes(): Node[] {
     description: photo.alt,
     about: personRef,
     creator: personRef,
+    ...imageCredit,
     isPartOf: websiteRef,
     ...(index === 0 ? { representativeOfPage: true } : {}),
   }))
@@ -246,6 +260,8 @@ export function articleGraph(post: ArticleGraphInput) {
       width: 1200,
       height: 630,
       caption: post.title,
+      creator: personRef,
+      ...imageCredit,
     },
     {
       '@type': 'BlogPosting',
