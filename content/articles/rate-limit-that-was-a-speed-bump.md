@@ -1,6 +1,6 @@
 ---
 title: "My Rate Limit Was a Speed Bump Wearing a Ceiling's Clothes"
-metaTitle: "Serverless Rate Limiting: The In-Memory Trap"
+metaTitle: "Serverless Rate Limiting: In-Memory Trap"
 slug: rate-limit-that-was-a-speed-bump
 excerpt: "An in-memory limiter on serverless does not limit to your number. It limits to your number times however many instances happen to be warm, and it forgets everything when one recycles."
 date: "2026-07-23"

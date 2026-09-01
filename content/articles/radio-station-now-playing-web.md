@@ -1,6 +1,6 @@
 ---
 title: "Reading Now-Playing Off the Stream Instead of Typing It Into a CMS"
-metaTitle: "Radio Station Site: Now-Playing From the Stream"
+metaTitle: "Radio Site Now-Playing From the Stream"
 slug: radio-station-now-playing-web
 excerpt: "A station site that says what is on air because a person updated it is wrong within the hour. One that reads the broadcast is right by construction. The work is in the metadata, the polling, and what to show when the stream is unreachable."
 date: "2026-06-03"

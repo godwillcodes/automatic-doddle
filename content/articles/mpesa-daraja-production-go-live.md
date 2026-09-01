@@ -1,6 +1,6 @@
 ---
 title: "Getting Daraja Approved for Production, and What Breaks on the Way"
-metaTitle: "Daraja Go-Live: Production Approval Checklist"
+metaTitle: "Daraja Go-Live: Approval Checklist"
 slug: mpesa-daraja-production-go-live
 excerpt: "The code was finished on a Tuesday. We went live nineteen days later. Not one of those days was spent on engineering, and none of it was under my control."
 date: "2026-05-13"

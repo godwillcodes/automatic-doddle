@@ -31,7 +31,9 @@ export const lockAndMercer = {
 export const site = {
   url: siteUrl,
   name: 'Godwill Barasa',
-  title: 'Godwill Barasa — Founder, Lock & Mercer',
+  // Middle dot, not an em dash: the one standardized separator across every
+  // title on the site (and the same mark the Lock & Mercer team page uses).
+  title: 'Godwill Barasa · Founder, Lock & Mercer',
   description:
     'Godwill Barasa is a software engineer in Nairobi. He founded Lock & Mercer, a venture studio, and builds and operates web platforms in Kenya.',
   locale: 'en_US',

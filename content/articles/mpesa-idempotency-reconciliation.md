@@ -1,6 +1,6 @@
 ---
 title: "M-Pesa Reconciliation: Idempotency, Duplicates and the Ledger"
-metaTitle: "M-Pesa Reconciliation and Idempotent Callbacks"
+metaTitle: "M-Pesa Reconciliation and Idempotency"
 slug: mpesa-idempotency-reconciliation
 excerpt: "Safaricom will send the same callback twice. Your job is to make that boring. A practical design for idempotent payment writes, an append-only ledger, and the daily job that catches what both miss."
 date: "2026-03-18"

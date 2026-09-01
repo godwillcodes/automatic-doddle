@@ -1,6 +1,6 @@
 ---
 title: "Building SpaceYako: Verification That Takes Itself Away"
-metaTitle: "Building SpaceYako: Listing Fraud and Verification"
+metaTitle: "SpaceYako: Listing Fraud and Verification"
 slug: building-spaceyako-verification
 excerpt: "A property platform for Kenya, where the fraud is specific: stolen photographs and lapsed licences. Three mechanisms, one structural decision, and why the badge has to expire without anyone remembering to remove it."
 date: "2026-08-29"

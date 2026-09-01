@@ -1,6 +1,6 @@
 ---
 title: "Why Your M-Pesa Callback Never Arrives"
-metaTitle: "M-Pesa Callback Not Received: Causes and Fixes"
+metaTitle: "M-Pesa Callback Not Received: Fixes"
 slug: mpesa-callback-not-received
 excerpt: "The customer paid, Safaricom took the money, and your app never found out. A ranked list of the reasons Daraja callbacks go missing, and how to tell which one is yours."
 date: "2026-03-11"

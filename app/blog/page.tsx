@@ -14,7 +14,9 @@ import { absoluteUrl, site } from '@/lib/site'
 export const revalidate = 3600
 
 
-const title = 'Writing on web engineering, performance and M-Pesa'
+// 37 characters, so the templated title lands at 54 — inside the ~60 Google
+// shows. The previous 50-character version truncated in every SERP.
+const title = 'Writing on web engineering and M-Pesa'
 const description =
   'Field notes on building for the web: M-Pesa and Daraja integration, Core Web Vitals, and the architecture decisions that hold up in production.'
 

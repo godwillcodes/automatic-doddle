@@ -1,6 +1,6 @@
 ---
 title: "Building PixelPress: Client-Side Image Compression with Next.js and Sharp"
-metaTitle: "Building PixelPress: Image Compression in Next.js"
+metaTitle: "PixelPress: Image Compression in Next.js"
 slug: building-pixelpress
 excerpt: "A 12MB hero image on a client's homepage sent me down a two-week hole. The result treats smallest acceptable file as a search problem instead of a quality slider you guess at."
 date: "2024-12-21"

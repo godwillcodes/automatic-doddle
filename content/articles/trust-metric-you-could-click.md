@@ -1,6 +1,6 @@
 ---
 title: "Our Trust Signal Could Be Earned by Clicking a Button"
-metaTitle: "Designing a Response-Time Metric That Cannot Be Gamed"
+metaTitle: "A Response-Time Metric That Can't Be Gamed"
 slug: trust-metric-you-could-click
 excerpt: "Usually replies in about two hours. A real number, computed from real data, and an agent could produce it without ever answering anybody. The problem was what we let count as a reply."
 date: "2026-08-06"

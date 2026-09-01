@@ -1,6 +1,6 @@
 ---
 title: "M-Pesa Daraja API Integration with Next.js: A Production Guide"
-metaTitle: "M-Pesa Daraja API + Next.js: Production Guide"
+metaTitle: "M-Pesa Daraja + Next.js: Production Guide"
 slug: mpesa-daraja-api-nextjs
 excerpt: "Most Daraja tutorials stop at a successful STK Push in sandbox. This is the rest of it: token caching, callback verification, idempotent writes and the failure modes that only show up with real money."
 date: "2026-03-04"

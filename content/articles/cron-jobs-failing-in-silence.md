@@ -1,6 +1,6 @@
 ---
 title: "Fourteen Jobs Ran at 2am and Nobody Would Have Known"
-metaTitle: "Cron Failure Alerting: console.error Is Not an Alert"
+metaTitle: "Cron Failure Alerting: Failing in Silence"
 slug: cron-jobs-failing-in-silence
 excerpt: "The nightly batch caught every error properly, logged it properly, and recorded it in the response. What it never did was tell a human. One of those jobs carries a statutory deadline."
 date: "2026-07-09"

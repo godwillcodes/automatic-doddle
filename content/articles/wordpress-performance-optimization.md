@@ -1,6 +1,6 @@
 ---
 title: "WordPress Core Web Vitals: Fixing LCP, INP and CLS at the Source"
-metaTitle: "WordPress Core Web Vitals: A Practical Fix Guide"
+metaTitle: "WordPress Core Web Vitals: Fix Guide"
 slug: wordpress-performance-optimization
 excerpt: "A site that took 43 seconds to load taught me that almost everything written about WordPress performance is a list of plugins. The actual work is finding which layer is lying to you."
 date: "2024-12-20"

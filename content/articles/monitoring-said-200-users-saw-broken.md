@@ -1,6 +1,6 @@
 ---
 title: "Every Check Was Green and the Map Was Broken for Everybody"
-metaTitle: "When Monitoring Returns 200 and Users See Broken"
+metaTitle: "Monitoring Says 200, Users See Broken"
 slug: monitoring-said-200-users-saw-broken
 excerpt: "The tile server answered 200. The PNG was the right size. No console error, no failed request, nothing in Sentry. And every visitor was looking at a map with API KEY REQUIRED painted diagonally across it."
 date: "2026-06-11"

@@ -28,7 +28,10 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
     default: site.title,
-    template: '%s | Godwill Barasa',
+    // One separator everywhere: the middle dot. Every metaTitle is kept at
+    // 43 characters or fewer so the full "%s · Godwill Barasa" stays within
+    // the ~60 characters Google displays before truncating.
+    template: '%s · Godwill Barasa',
   },
   description: site.description,
   applicationName: 'Godwill Barasa',
