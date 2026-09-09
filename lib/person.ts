@@ -186,6 +186,29 @@ export const faqs: Faq[] = [
   },
 ]
 
+export interface RecordRow {
+  years: string
+  org: string
+  role: string
+  location: string
+  /** Marks a position still held; the ledger renders these with the live tint. */
+  current?: boolean
+}
+
+/**
+ * The employment record, oldest work at the bottom. Confirmed row by row by
+ * the person himself on 10 Sept 2026, and consistent with the history his
+ * earlier site published. Nothing here is inferred.
+ */
+export const record: RecordRow[] = [
+  { years: '2025 — now', org: 'Piedmont Global', role: 'Senior Engineer, Web Platform', location: 'Fairfax, VA · Remote', current: true },
+  { years: 'Current', org: 'Lock & Mercer', role: 'Founder · Technology', location: 'Nairobi, KE', current: true },
+  { years: '2024 — 2025', org: 'Ogilvy', role: 'Senior Front End Engineer', location: 'Cape Town, ZA · Remote' },
+  { years: '2021 — 2024', org: 'Belva Digital', role: 'Fullstack Engineer', location: 'Nairobi, KE' },
+  { years: '2019 — 2021', org: 'Legibra', role: 'Mobile Engineer', location: 'Nairobi, KE' },
+  { years: '2018', org: 'Procter & Gamble', role: 'Web Engineer, Intern', location: 'Nairobi, KE' },
+]
+
 export interface Photograph {
   src: string
   /** Truthful description of what is actually in the frame. */

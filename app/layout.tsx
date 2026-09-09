@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Archivo, IBM_Plex_Mono } from 'next/font/google'
+import { Archivo, IBM_Plex_Mono, Newsreader } from 'next/font/google'
 
 import './globals.css'
 import Header from '@/components/Header'
@@ -21,6 +21,16 @@ const plexMono = IBM_Plex_Mono({
   variable: '--font-plex-mono',
   subsets: ['latin'],
   weight: ['400', '500'],
+  display: 'swap',
+})
+
+// Newsreader carries the reading voice of the console design: body prose,
+// the thesis line, article text. Optical sizing is on, so it sets small
+// text and large text with different cuts of the same face.
+const newsreader = Newsreader({
+  variable: '--font-newsreader',
+  subsets: ['latin'],
+  style: ['normal', 'italic'],
   display: 'swap',
 })
 
@@ -88,18 +98,21 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${archivo.variable} ${plexMono.variable} scroll-smooth`}>
-      <body
-        className="bg-paper text-ink antialiased"
-      >
+    <html
+      lang="en"
+      className={`${archivo.variable} ${plexMono.variable} ${newsreader.variable} scroll-smooth`}
+    >
+      <body className="bg-paper text-ink antialiased">
         <a
           href="#main-content"
-          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[200] focus:bg-ink focus:px-4 focus:py-2 focus:text-paper"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[200] focus:bg-accent focus:px-4 focus:py-2 focus:text-[#14100d]"
         >
           Skip to content
         </a>
         <Header />
-        <main id="main-content">{children}</main>
+        <main id="main-content" className="co-page">
+          {children}
+        </main>
         <Footer />
       </body>
     </html>

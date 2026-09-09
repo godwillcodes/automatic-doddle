@@ -37,6 +37,15 @@ export default function Reveal({
     )
 
     observer.observe(el)
+
+    // Belt and braces: an IntersectionObserver that never delivers — a
+    // throttled background tab, an embedded webview, an unusual crawler —
+    // must not leave content at opacity 0 forever. If nothing has fired
+    // within a beat of the element being near the viewport, show it anyway.
+    const failsafe = window.setTimeout(() => {
+      el.classList.add('reveal-in')
+      el.querySelectorAll('.draw').forEach((rule) => rule.classList.add('draw-in'))
+    }, 1800)
     // Draw child rules alongside the block itself.
     el.querySelectorAll('.draw').forEach((rule) => {
       const o = new IntersectionObserver(
@@ -53,7 +62,10 @@ export default function Reveal({
       o.observe(rule)
     })
 
-    return () => observer.disconnect()
+    return () => {
+      window.clearTimeout(failsafe)
+      observer.disconnect()
+    }
   }, [])
 
   return (

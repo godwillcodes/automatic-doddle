@@ -1,20 +1,24 @@
 @import "tailwindcss";
 
 /*
- * Design tokens ported from the approved design canvas (artifact 7f11352a).
- * Editorial monograph language: warm paper, near-black ink, hairline rules,
- * one restrained accent. Typography does the branding.
+ * Design tokens for the operations-console redesign (artifact 5f61e92a,
+ * Sept 2026). One committed world: near-black slate ground, warm bone type,
+ * burnt copper as the structural accent, teal strictly for live status.
+ * The token NAMES survive from the editorial design so every existing
+ * class keeps working — paper now means ground, ink now means bone.
  */
 @theme {
-  --color-paper: #f4f2ed;
-  --color-paper-2: #eae7e0;
-  --color-ink: #101012;
-  --color-ink-2: #1c1c20;
-  --color-stone: #5f5c56;
-  --color-rule: #cec8bc;
-  --color-rule-dk: #34343a;
-  --color-accent: #e3a102;
-  --color-accent-lo: #855e00;
+  --color-paper: #0e1116;
+  --color-paper-2: #171c25;
+  --color-ink: #ede8de;
+  --color-ink-2: #1d232e;
+  --color-stone: #a8b0bc;
+  --color-faint: #6e7887;
+  --color-rule: #262e3a;
+  --color-rule-dk: #333d4c;
+  --color-accent: #e4703c;
+  --color-accent-lo: #b4542a;
+  --color-live: #3dd6a8;
 
   --ease-editorial: cubic-bezier(0.16, 0.84, 0.3, 1);
 }
@@ -29,7 +33,9 @@
 :root {
   --rule-w: 1px;
   --font-site-sans: var(--font-archivo), "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-site-serif: var(--font-newsreader), Georgia, "Times New Roman", serif;
   --font-site-mono: var(--font-plex-mono), ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  color-scheme: dark;
 }
 
 /* Tailwind's font-sans / font-mono utilities inline these same stacks. */
@@ -45,11 +51,13 @@ html {
 body {
   background-color: var(--color-paper);
   color: var(--color-ink);
-  font-family: var(--font-site-sans);
+  /* Newsreader for reading; Archivo keeps headings, mono keeps telemetry. */
+  font-family: var(--font-site-serif);
+  font-optical-sizing: auto;
   font-size: clamp(1rem, 0.95rem + 0.2vw, 1.0625rem);
-  font-weight: 380;
-  line-height: 1.55;
-  letter-spacing: -0.005em;
+  font-weight: 400;
+  line-height: 1.6;
+  letter-spacing: -0.002em;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-synthesis-weight: none;
@@ -57,13 +65,29 @@ body {
   overflow-x: hidden;
 }
 
+/* Ambient copper wash behind everything; fixed, so it never scrolls oddly. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(900px 620px at 78% -6%, rgba(228, 112, 60, 0.09), transparent 62%),
+    radial-gradient(700px 520px at 6% 104%, rgba(61, 214, 168, 0.05), transparent 60%);
+}
+body > * {
+  position: relative;
+  z-index: 1;
+}
+
 ::selection {
   background: var(--color-accent);
-  color: var(--color-ink);
+  color: #14100d;
 }
 
 :focus-visible {
-  outline: 2px solid var(--color-accent-lo);
+  outline: 2px solid var(--color-accent);
   outline-offset: 3px;
   border-radius: 1px;
 }
@@ -92,7 +116,13 @@ body {
 }
 
 .meta-accent {
-  color: var(--color-accent-lo);
+  /* Full copper: the -lo cut was for contrast on light paper and reads as
+     mud on the slate ground. */
+  color: var(--color-accent);
+}
+
+.meta-faint {
+  color: var(--color-faint);
 }
 
 /* Large figures: tabular, condensed, tight. */
@@ -126,21 +156,10 @@ body {
   border-left: var(--rule-w) solid var(--color-rule);
 }
 
-/* Inverted (ink) sections. */
+/* Raised panel sections: a step up from the ground, not an inversion. */
 .on-ink {
-  background-color: var(--color-ink);
-  color: var(--color-paper);
+  background-color: var(--color-paper-2);
   --color-rule: var(--color-rule-dk);
-  --color-stone: #9d998f;
-}
-.on-ink :focus-visible {
-  outline-color: var(--color-accent);
-}
-.on-ink .meta-ink {
-  color: var(--color-paper);
-}
-.on-ink .meta-accent {
-  color: var(--color-accent);
 }
 
 /* Reading prose. */
@@ -155,12 +174,6 @@ body {
 }
 .prose-body + .prose-body {
   margin-top: 1.1em;
-}
-.on-ink .prose-body {
-  color: #a8a49a;
-}
-.on-ink .prose-body strong {
-  color: var(--color-paper);
 }
 
 /* Section header block. */
@@ -197,10 +210,6 @@ body {
 .nav-link[aria-current] .dot {
   background: var(--color-accent);
 }
-.on-ink .nav-link:hover,
-.on-ink .nav-link[aria-current] {
-  color: var(--color-paper);
-}
 
 /* Stack listing rows. */
 .stack-col li {
@@ -217,9 +226,6 @@ body {
 .stack-col li:hover {
   color: var(--color-ink);
   padding-left: 0.4rem;
-}
-.on-ink .stack-col li:hover {
-  color: var(--color-paper);
 }
 
 /* Horizontal photo strip on small screens. */
@@ -245,9 +251,6 @@ body {
       color-mix(in srgb, var(--color-rule) 55%, transparent) 11px 12px
     ),
     var(--color-paper-2);
-}
-.on-ink .slot {
-  background-color: var(--color-ink-2);
 }
 
 /* ------------------------------------------------------------------ */
@@ -361,5 +364,719 @@ details[open] .disc-mark {
   .on-ink {
     background: #fff !important;
     color: #000 !important;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Console layer: the operations-room structures. Prefixed .co- so     */
+/* they cannot collide with Tailwind utilities.                        */
+/* ------------------------------------------------------------------ */
+
+/* Left rail — desktop only; the topbar carries everything on mobile. */
+.co-rail {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 78px;
+  z-index: 40;
+  border-right: var(--rule-w) solid var(--color-rule);
+  background: rgba(14, 17, 22, 0.82);
+  backdrop-filter: blur(14px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding-block: 20px;
+}
+.co-rail-mark {
+  writing-mode: vertical-rl;
+  font-family: var(--font-site-sans);
+  font-stretch: 112%;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--color-stone);
+  transition: color 0.3s var(--ease-editorial);
+}
+.co-rail-mark:hover {
+  color: var(--color-accent);
+}
+.co-rail-line {
+  width: 1px;
+  height: 64px;
+  background: linear-gradient(var(--color-rule-dk), transparent);
+}
+.co-rail-line.up {
+  background: linear-gradient(transparent, var(--color-rule-dk));
+}
+.co-rail-social {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.co-rail-social a {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  color: var(--color-faint);
+  border-radius: 3px;
+  transition:
+    color 0.22s var(--ease-editorial),
+    background 0.22s var(--ease-editorial);
+}
+.co-rail-social a:hover {
+  color: var(--color-accent);
+  background: var(--color-paper-2);
+}
+.co-rail-social svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+  display: block;
+}
+
+/* Live-status dot, pulsing. Teal is semantic: something is on air. */
+.co-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--color-live);
+  animation: co-pulse 2.6s var(--ease-editorial) infinite;
+}
+@keyframes co-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(61, 214, 168, 0.42); }
+  70% { box-shadow: 0 0 0 11px rgba(61, 214, 168, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(61, 214, 168, 0); }
+}
+
+/* Topbar — the site chrome on every page. */
+.co-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 0 clamp(20px, 4vw, 56px);
+  min-height: 58px;
+  border-bottom: var(--rule-w) solid var(--color-rule);
+  background: rgba(14, 17, 22, 0.78);
+  backdrop-filter: blur(14px);
+}
+.co-topbar nav {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+.co-topbar nav a {
+  color: var(--color-faint);
+  padding: 6px 11px;
+  border-radius: 3px;
+  transition:
+    color 0.2s var(--ease-editorial),
+    background 0.2s var(--ease-editorial);
+}
+.co-topbar nav a:hover {
+  color: var(--color-ink);
+  background: var(--color-paper-2);
+}
+.co-topbar nav a[aria-current] {
+  color: var(--color-accent);
+}
+
+/* Page gutter that respects the rail. */
+.co-page {
+  margin-left: 78px;
+}
+@media (max-width: 860px) {
+  .co-rail { display: none; }
+  .co-page { margin-left: 0; }
+}
+
+/* Section scaffolding. */
+.co-wrap {
+  padding-inline: clamp(20px, 4vw, 56px);
+}
+.co-section {
+  padding-block: clamp(64px, 8vw, 108px);
+  border-top: var(--rule-w) solid var(--color-rule);
+}
+.co-sec-head {
+  display: flex;
+  align-items: baseline;
+  gap: 18px;
+  margin-bottom: clamp(28px, 3.5vw, 44px);
+  flex-wrap: wrap;
+}
+.co-sec-head h2 {
+  font-family: var(--font-site-sans);
+  font-stretch: 96%;
+  font-size: clamp(26px, 3.4vw, 40px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+.co-sec-note {
+  color: var(--color-faint);
+  font-size: 14.5px;
+  margin-left: auto;
+  max-width: 40ch;
+  line-height: 1.5;
+}
+@media (max-width: 860px) {
+  .co-sec-note { margin-left: 0; }
+}
+
+/* Name mark. */
+.co-namemark {
+  font-family: var(--font-site-sans);
+  font-stretch: 118%;
+  font-weight: 800;
+  font-size: clamp(52px, 12.4vw, 178px);
+  line-height: 0.84;
+  letter-spacing: -0.035em;
+  text-transform: uppercase;
+  margin: 0;
+  color: var(--color-ink);
+}
+.co-namemark .ln {
+  display: block;
+}
+.co-namemark .ln:last-child {
+  color: var(--color-stone);
+}
+
+/* Thesis line. */
+.co-thesis {
+  font-family: var(--font-site-serif);
+  font-size: clamp(21px, 2.5vw, 30px);
+  line-height: 1.34;
+  font-weight: 300;
+  letter-spacing: -0.01em;
+  color: var(--color-ink);
+  max-width: 22ch;
+}
+.co-thesis em {
+  font-style: italic;
+  color: var(--color-accent);
+}
+
+/* Inline links inside prose. */
+.co-inline {
+  color: var(--color-ink);
+  border-bottom: 1px solid var(--color-accent-lo);
+  padding-bottom: 1px;
+  transition:
+    border-color 0.2s var(--ease-editorial),
+    color 0.2s var(--ease-editorial);
+}
+.co-inline:hover {
+  color: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+/* Buttons. */
+.co-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 11px 18px;
+  border-radius: 3px;
+  border: var(--rule-w) solid var(--color-rule-dk);
+  color: var(--color-ink);
+  background: var(--color-paper-2);
+  transition:
+    transform 0.22s var(--ease-editorial),
+    border-color 0.22s var(--ease-editorial),
+    background 0.22s var(--ease-editorial);
+}
+.co-btn:hover {
+  transform: translateY(-2px);
+  border-color: var(--color-accent);
+}
+.co-btn.primary {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: #14100d;
+}
+.co-btn.primary:hover {
+  background: #f0834f;
+  border-color: #f0834f;
+}
+.co-btn .arw,
+.co-lnk .arw {
+  transition: transform 0.22s var(--ease-editorial);
+}
+.co-btn:hover .arw {
+  transform: translateX(3px);
+}
+
+/* Telemetry panel. */
+.co-telemetry {
+  border: var(--rule-w) solid var(--color-rule);
+  background: linear-gradient(180deg, var(--color-paper-2), #12161d);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.co-tel-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 11px 14px;
+  border-bottom: var(--rule-w) solid var(--color-rule);
+}
+.co-tel-live {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--color-live);
+}
+.co-portrait {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border-bottom: var(--rule-w) solid var(--color-rule);
+  overflow: hidden;
+}
+.co-portrait img {
+  object-fit: cover;
+  filter: grayscale(0.25) contrast(1.05);
+}
+.co-tel-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 10px 14px;
+  border-bottom: var(--rule-w) solid var(--color-rule);
+}
+.co-tel-row:last-child {
+  border-bottom: 0;
+}
+.co-tel-row dt {
+  color: var(--color-faint);
+  margin: 0;
+}
+.co-tel-row dd {
+  margin: 0;
+  color: var(--color-ink);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+.co-tel-row dd.accent {
+  color: var(--color-accent);
+}
+
+/* Ticker. */
+.co-ticker {
+  border-block: var(--rule-w) solid var(--color-rule);
+  background: #12161d;
+  overflow: hidden;
+  padding-block: 12px;
+}
+.co-ticker-track {
+  display: flex;
+  gap: 40px;
+  width: max-content;
+  animation: co-slide 46s linear infinite;
+  color: var(--color-faint);
+}
+.co-ticker:hover .co-ticker-track {
+  animation-play-state: paused;
+}
+.co-ticker-track i {
+  font-style: normal;
+  color: var(--color-accent);
+}
+@keyframes co-slide {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* Cards. */
+.co-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border: var(--rule-w) solid var(--color-rule);
+  background: var(--color-paper-2);
+  border-radius: 6px;
+  padding: clamp(20px, 2.2vw, 28px);
+  transition:
+    border-color 0.28s var(--ease-editorial),
+    transform 0.28s var(--ease-editorial),
+    background 0.28s var(--ease-editorial);
+}
+.co-card::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(90deg, var(--color-accent), transparent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.45s var(--ease-editorial);
+}
+.co-card:hover {
+  border-color: var(--color-rule-dk);
+  transform: translateY(-3px);
+}
+.co-card:hover::after {
+  transform: scaleX(1);
+}
+.co-card h3 {
+  font-family: var(--font-site-sans);
+  font-stretch: 98%;
+  font-size: clamp(22px, 2.3vw, 30px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+/* Chips and stack tags. */
+.co-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 4px 9px;
+  border-radius: 100px;
+  border: var(--rule-w) solid var(--color-rule-dk);
+  color: var(--color-faint);
+  white-space: nowrap;
+}
+.co-chip.live {
+  color: var(--color-live);
+  border-color: rgba(61, 214, 168, 0.32);
+  background: rgba(61, 214, 168, 0.12);
+}
+.co-chip .co-dot {
+  width: 5px;
+  height: 5px;
+  animation-duration: 3.4s;
+}
+.co-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.co-stack span {
+  padding: 3px 8px;
+  border-radius: 3px;
+  background: var(--color-paper);
+  border: var(--rule-w) solid var(--color-rule);
+  color: var(--color-faint);
+}
+
+/* Detail line inside a card: the operational fact. */
+.co-detail {
+  margin: 0;
+  padding-top: 14px;
+  border-top: var(--rule-w) solid var(--color-rule);
+  color: var(--color-faint);
+  font-size: 15px;
+  line-height: 1.55;
+}
+.co-detail b {
+  color: var(--color-ink);
+  font-weight: 400;
+}
+
+/* Links with travel. */
+.co-lnk {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--color-ink);
+  transition: color 0.2s var(--ease-editorial);
+}
+.co-lnk:hover {
+  color: var(--color-accent);
+}
+.co-lnk:hover .arw {
+  transform: translate(3px, -3px);
+}
+.co-lnk.muted {
+  color: var(--color-faint);
+}
+.co-lnk.muted:hover {
+  color: var(--color-stone);
+}
+
+/* Writing cards: provenance is the design. */
+.co-post {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border-radius: 6px;
+  padding: 20px;
+  min-height: 100%;
+  transition:
+    transform 0.26s var(--ease-editorial),
+    border-color 0.26s var(--ease-editorial),
+    background 0.26s var(--ease-editorial);
+}
+.co-post[data-src="own"] {
+  background: var(--color-paper-2);
+  border: var(--rule-w) solid var(--color-rule);
+  border-left: 2px solid var(--color-accent);
+}
+.co-post[data-src="own"]:hover {
+  transform: translateY(-3px);
+}
+.co-post[data-src="lm"] {
+  background: transparent;
+  border: var(--rule-w) dashed var(--color-rule-dk);
+}
+.co-post[data-src="lm"]:hover {
+  background: #12161d;
+  border-color: var(--color-faint);
+  transform: translateY(-3px);
+}
+.co-post h3 {
+  font-family: var(--font-site-serif);
+  font-size: 19px;
+  line-height: 1.32;
+  font-weight: 400;
+  letter-spacing: -0.005em;
+  color: var(--color-ink);
+}
+.co-post[data-src="lm"] h3 {
+  color: var(--color-stone);
+}
+.co-post p {
+  margin: 0;
+  color: var(--color-faint);
+  font-size: 15px;
+  line-height: 1.5;
+}
+.co-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 8px;
+  border-radius: 3px;
+  font-family: var(--font-site-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+.co-post[data-src="own"] .co-badge {
+  background: rgba(228, 112, 60, 0.14);
+  color: var(--color-accent);
+  border: var(--rule-w) solid rgba(228, 112, 60, 0.3);
+}
+.co-post[data-src="lm"] .co-badge {
+  background: transparent;
+  color: var(--color-faint);
+  border: var(--rule-w) dashed var(--color-rule-dk);
+}
+.co-post .co-post-foot {
+  margin-top: auto;
+  padding-top: 8px;
+  color: var(--color-faint);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.co-post[data-src="own"] .co-post-foot {
+  color: var(--color-accent);
+}
+
+/* Filter buttons. */
+.co-fbtn {
+  font-family: var(--font-site-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 500;
+  padding: 8px 13px;
+  border-radius: 100px;
+  cursor: pointer;
+  border: var(--rule-w) solid var(--color-rule);
+  background: transparent;
+  color: var(--color-faint);
+  transition:
+    color 0.2s var(--ease-editorial),
+    border-color 0.2s var(--ease-editorial),
+    background 0.2s var(--ease-editorial);
+}
+.co-fbtn:hover {
+  color: var(--color-ink);
+  border-color: var(--color-rule-dk);
+}
+.co-fbtn[aria-pressed="true"] {
+  color: #14100d;
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+/* The record ledger. */
+.co-row {
+  display: grid;
+  grid-template-columns: 130px minmax(0, 1.1fr) minmax(0, 1fr) auto;
+  gap: 20px;
+  align-items: baseline;
+  padding: 20px 4px;
+  border-bottom: var(--rule-w) solid var(--color-rule);
+  transition:
+    background 0.24s var(--ease-editorial),
+    padding-left 0.24s var(--ease-editorial);
+}
+.co-row:hover {
+  background: #12161d;
+  padding-left: 14px;
+}
+.co-row .org {
+  font-family: var(--font-site-sans);
+  font-weight: 600;
+  font-size: 19px;
+  letter-spacing: -0.012em;
+  color: var(--color-ink);
+}
+.co-row .role {
+  color: var(--color-stone);
+  font-size: 16px;
+}
+.co-row .loc {
+  color: var(--color-faint);
+  text-align: right;
+}
+.co-row .yr {
+  color: var(--color-faint);
+  font-variant-numeric: tabular-nums;
+}
+.co-row.now .yr {
+  color: var(--color-live);
+}
+@media (max-width: 1080px) {
+  .co-row {
+    grid-template-columns: 100px minmax(0, 1fr);
+  }
+  .co-row .role,
+  .co-row .loc {
+    grid-column: 2;
+    text-align: left;
+  }
+}
+@media (max-width: 560px) {
+  .co-row {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+  .co-row .role,
+  .co-row .loc {
+    grid-column: 1;
+  }
+}
+
+/* Footer index. */
+.co-footer {
+  border-top: var(--rule-w) solid var(--color-rule);
+  background: #12161d;
+  padding: clamp(48px, 6vw, 80px) clamp(20px, 4vw, 56px) 28px;
+}
+.co-foot-lead {
+  font-family: var(--font-site-sans);
+  font-stretch: 104%;
+  font-weight: 700;
+  font-size: clamp(28px, 4.6vw, 58px);
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+  color: var(--color-ink);
+  max-width: 16ch;
+  margin-bottom: 14px;
+}
+.co-foot-mail {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-site-serif);
+  font-size: clamp(18px, 2.2vw, 25px);
+  color: var(--color-accent);
+  border-bottom: 1px solid var(--color-accent-lo);
+  padding-bottom: 3px;
+  margin-bottom: 44px;
+  transition:
+    color 0.2s var(--ease-editorial),
+    border-color 0.2s var(--ease-editorial);
+}
+.co-foot-mail:hover {
+  color: #f0834f;
+  border-color: #f0834f;
+}
+.co-foot-cols {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(20px, 3vw, 40px);
+  padding-top: 34px;
+  border-top: var(--rule-w) solid var(--color-rule);
+}
+@media (max-width: 860px) {
+  .co-foot-cols { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 560px) {
+  .co-foot-cols { grid-template-columns: 1fr; }
+}
+.co-foot-col ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 9px;
+}
+.co-foot-col a {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--color-stone);
+  font-size: 15.5px;
+  transition:
+    color 0.2s var(--ease-editorial),
+    gap 0.2s var(--ease-editorial);
+}
+.co-foot-col a:hover {
+  color: var(--color-accent);
+  gap: 13px;
+}
+.co-foot-col svg {
+  width: 15px;
+  height: 15px;
+  fill: currentColor;
+  flex: none;
+  opacity: 0.8;
+}
+.co-handle {
+  color: var(--color-faint);
+  font-family: var(--font-site-mono);
+  font-size: 11.5px;
+}
+.co-colophon {
+  margin-top: 44px;
+  padding-top: 20px;
+  border-top: var(--rule-w) solid var(--color-rule);
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  color: var(--color-faint);
+}
+
+/* Small screens: the nav takes the full first row and spreads; the clock
+   drops to its own line rather than squeezing the nav into a column. */
+@media (max-width: 560px) {
+  .co-topbar {
+    flex-wrap: wrap;
+    padding-block: 10px;
+  }
+  .co-topbar nav {
+    width: 100%;
+    justify-content: space-between;
   }
 }

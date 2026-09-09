@@ -1,0 +1,6 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    { "name": "godwillbarasa", "runtimeExecutable": "npm", "runtimeArgs": ["run", "dev", "--", "--port", "3311"], "port": 3311 }
+  ]
+}

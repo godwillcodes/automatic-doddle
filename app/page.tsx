@@ -1,17 +1,20 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
+import Image from 'next/image'
 
 import HeroGallery from '@/components/HeroGallery'
 import Reveal from '@/components/Reveal'
 import StructuredData from '@/components/StructuredData'
+import WritingSection from '@/components/WritingSection'
 import { homeGraph } from '@/lib/seo/graph'
-import { archive, faqs, identity, notes, platforms, profiles } from '@/lib/person'
-import { getAllPosts, getNow } from '@/lib/sanity/queries'
-import { absoluteUrl, lockAndMercer, site } from '@/lib/site'
+import { faqs, primaryPhotograph, record } from '@/lib/person'
+import { getAllPosts } from '@/lib/sanity/queries'
+import { absoluteUrl, site } from '@/lib/site'
 
 /**
- * Falls back to hourly regeneration so a Studio edit reaches the site even if
- * the Sanity webhook at /api/revalidate is not configured.
+ * The homepage as an operations room. The claim the whole site makes — he
+ * builds platforms and then runs them — is argued by the form before the
+ * copy says it: live status chips, a ticking Nairobi clock in the chrome,
+ * an operational fact on every card. Design from artifact 5f61e92a.
  */
 export const revalidate = 3600
 
@@ -19,314 +22,374 @@ export const metadata: Metadata = {
   alternates: { canonical: absoluteUrl('/') },
 }
 
-function SectionLabel({ number, label }: { number: string; label: string }) {
+const TICKER = [
+  'TypeScript',
+  'Node.js',
+  'Next.js',
+  'PostgreSQL',
+  'MySQL',
+  'M-Pesa Daraja',
+  'Sanity',
+  'Docker',
+  'CI/CD',
+  'WCAG 2.1',
+  'Broadcast metadata',
+  'Redirect mapping',
+  'Performance budgets',
+  'Trust systems',
+  'Incident response',
+  'Technical SEO',
+]
+
+interface Platform {
+  name: string
+  chip: string
+  summary: string
+  detail: React.ReactNode
+  stack: string[]
+  url: string
+  urlLabel: string
+  caseStudy?: { href: string; label: string }
+}
+
+const PLATFORMS: Platform[] = [
+  {
+    name: 'SpaceYako',
+    chip: 'Live',
+    summary:
+      'A property marketplace for Kenya where agents pay to list, seekers never pay, and no money moves between users.',
+    detail: (
+      <>
+        Verification is keyed to the <b>expiry date on an agent&apos;s practising certificate</b> —
+        the badge removes itself when the certificate lapses, so nobody has to remember to revoke
+        it.
+      </>
+    ),
+    stack: ['Next.js', 'TypeScript', 'PostgreSQL', 'M-Pesa Daraja'],
+    url: 'https://www.spaceyako.com',
+    urlLabel: 'spaceyako.com',
+    caseStudy: {
+      href: 'https://www.lockandmercer.com/ventures/spaceyako',
+      label: 'Venture page',
+    },
+  },
+  {
+    name: 'Business Report',
+    chip: 'Live',
+    summary: 'An independent Kenyan business publication, rebuilt as a server-rendered newsroom.',
+    detail: (
+      <>
+        The deliverable on that migration was not the design — it was the{' '}
+        <b>verified redirect map</b>. Every legacy URL resolves, so a decade of archive kept its
+        search history.
+      </>
+    ),
+    stack: ['Next.js', 'Sanity', 'ISR', 'Redirect mapping'],
+    url: 'https://www.businessreport.co.ke',
+    urlLabel: 'businessreport.co.ke',
+    caseStudy: {
+      href: 'https://www.lockandmercer.com/work/business-report',
+      label: 'Case study',
+    },
+  },
+  {
+    name: 'Khendo FM',
+    chip: 'On air',
+    summary: 'A radio station broadcasting across Western Kenya and the North Rift.',
+    detail: (
+      <>
+        The site reads <b>on-air state and now-playing from the broadcast itself</b>, so the page
+        and the transmitter never disagree about what is happening.
+      </>
+    ),
+    stack: ['Next.js', 'Sanity', 'Stream metadata', 'Edge cache'],
+    url: 'https://www.khendofm.co.ke',
+    urlLabel: 'khendofm.co.ke',
+    caseStudy: { href: 'https://www.lockandmercer.com/work/khendo-fm', label: 'Case study' },
+  },
+  {
+    name: 'COFEK',
+    chip: 'Live',
+    summary:
+      'The Consumers Federation of Kenya — a rebuild for an audience that arrives on whatever connection it has.',
+    detail: (
+      <>
+        Performance budget set against <b>the connection people actually have</b>, not the one the
+        office wifi shows. Weight measured on 3G, not on a Lighthouse run.
+      </>
+    ),
+    stack: ['Next.js', 'Sanity', 'Performance budgets', 'WCAG 2.1'],
+    url: 'https://cofek.africa',
+    urlLabel: 'cofek.africa',
+    caseStudy: { href: 'https://www.lockandmercer.com/work/cofek', label: 'Case study' },
+  },
+]
+
+function SectionHead({
+  number,
+  title,
+  note,
+}: {
+  number: string
+  title: string
+  note: string
+}) {
   return (
-    <p className="meta">
-      <span className="meta-accent">{number}</span>
-      <span aria-hidden="true">{'  /  '}</span>
-      {label}
-    </p>
+    <div className="co-sec-head">
+      <span className="meta meta-accent">{number}</span>
+      <h2>{title}</h2>
+      <p className="co-sec-note">{note}</p>
+    </div>
   )
 }
 
 export default async function Home() {
-  const [posts, now] = await Promise.all([getAllPosts(), getNow()])
+  const posts = await getAllPosts()
+  const featured = [...posts]
+    .sort((a, b) => Number(b.featured ?? false) - Number(a.featured ?? false))
+    .slice(0, 6)
+    .map((p) => ({
+      slug: p.slug,
+      title: p.title,
+      excerpt: p.excerpt,
+      readingTime: p.readingTime,
+      category: p.category.title,
+    }))
 
-  const asOf = now
-    ? new Date(now.updatedAt).toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })
-    : null
+  const tickerRow = (
+    <>
+      {TICKER.map((t) => (
+        <span key={t}>
+          {t} <i>/</i>
+        </span>
+      ))}
+    </>
+  )
 
   return (
-    <div className="bg-paper">
+    <>
       <StructuredData graph={homeGraph(faqs)} />
 
-      {/* Identity. Above the fold, in the initial document. */}
-      <section aria-label="Identity" className="mx-auto max-w-7xl px-6 sm:px-8">
-        <div className="rule-b flex flex-wrap items-baseline justify-between gap-3 py-4">
-          <p className="meta">Founder, Lock &amp; Mercer</p>
-          <p className="meta">Nairobi, Kenya</p>
-        </div>
+      <div className="co-wrap">
+        {/* ---------- hero ---------- */}
+        <section className="pt-[clamp(44px,6vw,76px)] pb-[clamp(30px,4vw,52px)]">
+          <div className="meta mb-[clamp(20px,3vw,34px)] flex flex-wrap items-center gap-3">
+            <span>Senior Software Engineer</span>
+            <span aria-hidden="true" className="h-px w-5 bg-rule-dk" />
+            <span>Piedmont Global</span>
+            <span aria-hidden="true" className="h-px w-5 bg-rule-dk" />
+            <strong className="meta-accent font-medium">Nairobi, Kenya</strong>
+          </div>
 
-        <div className="py-[clamp(3rem,9vh,6.5rem)]">
-          <h1 className="display text-[clamp(2.6rem,9vw,7rem)] uppercase">
-            <span className="block">Godwill</span>
-            <span className="block">Barasa</span>
+          <h1 className="co-namemark mb-[clamp(24px,3vw,38px)]">
+            <span className="ln">Godwill</span>
+            <span className="ln">Barasa</span>
           </h1>
 
-          <div className="mt-[clamp(2rem,5vh,3.5rem)] grid gap-8 md:grid-cols-12">
-            <div className="md:col-span-7">
-              <p className="text-[clamp(1.15rem,1.8vw,1.5rem)] leading-snug text-ink">
-                {identity.h1Line}
+          <div className="grid items-start gap-[clamp(20px,2.4vw,32px)] lg:grid-cols-[minmax(0,1.45fr)_minmax(0,1fr)]">
+            <div>
+              <p className="co-thesis mb-5">
+                I build web platforms in Kenya — and then I <em>run</em> them.
               </p>
-              <p className="prose-body mt-5">
-                {identity.summary} The studio&apos;s side of the record is at{' '}
-                <a
-                  href={lockAndMercer.teamProfile}
-                  rel="me"
-                  className="underline decoration-accent decoration-[1.5px] underline-offset-[3px] transition-colors hover:text-accent-lo"
-                >
-                  lockandmercer.com
+              <p className="prose-body mb-4">
+                Most engineers hand a repository over and leave. I stay on the pager. Everything
+                below is in production right now, on infrastructure I still own the incidents for.
+              </p>
+              <p className="prose-body">
+                Senior Engineer on the web platform at{' '}
+                <a className="co-inline" href="#record">
+                  Piedmont Global
                 </a>
-                .
-              </p>
-            </div>
-
-            <div className="md:col-span-5 md:justify-self-end">
-              <p className="meta mb-2">Stack</p>
-              <p className="meta meta-ink max-w-xs leading-relaxed">
-                {identity.stack.join(' · ')}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <HeroGallery />
-
-        <div className="rule-t flex flex-wrap items-baseline justify-between gap-3 py-4">
-          <p className="meta">Software engineer</p>
-          <p className="meta hidden sm:block">Builds platforms, then operates them</p>
-          <p className="meta" aria-hidden="true">
-            Scroll ↓
-          </p>
-        </div>
-      </section>
-
-      {/* Work, in first person. */}
-      <section id="work" aria-label="Work" className="mx-auto max-w-7xl scroll-mt-20 px-6 sm:px-8">
-        <div className="sec-head rule-t">
-          <Reveal>
-            <SectionLabel number="01" label="Work" />
-            <h2 className="display mt-4 text-[clamp(1.9rem,4.5vw,3.4rem)]">
-              Built here, run here
-            </h2>
-            <p className="prose-body mt-4">
-              Four platforms, owned or rebuilt, all in production. This page carries the
-              first-person account: the decisions and what they cost. The full case
-              studies live on the studio site.
-            </p>
-          </Reveal>
-        </div>
-
-        {platforms.map((platform) => (
-          <Reveal key={platform.name} as="article" className="rule-t py-[clamp(2rem,4vw,3rem)]">
-            <div className="grid gap-8 lg:grid-cols-12">
-              <div className="lg:col-span-4">
-                <p className="meta">
-                  <span className="meta-accent">Work {platform.index}</span>
-                </p>
-                <h3 className="display mt-4 text-[clamp(1.7rem,3.5vw,2.6rem)]">
-                  {platform.name}
-                </h3>
-                <p className="meta mt-2">{platform.role}</p>
+                , and founder of{' '}
                 <a
-                  href={platform.url}
+                  className="co-inline"
+                  href="https://www.lockandmercer.com"
+                  rel="noopener"
                   target="_blank"
-                  rel="noopener noreferrer"
-                  className="meta meta-ink mt-5 inline-block transition-colors hover:text-accent-lo"
                 >
-                  {platform.url.replace('https://', '')} →
+                  Lock&nbsp;&amp;&nbsp;Mercer
                 </a>
-              </div>
+                , the Nairobi studio behind SpaceYako. TypeScript and Node across the stack;
+                Postgres and MySQL underneath; M-Pesa, broadcast feeds and low-bandwidth Kenya as
+                the constraints that actually shape the work.
+              </p>
 
-              <div className="lg:col-span-8">
-                {platform.account.map((paragraph) => (
-                  <p key={paragraph.slice(0, 32)} className="prose-body">
-                    {paragraph}
-                  </p>
-                ))}
-                <a
-                  href={platform.caseStudy}
-                  className="meta meta-ink mt-6 inline-block transition-colors hover:text-accent-lo"
-                >
-                  {platform.caseStudyLabel} <span className="text-accent-lo">→</span>
+              <div className="mt-6 flex flex-wrap gap-2.5">
+                <a className="co-btn primary meta" href="#operating">
+                  See what is running <span className="arw">→</span>
+                </a>
+                <a className="co-btn meta" href={`mailto:${site.author.email}`}>
+                  Email me <span className="arw">→</span>
                 </a>
               </div>
             </div>
-          </Reveal>
-        ))}
-      </section>
 
-      {/* Currently. Rendered only while the entry is fresh. */}
-      {now && (
-        <section
-          id="currently"
-          aria-label="Currently"
-          className="mx-auto max-w-7xl scroll-mt-20 px-6 sm:px-8"
-        >
-          <div className="sec-head rule-t">
             <Reveal>
-              <SectionLabel number="02" label={`Currently · as of ${asOf}`} />
-              <h2 className="display mt-4 text-[clamp(1.9rem,4.5vw,3.4rem)]">
-                In progress
-              </h2>
-            </Reveal>
-          </div>
-          <Reveal>
-            <ul className="max-w-3xl space-y-4 pb-[clamp(2rem,4vw,3rem)]">
-              {now.items.map((item) => (
-                <li key={item.slice(0, 32)} className="prose-body flex gap-4">
-                  <span
-                    aria-hidden="true"
-                    className="mt-[0.55em] h-1 w-1 shrink-0 rounded-full bg-accent"
+              <div className="co-telemetry">
+                <div className="co-tel-top meta">
+                  <span>Status</span>
+                  <span className="co-tel-live">
+                    <span className="co-dot" aria-hidden="true" /> All systems nominal
+                  </span>
+                </div>
+                <div className="co-portrait">
+                  <Image
+                    src={primaryPhotograph.src}
+                    alt={primaryPhotograph.alt}
+                    fill
+                    sizes="(min-width: 1024px) 38vw, 100vw"
+                    priority
                   />
-                  <span>{item}</span>
-                </li>
-              ))}
-            </ul>
-          </Reveal>
-        </section>
-      )}
-
-      {/* Writing: the studio notes, linked, never copied. */}
-      <section
-        id="writing"
-        aria-label="Writing"
-        className="mx-auto max-w-7xl scroll-mt-20 px-6 sm:px-8"
-      >
-        <div className="sec-head rule-t">
-          <Reveal>
-            <SectionLabel number="03" label="Writing" />
-            <h2 className="display mt-4 text-[clamp(1.9rem,4.5vw,3.4rem)]">Notes</h2>
-            <p className="prose-body mt-4">
-              Published on the studio site and attributed there. Listed here, linked
-              across, never copied.
-            </p>
-          </Reveal>
-        </div>
-
-        <ul>
-          {notes.map((note, index) => (
-            <Reveal key={note.href} as="li" delay={Math.min(index * 0.03, 0.15)} className="rule-t">
-              <a
-                href={note.href}
-                className="group grid gap-1 py-5 sm:grid-cols-[3.5rem_1fr] sm:items-baseline sm:gap-6"
-              >
-                <span className="meta meta-accent">
-                  {String(index + 1).padStart(2, '0')}
-                </span>
-                <span>
-                  <span className="display block text-[clamp(1.1rem,2vw,1.45rem)] transition-colors group-hover:text-stone">
-                    {note.title}
-                  </span>
-                  <span className="prose-body mt-1 block text-sm">{note.line}</span>
-                </span>
-              </a>
-            </Reveal>
-          ))}
-        </ul>
-
-      </section>
-
-      {/* The engineering archive, connected to the work rather than stranded
-          on the same domain. */}
-      {posts.length > 0 && (
-        <section
-          id="archive"
-          aria-label="Engineering record"
-          className="mx-auto max-w-7xl scroll-mt-20 px-6 sm:px-8"
-        >
-          <div className="sec-head rule-t">
-            <Reveal>
-              <SectionLabel number="04" label="The engineering record" />
-              <h2 className="display mt-4 text-[clamp(1.9rem,4.5vw,3.4rem)]">
-                {archive.heading}
-              </h2>
-              <p className="prose-body mt-4">{archive.lede}</p>
-              <p className="prose-body">{archive.bridge}</p>
+                </div>
+                <dl className="meta m-0">
+                  <div className="co-tel-row">
+                    <dt>Platforms live</dt>
+                    <dd className="accent">4</dd>
+                  </div>
+                  <div className="co-tel-row">
+                    <dt>Pieces published</dt>
+                    <dd>{posts.length}</dd>
+                  </div>
+                  <div className="co-tel-row">
+                    <dt>Shipping since</dt>
+                    <dd>2018</dd>
+                  </div>
+                  <div className="co-tel-row">
+                    <dt>Primary stack</dt>
+                    <dd>TypeScript · Node</dd>
+                  </div>
+                  <div className="co-tel-row">
+                    <dt>Availability</dt>
+                    <dd>Selective</dd>
+                  </div>
+                </dl>
+              </div>
             </Reveal>
           </div>
+        </section>
+      </div>
 
-          <ul>
-            {posts.slice(0, 4).map((post, index) => (
-              <Reveal
-                key={post.slug}
-                as="li"
-                delay={Math.min(index * 0.04, 0.16)}
-                className="rule-t"
-              >
-                <Link
-                  href={`/blog/${post.slug}`}
-                  className="group grid gap-2 py-5 sm:grid-cols-[1fr_auto] sm:items-baseline sm:gap-6"
-                >
-                  <span>
-                    <span className="display block text-[clamp(1.1rem,2vw,1.45rem)] transition-colors group-hover:text-stone">
-                      {post.title}
+      {/* ---------- ticker ---------- */}
+      <div className="co-ticker" aria-hidden="true">
+        <div className="co-ticker-track meta">
+          {tickerRow}
+          {tickerRow}
+        </div>
+      </div>
+
+      <div className="co-wrap">
+        {/* ---------- 01 operating ---------- */}
+        <section className="co-section" id="operating">
+          <SectionHead
+            number="01"
+            title="Operating"
+            note="Four platforms in production. Live domains, not case-study screenshots."
+          />
+          <div className="grid gap-[clamp(14px,1.6vw,20px)] md:grid-cols-2">
+            {PLATFORMS.map((p, i) => (
+              <Reveal key={p.name} delay={i * 0.06} as="article">
+                <div className="co-card h-full gap-4">
+                  <div className="flex items-start justify-between gap-3.5">
+                    <h3>{p.name}</h3>
+                    <span className="co-chip live meta">
+                      <span className="co-dot" aria-hidden="true" /> {p.chip}
                     </span>
-                    <span className="prose-body mt-1 block text-sm">{post.excerpt}</span>
-                  </span>
-                  <span className="meta sm:text-right">
-                    {post.category.title}
-                    <span className="mt-1 block">{post.readingTime} min</span>
-                  </span>
-                </Link>
+                  </div>
+                  <p className="m-0 text-[16px] text-stone">{p.summary}</p>
+                  <p className="co-detail">{p.detail}</p>
+                  <div className="co-stack meta">
+                    {p.stack.map((s) => (
+                      <span key={s}>{s}</span>
+                    ))}
+                  </div>
+                  <div className="mt-auto flex flex-wrap items-center gap-4 pt-4">
+                    <a className="co-lnk meta" href={p.url} rel="noopener" target="_blank">
+                      {p.urlLabel} <span className="arw">↗</span>
+                    </a>
+                    {p.caseStudy ? (
+                      <a
+                        className="co-lnk muted meta"
+                        href={p.caseStudy.href}
+                        rel="noopener"
+                        target="_blank"
+                      >
+                        {p.caseStudy.label} <span className="arw">↗</span>
+                      </a>
+                    ) : null}
+                  </div>
+                </div>
               </Reveal>
             ))}
-          </ul>
-
-          <Reveal className="rule-t pb-[clamp(2rem,4vw,3rem)] pt-6">
-            <Link href="/blog" className="meta meta-ink">
-              All {posts.length} pieces <span className="text-accent-lo">→</span>
-            </Link>
-          </Reveal>
-        </section>
-      )}
-
-      {/* FAQ, visible and marked up. */}
-      <section aria-label="Questions" className="mx-auto max-w-7xl px-6 sm:px-8">
-        <div className="sec-head rule-t">
-          <Reveal>
-            <SectionLabel number="05" label="In brief" />
-          </Reveal>
-        </div>
-        <dl className="grid gap-x-10 gap-y-8 pb-[clamp(2rem,4vw,3rem)] sm:grid-cols-2">
-          {faqs.map((faq) => (
-            <Reveal key={faq.question}>
-              <dt className="meta meta-ink">{faq.question}</dt>
-              <dd className="prose-body mt-3 text-[0.95rem]">{faq.answer}</dd>
-            </Reveal>
-          ))}
-        </dl>
-      </section>
-
-      {/* Profiles and contact. */}
-      <section id="contact-closing" aria-label="Contact" className="on-ink">
-        <div className="mx-auto max-w-7xl px-6 sm:px-8">
-          <div className="sec-head rule-t">
-            <SectionLabel number="06" label="Contact" />
           </div>
+        </section>
 
-          <Reveal>
-            <h2 className="display max-w-4xl text-[clamp(2rem,5vw,4rem)]">
-              One address. It reaches me, not a studio inbox.
-            </h2>
-            <a
-              href={`mailto:${site.author.email}`}
-              className="display mt-10 inline-block break-all text-[clamp(1.3rem,4vw,2.4rem)] underline decoration-accent decoration-2 underline-offset-8 transition-colors hover:text-accent"
-            >
-              {site.author.email}
-            </a>
-          </Reveal>
+        {/* ---------- 02 writing ---------- */}
+        <section className="co-section" id="writing">
+          <SectionHead
+            number="02"
+            title="Writing"
+            note="Two publications, two treatments. Solid cards are mine. Dashed cards are studio notes that live on Lock & Mercer."
+          />
+          <WritingSection posts={featured} total={posts.length} />
+        </section>
 
-          <Reveal delay={0.08}>
-            <ul className="stack-col mt-12 max-w-xl pb-[clamp(3rem,6vw,5rem)]">
-              {profiles.map((profile) => (
-                <li key={profile.href}>
-                  <span className="meta">{profile.label}</span>
-                  <a
-                    href={profile.href}
-                    {...(profile.me
-                      ? { rel: 'me' }
-                      : { target: '_blank', rel: 'noopener noreferrer me' })}
-                    className="text-right text-sm transition-colors hover:text-accent"
-                  >
-                    {profile.href.replace('https://', '').replace(/\/$/, '')}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </Reveal>
-        </div>
-      </section>
-    </div>
+        {/* ---------- 03 record ---------- */}
+        <section className="co-section" id="record">
+          <SectionHead
+            number="03"
+            title="Record"
+            note="Eight years of production work, agency through platform engineering."
+          />
+          <div className="rule-t">
+            {record.map((row) => (
+              <div key={`${row.org}-${row.years}`} className={`co-row${row.current ? ' now' : ''}`}>
+                <span className="yr meta">{row.years}</span>
+                <span className="org">{row.org}</span>
+                <span className="role">{row.role}</span>
+                <span className="loc meta">{row.location}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ---------- 04 photographs ---------- */}
+        <section className="co-section" id="photographs">
+          <SectionHead
+            number="04"
+            title="Photographs"
+            note="The person behind the pager. Colour returns on hover."
+          />
+          <HeroGallery />
+        </section>
+
+        {/* ---------- 05 questions ---------- */}
+        <section className="co-section" id="questions">
+          <SectionHead
+            number="05"
+            title="Questions"
+            note="Short answers to the things people actually search."
+          />
+          <div className="max-w-[70ch]">
+            {faqs.map((faq) => (
+              <details key={faq.question} className="rule-t py-4">
+                <summary className="flex items-baseline justify-between gap-4">
+                  <span className="font-sans text-[17px] font-medium text-ink">
+                    {faq.question}
+                  </span>
+                  <span className="disc-mark meta meta-accent" aria-hidden="true">
+                    +
+                  </span>
+                </summary>
+                <div className="disclosure-body">
+                  <div>
+                    <p className="prose-body pt-3">{faq.answer}</p>
+                  </div>
+                </div>
+              </details>
+            ))}
+          </div>
+        </section>
+      </div>
+    </>
   )
 }

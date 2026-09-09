@@ -32,19 +32,26 @@ export const site = {
   url: siteUrl,
   name: 'Godwill Barasa',
   // Middle dot, not an em dash: the one standardized separator across every
-  // title on the site (and the same mark the Lock & Mercer team page uses).
-  title: 'Godwill Barasa · Founder, Lock & Mercer',
+  // title on the site. The descriptor says what he IS — the Sept 2026 search
+  // audit found the old "Founder, Lock & Mercer" title telling Google the
+  // real subject lived at another domain.
+  title: 'Godwill Barasa · Software Engineer, Nairobi',
   description:
-    'Godwill Barasa is a software engineer in Nairobi. He founded Lock & Mercer, a venture studio, and builds and operates web platforms in Kenya.',
+    'Godwill Barasa is a software engineer in Nairobi. He builds web platforms in Kenya and then runs them — SpaceYako, Business Report, Khendo FM and COFEK — through Lock & Mercer, the studio he founded.',
   locale: 'en_US',
   author: {
     name: 'Godwill Barasa',
-    jobTitle: 'technology',
+    // A job title, not a category tag: the audit caught the schema shipping
+    // jobTitle "technology", which no recruiter and no crawler could use.
+    jobTitle: 'Software Engineer',
     email: 'godwill.codes@gmail.com',
     /**
      * Confirmed profiles only. An unverified URL in structured data is a
-     * machine-readable false claim. No X profile is confirmed, so none is
-     * listed.
+     * machine-readable false claim. Instagram and YouTube were confirmed by
+     * the person himself on 10 Sept 2026 (both @realgodwillbarasa); no X
+     * profile is confirmed, so none is listed. sameAs is the mechanism
+     * Google uses to merge scattered profiles into one entity — every entry
+     * here earns its place.
      */
     sameAs: [
       lockAndMercer.teamProfile,
@@ -52,6 +59,8 @@ export const site = {
       'https://www.linkedin.com/in/godwillcodes/',
       'https://iamgodwillb.medium.com/',
       'https://dev.to/godwillb',
+      'https://www.instagram.com/realgodwillbarasa/',
+      'https://www.youtube.com/@realgodwillbarasa',
     ],
   },
 } as const
