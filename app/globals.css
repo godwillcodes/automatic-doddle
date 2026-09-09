@@ -1117,3 +1117,44 @@ details[open] .disc-mark {
   font-variant-numeric: tabular-nums;
   font-weight: 500;
 }
+
+/* Compact cards for work built elsewhere: client sites, agency years,
+   open source. Deliberately quieter than the Operating cards — no live
+   chips, because the pager for these belongs to someone else. */
+.co-mini {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border: var(--rule-w) solid var(--color-rule);
+  background: var(--color-paper-2);
+  border-radius: 6px;
+  padding: 18px;
+  min-height: 100%;
+  transition:
+    border-color 0.26s var(--ease-editorial),
+    transform 0.26s var(--ease-editorial);
+}
+.co-mini:hover {
+  border-color: var(--color-rule-dk);
+  transform: translateY(-2px);
+}
+.co-mini h3 {
+  font-family: var(--font-site-sans);
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+.co-mini p {
+  margin: 0;
+  color: var(--color-faint);
+  font-size: 14.5px;
+  line-height: 1.5;
+}
+.co-mini .co-post-foot {
+  margin-top: auto;
+  padding-top: 6px;
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}

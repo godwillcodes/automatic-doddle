@@ -125,6 +125,88 @@ const PLATFORMS: Platform[] = [
   },
 ]
 
+interface ElsewhereItem {
+  name: string
+  tag: string
+  line: string
+  links: { href: string; label: string }[]
+}
+
+/**
+ * Work that is not on my pager: client sites from the agency years, a
+ * product I contribute to, and open source. Every URL verified live before
+ * it earned a card; joinstartup.africa was dropped from this list when the
+ * lapsed domain turned out to redirect to a gambling site.
+ */
+const ELSEWHERE: ElsewhereItem[] = [
+  {
+    name: 'Safaricom',
+    tag: 'Client',
+    line:
+      'Kenya\u2019s largest telco and the home of M-Pesa \u2014 web engineering on the public estate during the agency years.',
+    links: [{ href: 'https://www.safaricom.co.ke/', label: 'safaricom.co.ke' }],
+  },
+  {
+    name: 'Safaricom Newsroom',
+    tag: 'Client',
+    line: 'The telco\u2019s press and stories platform, publishing daily.',
+    links: [{ href: 'https://newsroom.safaricom.co.ke/', label: 'newsroom.safaricom.co.ke' }],
+  },
+  {
+    name: 'PixelPress',
+    tag: 'Open source · TypeScript',
+    line:
+      'Image compression that binary-searches quality until the file is as small as the eye allows. Next.js and Sharp.',
+    links: [
+      { href: 'https://exact80.vercel.app', label: 'Live app' },
+      { href: 'https://github.com/godwillcodes/PixelPress', label: 'Source' },
+    ],
+  },
+  {
+    name: 'WP Site Performance Tracker',
+    tag: 'Open source · PHP',
+    line:
+      'Performance governance for WordPress: scheduled Lighthouse audits in the lab, web-vitals from real visitors, one report.',
+    links: [{ href: 'https://github.com/godwillcodes/WPSitePerformanceTracker', label: 'Source' }],
+  },
+  {
+    name: 'Co-operative Bank of Kenya',
+    tag: 'Client',
+    line: 'The public banking site of one of Kenya\u2019s largest banks — engineering from the agency years.',
+    links: [{ href: 'https://www.co-opbank.co.ke/', label: 'co-opbank.co.ke' }],
+  },
+  {
+    name: 'Co-op Diaspora Banking',
+    tag: 'Client',
+    line: 'The bank\u2019s arm for Kenyans banking from abroad.',
+    links: [{ href: 'https://diaspora.co-opbank.co.ke/', label: 'diaspora.co-opbank.co.ke' }],
+  },
+  {
+    name: 'Axis AI',
+    tag: 'Product',
+    line: 'A unified AI workspace: engagement, social content, learning and productivity under one roof.',
+    links: [{ href: 'https://myaxis.ai/', label: 'myaxis.ai' }],
+  },
+  {
+    name: 'Belva Digital',
+    tag: 'Agency',
+    line: 'Three years here as a fullstack engineer — the marketing-technology agency\u2019s own site included.',
+    links: [{ href: 'https://belvadigital.com/', label: 'belvadigital.com' }],
+  },
+  {
+    name: 'GrowthLab',
+    tag: 'Agency',
+    line: 'A digital transformation agency\u2019s web presence.',
+    links: [{ href: 'https://growthlab.digital/', label: 'growthlab.digital' }],
+  },
+  {
+    name: 'Find Din Terapeut',
+    tag: 'Client',
+    line: 'A directory for finding a therapist, serving the whole of Denmark.',
+    links: [{ href: 'https://finddinterapeut.dk/', label: 'finddinterapeut.dk' }],
+  },
+]
+
 function SectionHead({
   number,
   title,
@@ -352,20 +434,45 @@ export default async function Home() {
           </div>
         </section>
 
-        {/* ---------- 04 photographs ---------- */}
-        <section className="co-section" id="photographs">
+        {/* ---------- 04 built elsewhere ---------- */}
+        <section className="co-section" id="elsewhere">
           <SectionHead
             number="04"
+            title="Built elsewhere"
+            note="Client sites, agency years and open source. Not operated from here — the pager for these belongs to someone else."
+          />
+          <div className="grid gap-3.5 sm:grid-cols-2 xl:grid-cols-4">
+            {ELSEWHERE.map((item) => (
+              <article key={item.name} className="co-mini">
+                <span className="meta meta-faint">{item.tag}</span>
+                <h3>{item.name}</h3>
+                <p>{item.line}</p>
+                <div className="co-post-foot meta">
+                  {item.links.map((l) => (
+                    <a key={l.href} className="co-lnk" href={l.href} rel="noopener" target="_blank">
+                      {l.label} <span className="arw">↗</span>
+                    </a>
+                  ))}
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        {/* ---------- 05 photographs ---------- */}
+        <section className="co-section" id="photographs">
+          <SectionHead
+            number="05"
             title="Photographs"
             note="The person behind the pager. Colour returns on hover."
           />
           <HeroGallery />
         </section>
 
-        {/* ---------- 05 questions ---------- */}
+        {/* ---------- 06 questions ---------- */}
         <section className="co-section" id="questions">
           <SectionHead
-            number="05"
+            number="06"
             title="Questions"
             note="Short answers to the things people actually search."
           />
