@@ -186,7 +186,7 @@ export default async function Home() {
             <span className="ln">Barasa</span>
           </h1>
 
-          <div className="grid items-start gap-[clamp(20px,2.4vw,32px)] lg:grid-cols-[minmax(0,1.45fr)_minmax(0,1fr)]">
+          <div className="grid items-center gap-[clamp(24px,3vw,44px)] md:grid-cols-2">
             <div>
               <p className="co-thesis mb-5">
                 I build web platforms in Kenya — and then I <em>run</em> them.
@@ -237,7 +237,7 @@ export default async function Home() {
                     src={primaryPhotograph.src}
                     alt={primaryPhotograph.alt}
                     fill
-                    sizes="(min-width: 1024px) 38vw, 100vw"
+                    sizes="(min-width: 1024px) 640px, 100vw"
                     priority
                   />
                 </div>
