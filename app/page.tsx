@@ -173,21 +173,21 @@ export default async function Home() {
       <div className="co-wrap">
         {/* ---------- hero ---------- */}
         <section className="pt-[clamp(44px,6vw,76px)] pb-[clamp(30px,4vw,52px)]">
-          <div className="meta mb-[clamp(20px,3vw,34px)] flex flex-wrap items-center gap-3">
-            <span>Senior Software Engineer</span>
-            <span aria-hidden="true" className="h-px w-5 bg-rule-dk" />
-            <span>Piedmont Global</span>
-            <span aria-hidden="true" className="h-px w-5 bg-rule-dk" />
-            <strong className="meta-accent font-medium">Nairobi, Kenya</strong>
-          </div>
-
-          <h1 className="co-namemark mb-[clamp(24px,3vw,38px)]">
-            <span className="ln">Godwill</span>
-            <span className="ln">Barasa</span>
-          </h1>
-
           <div className="grid items-center gap-[clamp(24px,3vw,44px)] md:grid-cols-2">
             <div>
+              <div className="meta mb-5 flex flex-wrap items-center gap-3">
+                <span>Senior Software Engineer</span>
+                <span aria-hidden="true" className="h-px w-5 bg-rule-dk" />
+                <span>Piedmont Global</span>
+                <span aria-hidden="true" className="h-px w-5 bg-rule-dk" />
+                <strong className="meta-accent font-medium">Nairobi, Kenya</strong>
+              </div>
+
+              <h1 className="co-namemark mb-6">
+                <span className="ln">Godwill</span>
+                <span className="ln">Barasa</span>
+              </h1>
+
               <p className="co-thesis mb-5">
                 I build web platforms in Kenya — and then I <em>run</em> them.
               </p>
