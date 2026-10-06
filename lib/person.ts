@@ -254,11 +254,6 @@ export const photographs: Photograph[] = [
     caption: 'Techsgiving, Nairobi',
   },
   {
-    src: '/photographs/godwill-barasa-technology-event-nairobi.jpg',
-    alt: 'Godwill Barasa with three other attendees at a technology event in Nairobi',
-    caption: 'Technology event, Nairobi',
-  },
-  {
     src: '/photographs/godwill-barasa-nairobi.jpg',
     alt: 'Godwill Barasa beside a white grand piano in a mirrored, blue-lit room',
     caption: 'Nairobi',
