@@ -18,6 +18,9 @@ import { GitHubIcon, InstagramIcon, LinkedInIcon, YouTubeIcon } from '@/componen
  */
 
 const NAV = [
+  // About leads: it is the canonical biography, and the page the verification
+  // searches that make up most of this site's traffic are looking for.
+  { label: 'About', href: '/about' },
   { label: 'Operating', href: '/#operating' },
   { label: 'Writing', href: '/blog' },
   { label: 'Record', href: '/#record' },

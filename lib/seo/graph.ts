@@ -1,5 +1,5 @@
 import { photographs, primaryPhotograph, record, type Faq } from '@/lib/person'
-import { absoluteUrl, employer, lockAndMercer, site, siteUrl } from '@/lib/site'
+import { aboutDates, absoluteUrl, employer, lockAndMercer, site, siteUrl } from '@/lib/site'
 
 /**
  * One @graph per page.
@@ -36,26 +36,50 @@ function personNode(withImages: boolean): Node {
     '@type': 'Person',
     '@id': PERSON_ID,
     name: site.author.name,
+    alternateName: [...site.author.alternateName],
     url: siteUrl,
     jobTitle: site.author.jobTitle,
     description: site.description,
     /*
-     * Stated inline rather than by reference. This used to be an @id minted on
-     * lockandmercer.com, which no crawler can resolve from here — so the one
-     * employment fact in the graph was one Google had to drop, while the
-     * visible copy named a different employer.
+     * The employment history, as schema.org actually models it.
+     *
+     * worksFor used to be a single @id minted on lockandmercer.com, which no
+     * crawler can resolve from here, so the one employment fact in the graph
+     * was one Google had to drop. It is now the full dated record, each entry
+     * an EmployeeRole wrapping the Organization — the Role convention, where
+     * the inner property repeats the outer one. A first draft put the dates
+     * under hasOccupation with worksFor inside an OrganizationRole, which
+     * reads sensibly and is not valid: hasOccupation takes an Occupation, and
+     * a Role's inner property must match the property it wraps.
+     *
+     * The current employer carries its url and address so the entity can be
+     * corroborated. Past employers are named; asserting addresses nobody
+     * verified would be the kind of claim this file exists to avoid.
      */
-    worksFor: {
-      '@type': 'Organization',
-      name: employer.name,
-      url: employer.url,
-      address: {
-        '@type': 'PostalAddress',
-        addressLocality: employer.locality,
-        addressRegion: employer.region,
-        addressCountry: employer.country,
-      },
-    },
+    worksFor: record
+      .filter((r) => r.start)
+      .map((r) => ({
+        '@type': 'EmployeeRole',
+        roleName: r.role,
+        startDate: r.start,
+        ...(r.end ? { endDate: r.end } : {}),
+        worksFor:
+          r.org === employer.shortName
+            ? {
+                '@type': 'Organization',
+                name: employer.name,
+                url: employer.url,
+                address: {
+                  '@type': 'PostalAddress',
+                  addressLocality: employer.locality,
+                  addressRegion: employer.region,
+                  addressCountry: employer.country,
+                },
+              }
+            : { '@type': 'Organization', name: r.org },
+      })),
+    // The standing title, which is what hasOccupation is for.
+    hasOccupation: { '@type': 'Occupation', name: site.author.jobTitle },
     // The studio is something he founded, which is the accurate relation and
     // keeps it from competing with him as the subject of this site.
     founder: {
@@ -65,16 +89,6 @@ function personNode(withImages: boolean): Node {
       url: lockAndMercer.url,
       sameAs: [lockAndMercer.url],
     },
-    // The dated history, for the verification searches that reach this site.
-    hasOccupation: record
-      .filter((r) => r.start)
-      .map((r) => ({
-        '@type': 'OrganizationRole',
-        roleName: r.role,
-        startDate: r.start,
-        ...(r.end ? { endDate: r.end } : {}),
-        worksFor: { '@type': 'Organization', name: r.org },
-      })),
     homeLocation: {
       '@type': 'Place',
       address: {
@@ -197,9 +211,17 @@ function pageNode(
 
 const graph = (nodes: Node[]) => ({ '@context': 'https://schema.org', '@graph': nodes })
 
-/** Homepage: the entity page. ProfilePage is the type Google reads for a person. */
+/**
+ * Homepage: where the person entity is defined, and the index of the work.
+ *
+ * This was a ProfilePage until /about existed. Two ProfilePages for one person
+ * is the same split-entity problem the Oct 2026 review is about, in miniature:
+ * a crawler asked which page is the profile gets two answers. The biography
+ * lives at /about now, so that page carries ProfilePage and this one is a
+ * WebPage that still names the person as its main entity.
+ */
 export function homeGraph(faqs: Faq[]) {
-  const page = pageNode('ProfilePage', '/', site.title, site.description, {
+  const page = pageNode('WebPage', '/', site.title, site.description, {
     mainEntity: personRef,
     primaryImageOfPage: { '@id': `${siteUrl}/#primaryimage` },
   })
@@ -329,6 +351,35 @@ export function articleGraph(post: ArticleGraphInput) {
       isPartOf: { '@id': `${absoluteUrl('/blog')}#blog` },
       image: { '@id': `${url}#primaryimage` },
     },
+  ])
+}
+
+/**
+ * /about: the canonical biography.
+ *
+ * The review's finding was that 89% of the queries reaching this site are
+ * verification searches — someone checking a dated claim about the person —
+ * landing on pages with no dated biography to check against. This is the page
+ * they should land on, and the one an AI system should quote.
+ *
+ * Only the portrait is emitted, not the full gallery: that is the photograph
+ * this page displays, and it is the node #person already points at as the
+ * likeness. Asserting the other four here would claim the page shows them.
+ */
+export function aboutGraph(title: string, description: string) {
+  const page = pageNode('ProfilePage', '/about', title, description, {
+    mainEntity: personRef,
+    primaryImageOfPage: { '@id': `${siteUrl}/#primaryimage` },
+    dateCreated: aboutDates.created,
+    dateModified: aboutDates.modified,
+  })
+
+  return graph([
+    personNode(true),
+    ...imageNodes().slice(0, 1),
+    websiteNode(),
+    page,
+    breadcrumbs([{ name: 'About', path: '/about' }]),
   ])
 }
 

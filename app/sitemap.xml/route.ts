@@ -1,6 +1,6 @@
-import { photographs } from '@/lib/person'
+import { photographs, primaryPhotograph } from '@/lib/person'
 import { getAllPosts } from '@/lib/sanity/queries'
-import { absoluteUrl } from '@/lib/site'
+import { aboutDates, absoluteUrl } from '@/lib/site'
 
 /**
  * The sitemap, emitted by hand rather than through MetadataRoute.Sitemap.
@@ -67,6 +67,16 @@ export async function GET() {
       changefreq: 'weekly',
       priority: '1.0',
       images: photographs.map((photo) => absoluteUrl(photo.src)),
+    },
+    {
+      // The canonical biography. Ranked above /contact and below /blog: it is
+      // the page the verification searches want, and it changes when the
+      // record does rather than on a schedule.
+      loc: absoluteUrl('/about'),
+      lastmod: aboutDates.modified,
+      changefreq: 'monthly',
+      priority: '0.9',
+      images: [absoluteUrl(primaryPhotograph.src)],
     },
     {
       loc: absoluteUrl('/blog'),

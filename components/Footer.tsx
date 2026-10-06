@@ -44,6 +44,11 @@ export default function Footer() {
           <h4 className="meta mb-3.5">Writing</h4>
           <ul>
             <li>
+              <a href="/about">
+                About <span className="co-handle">the record</span>
+              </a>
+            </li>
+            <li>
               <a href="/blog">
                 This site <span className="co-handle">field notes</span>
               </a>

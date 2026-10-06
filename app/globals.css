@@ -1161,3 +1161,76 @@ details[open] .disc-mark {
   gap: 14px;
   align-items: center;
 }
+
+/* ─────────────────────────────────────────────────────────────
+   /about — the canonical biography.
+
+   Reuses .co-row for the dated record so the timeline reads the
+   same here as on the homepage. Everything below is layout only;
+   the type and colour come from the tokens above.
+   ───────────────────────────────────────────────────────────── */
+.co-about-head {
+  display: grid;
+  gap: clamp(28px, 5vw, 64px);
+  padding-block: clamp(48px, 8vw, 104px) clamp(32px, 5vw, 56px);
+}
+@media (min-width: 900px) {
+  .co-about-head {
+    grid-template-columns: minmax(0, 1fr) 360px;
+    align-items: start;
+  }
+}
+.co-about-title {
+  color: var(--color-faint);
+}
+.co-about-portrait img {
+  width: 100%;
+  height: auto;
+  border: var(--rule-w) solid var(--color-rule);
+  /* The portraits elsewhere on the site are desaturated until hover, which a
+     phone can never trigger. This one simply stays as shot. */
+}
+.co-about-portrait figcaption {
+  margin-top: 10px;
+}
+.co-about-body,
+.co-about-record,
+.co-about-links {
+  padding-block: clamp(32px, 5vw, 56px);
+  border-top: var(--rule-w) solid var(--color-rule);
+}
+.co-about-prose > p + p {
+  margin-top: 1.15em;
+}
+.co-about-prose a {
+  color: var(--color-ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--color-rule-dk);
+  transition: text-decoration-color 0.24s var(--ease-editorial);
+}
+.co-about-prose a:hover {
+  text-decoration-color: var(--color-accent);
+}
+.co-about-profiles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 28px;
+}
+.co-about-profiles a {
+  /* 44px of target on a phone, per the review's accessibility floor. */
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-family: var(--font-site-mono);
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+  color: var(--color-stone);
+  transition: color 0.24s var(--ease-editorial);
+}
+.co-about-profiles a:hover {
+  color: var(--color-accent);
+}
+.co-about-profiles .arw {
+  margin-left: 6px;
+}

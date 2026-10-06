@@ -75,6 +75,13 @@ export const site = {
      * Changing it means changing LinkedIn, GitHub and Lock & Mercer too.
      */
     jobTitle: 'Senior Software Engineer',
+    /**
+     * The handle he publishes under on GitHub and LinkedIn — both in sameAs
+     * below, so the claim is checkable. Search Console shows people searching
+     * it as a name; alternateName is how the graph says it resolves to him.
+     * Only the one handle: "godwill.codes" is a retired domain, not a name.
+     */
+    alternateName: ['godwillcodes'],
     email: 'godwill.codes@gmail.com',
     /**
      * Confirmed profiles only. An unverified URL in structured data is a
@@ -95,6 +102,14 @@ export const site = {
     ],
   },
 } as const
+
+/**
+ * When the biography at /about was last changed, as a date a crawler can
+ * read. Google's ProfilePage guidance asks for dateCreated and dateModified,
+ * and the sitemap's lastmod should say the same thing rather than the build
+ * time. Bump it when the prose or the record changes — not on every deploy.
+ */
+export const aboutDates = { created: '2026-10-06', modified: '2026-10-06' } as const
 
 /** Absolute URL for a site-relative path. Always use this for metadata. */
 export function absoluteUrl(path = '/'): string {

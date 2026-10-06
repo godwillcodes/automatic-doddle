@@ -31,9 +31,9 @@ const nextConfig: NextConfig = {
         destination: 'https://www.godwillbarasa.com/:path*',
         statusCode: 301,
       },
-      // Routes retired in the person-entity restructure. Their content lives
-      // on the homepage now; the redirect preserves whatever equity they had.
-      { source: '/about', destination: '/', statusCode: 301 },
+      // /about is a real page again as of Oct 2026 — the canonical dated
+      // biography — so its redirect to the homepage is gone. /skills stays
+      // retired; that content really did move onto the homepage.
       { source: '/skills', destination: '/', statusCode: 301 },
     ]
   },
