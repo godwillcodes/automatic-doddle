@@ -5,6 +5,7 @@ import ArticleBody, { extractHeadings, toReadableText } from '@/components/artic
 import BlogPostLayout from '@/components/BlogPostLayout'
 import StructuredData from '@/components/StructuredData'
 import { articleGraph } from '@/lib/seo/graph'
+import { metaDescription } from '@/lib/seo/description'
 import { getPostBySlug, getPostSlugs, getRelatedPosts } from '@/lib/sanity/queries'
 import { urlForOpenGraph } from '@/lib/sanity/client'
 import { absoluteUrl, site } from '@/lib/site'
@@ -47,7 +48,7 @@ export async function generateMetadata({
 
   return {
     title: post.metaTitle || post.title,
-    description: post.excerpt,
+    description: metaDescription(post),
     keywords: post.keywords,
     authors: [{ name: post.author.name, url: site.url }],
     category: post.category.title,
@@ -59,7 +60,7 @@ export async function generateMetadata({
       siteName: site.name,
       locale: site.locale,
       title: post.title,
-      description: post.excerpt,
+      description: metaDescription(post),
       publishedTime: post.publishedAt,
       modifiedTime: post.updatedAt ?? post.publishedAt,
       authors: [post.author.name],
@@ -70,7 +71,7 @@ export async function generateMetadata({
     twitter: {
       card: 'summary_large_image',
       title: post.title,
-      description: post.excerpt,
+      description: metaDescription(post),
       images: [ogImage],
     },
   }

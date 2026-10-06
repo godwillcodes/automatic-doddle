@@ -41,6 +41,7 @@ const postBySlugQuery = groq`
     targetKeyword,
     keywords,
     metaTitle,
+    metaDescription,
     noIndex
   }
 `

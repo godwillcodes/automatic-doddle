@@ -1,9 +1,17 @@
 import Link from 'next/link'
 import type { Metadata } from 'next'
 
+/*
+ * robots is null on purpose. Next.js injects <meta name="robots"
+ * content="noindex"> on every not-found page itself. Declaring robots here
+ * as well shipped two tags ("noindex" and "noindex, follow"); omitting it
+ * inherited the layout's "index, follow" beside the injected noindex, which
+ * is two tags that contradict each other. null clears the inheritance and
+ * leaves the framework's single noindex, which is the correct state.
+ */
 export const metadata: Metadata = {
   title: 'Page not found',
-  robots: { index: false, follow: true },
+  robots: null,
 }
 
 export default function NotFound() {

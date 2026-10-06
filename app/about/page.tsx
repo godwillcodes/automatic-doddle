@@ -28,8 +28,11 @@ import { absoluteUrl, employer, lockAndMercer, site } from '@/lib/site'
  * to write, so the page carries none rather than an invented one.
  */
 
+// Under 160 characters, so it is shown rather than cut. Name, title, city,
+// what he builds, and that the record is dated — the five things a searcher
+// verifying him needs to see in the result itself.
 const DESCRIPTION =
-  'Godwill Barasa is a senior software engineer in Nairobi, Kenya. He builds web platforms — SpaceYako, Business Report, Khendo FM and COFEK — and then operates them. A dated record of his work since 2018.'
+  'Godwill Barasa, senior software engineer in Nairobi, Kenya. He builds and operates SpaceYako, Business Report, Khendo FM and COFEK. His dated record since 2018.'
 
 /*
  * The one title on the site that is not run through the layout template.

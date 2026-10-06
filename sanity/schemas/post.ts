@@ -121,6 +121,16 @@ export default defineType({
       validation: (rule) => rule.max(60).warning('Google truncates around 60 characters.'),
     }),
     defineField({
+      name: 'metaDescription',
+      title: 'Meta description override',
+      type: 'text',
+      rows: 2,
+      group: 'seo',
+      description:
+        'What the search result shows under the title. Leave empty to use the excerpt, cut at a sentence boundary under 160 characters. Set it when the excerpt reads as a card summary rather than a reason to click.',
+      validation: (rule) => rule.max(160).error('Google cuts the description at about 160 characters.'),
+    }),
+    defineField({
       name: 'noIndex',
       title: 'Hide from search engines',
       type: 'boolean',

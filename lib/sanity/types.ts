@@ -63,5 +63,6 @@ export interface Post extends PostSummary {
   targetKeyword?: string
   keywords?: string[]
   metaTitle?: string
+  metaDescription?: string
   noIndex?: boolean
 }

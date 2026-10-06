@@ -351,6 +351,18 @@ export function articleGraph(post: ArticleGraphInput) {
       isPartOf: { '@id': `${absoluteUrl('/blog')}#blog` },
       image: { '@id': `${url}#primaryimage` },
     },
+    // The collection the article says it belongs to. This was referenced on
+    // all nineteen articles and defined only on /blog — the same shape as the
+    // worksFor @id the Oct 2026 review caught, nineteen times over. A graph
+    // is per page; an @id it points at has to be in it.
+    {
+      '@type': 'Blog',
+      '@id': `${absoluteUrl('/blog')}#blog`,
+      url: absoluteUrl('/blog'),
+      name: 'Writing',
+      author: personRef,
+      isPartOf: websiteRef,
+    },
   ])
 }
 

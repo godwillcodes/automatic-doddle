@@ -5,10 +5,12 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "postbuild": "node scripts/seo-audit.mjs --quiet",
     "start": "next start",
     "lint": "eslint",
     "seed": "node scripts/seed-sanity.mjs",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "audit:seo": "node scripts/seo-audit.mjs"
   },
   "dependencies": {
     "@portabletext/react": "^8.0.1",

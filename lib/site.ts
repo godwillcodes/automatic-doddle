@@ -55,8 +55,9 @@ export const site = {
   // audit found the old "Founder, Lock & Mercer" title telling Google the
   // real subject lived at another domain.
   title: 'Godwill Barasa · Senior Software Engineer, Nairobi',
+  // Under 160 characters so the result shows all of it; was 199 and cut.
   description:
-    'Godwill Barasa is a software engineer in Nairobi. He builds web platforms in Kenya and then runs them — SpaceYako, Business Report, Khendo FM and COFEK — through Lock & Mercer, the studio he founded.',
+    'Godwill Barasa is a senior software engineer in Nairobi. He builds web platforms in Kenya and runs them — SpaceYako, Business Report, Khendo FM, COFEK.',
   locale: 'en_US',
   author: {
     name: 'Godwill Barasa',
