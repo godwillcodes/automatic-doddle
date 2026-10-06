@@ -1,6 +1,6 @@
 import { ImageResponse } from 'next/og'
 
-export const alt = 'Godwill Barasa — Senior Web Engineer'
+export const alt = 'Godwill Barasa · Senior Software Engineer'
 export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'
 
@@ -40,7 +40,7 @@ export default function OpenGraphImage() {
             maxWidth: '900px',
           }}
         >
-          Senior Web Engineer — React, Next.js, TypeScript, Laravel and WordPress
+          Senior Software Engineer — React, Next.js, TypeScript, Laravel and WordPress
         </div>
         <div
           style={{

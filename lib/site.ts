@@ -54,15 +54,27 @@ export const site = {
   // title on the site. The descriptor says what he IS — the Sept 2026 search
   // audit found the old "Founder, Lock & Mercer" title telling Google the
   // real subject lived at another domain.
-  title: 'Godwill Barasa · Software Engineer, Nairobi',
+  title: 'Godwill Barasa · Senior Software Engineer, Nairobi',
   description:
     'Godwill Barasa is a software engineer in Nairobi. He builds web platforms in Kenya and then runs them — SpaceYako, Business Report, Khendo FM and COFEK — through Lock & Mercer, the studio he founded.',
   locale: 'en_US',
   author: {
     name: 'Godwill Barasa',
-    // A job title, not a category tag: the audit caught the schema shipping
-    // jobTitle "technology", which no recruiter and no crawler could use.
-    jobTitle: 'Software Engineer',
+    /*
+     * The one canonical title. Chosen by the person himself on 6 Oct 2026
+     * after the review found five in circulation — "Software Engineer" here,
+     * "Senior Software Engineer" in the hero, "Senior Engineer, Web Platform"
+     * in the Record, "Senior Web Engineer" on the OG image, and "technology"
+     * on Lock & Mercer. An entity Google cannot pin a title to is an entity it
+     * does not trust, which is the whole brand-query problem.
+     *
+     * This is the general title. The Record still shows the specific role he
+     * holds at Piedmont Global, which is not a contradiction: hasOccupation
+     * carries the per-employer roleName, jobTitle carries the standing one.
+     *
+     * Changing it means changing LinkedIn, GitHub and Lock & Mercer too.
+     */
+    jobTitle: 'Senior Software Engineer',
     email: 'godwill.codes@gmail.com',
     /**
      * Confirmed profiles only. An unverified URL in structured data is a
