@@ -95,6 +95,16 @@ export default function RootLayout({
       className={`${dmSans.variable} ${plexMono.variable} scroll-smooth`}
     >
       <body className="bg-paper text-ink antialiased">
+        {/* React hoists this into <head>. It lives here rather than in
+            `alternates` because child routes replace that object wholesale
+            when they set their canonical, and the feed must be discoverable
+            from every page. */}
+        <link
+          rel="alternate"
+          type="application/rss+xml"
+          title="Godwill Barasa — Writing"
+          href="/feed.xml"
+        />
         <a
           href="#main-content"
           className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[200] focus:bg-accent focus:px-4 focus:py-2 focus:text-[#14100d]"
