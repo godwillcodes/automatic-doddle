@@ -22,6 +22,25 @@ function resolveUrl(): string {
 
 export const siteUrl = resolveUrl()
 
+/**
+ * The employer.
+ *
+ * The Oct 2026 review found Person.worksFor pointing at Lock & Mercer via an
+ * @id minted on lockandmercer.com. A crawler cannot resolve an @id it has
+ * never seen defined, so the only employment fact in the graph was one Google
+ * had to discard — while the visible copy named Piedmont Global. The schema
+ * now states the employer inline, and Lock & Mercer is asserted as what it
+ * actually is: a company he founded.
+ */
+export const employer = {
+  name: 'Piedmont Global Language Solutions',
+  shortName: 'Piedmont Global',
+  url: 'https://piedmontglobal.com',
+  locality: 'Fairfax',
+  region: 'VA',
+  country: 'US',
+} as const
+
 export const lockAndMercer = {
   url: 'https://www.lockandmercer.com',
   organizationId: 'https://www.lockandmercer.com/#organization',

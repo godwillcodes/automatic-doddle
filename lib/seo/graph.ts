@@ -1,5 +1,5 @@
-import { photographs, primaryPhotograph, type Faq } from '@/lib/person'
-import { absoluteUrl, lockAndMercer, site, siteUrl } from '@/lib/site'
+import { photographs, primaryPhotograph, record, type Faq } from '@/lib/person'
+import { absoluteUrl, employer, lockAndMercer, site, siteUrl } from '@/lib/site'
 
 /**
  * One @graph per page.
@@ -39,7 +39,42 @@ function personNode(withImages: boolean): Node {
     url: siteUrl,
     jobTitle: site.author.jobTitle,
     description: site.description,
-    worksFor: { '@id': lockAndMercer.organizationId },
+    /*
+     * Stated inline rather than by reference. This used to be an @id minted on
+     * lockandmercer.com, which no crawler can resolve from here — so the one
+     * employment fact in the graph was one Google had to drop, while the
+     * visible copy named a different employer.
+     */
+    worksFor: {
+      '@type': 'Organization',
+      name: employer.name,
+      url: employer.url,
+      address: {
+        '@type': 'PostalAddress',
+        addressLocality: employer.locality,
+        addressRegion: employer.region,
+        addressCountry: employer.country,
+      },
+    },
+    // The studio is something he founded, which is the accurate relation and
+    // keeps it from competing with him as the subject of this site.
+    founder: {
+      '@type': 'Organization',
+      '@id': lockAndMercer.organizationId,
+      name: 'Lock & Mercer',
+      url: lockAndMercer.url,
+      sameAs: [lockAndMercer.url],
+    },
+    // The dated history, for the verification searches that reach this site.
+    hasOccupation: record
+      .filter((r) => r.start)
+      .map((r) => ({
+        '@type': 'OrganizationRole',
+        roleName: r.role,
+        startDate: r.start,
+        ...(r.end ? { endDate: r.end } : {}),
+        worksFor: { '@type': 'Organization', name: r.org },
+      })),
     homeLocation: {
       '@type': 'Place',
       address: {
@@ -48,15 +83,24 @@ function personNode(withImages: boolean): Node {
         addressCountry: 'KE',
       },
     },
+    /*
+     * Led by what the site actually ranks for. This used to open with "Venture
+     * building" and "Broadcast systems" and never mention M-Pesa, Daraja,
+     * TypeScript or Node.js — so the nine M-Pesa posts, the only cluster with
+     * a chance of owning its SERP, were unclaimed by the entity that wrote
+     * them.
+     */
     knowsAbout: [
-      'Venture building',
-      'Product engineering',
+      'M-Pesa Daraja API integration',
+      'Payments reconciliation',
+      'TypeScript',
+      'Node.js',
+      'Next.js',
+      'Web performance',
+      'Technical SEO',
+      'Website migration',
       'Editorial platforms',
       'Broadcast systems',
-      'Website migration',
-      'Trust and verification systems',
-      'Technical SEO',
-      'Web performance',
     ],
     sameAs: [...site.author.sameAs],
     image: withImages

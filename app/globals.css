@@ -13,7 +13,10 @@
   --color-ink: #ede8de;
   --color-ink-2: #1d232e;
   --color-stone: #a8b0bc;
-  --color-faint: #6e7887;
+  /* 5.57:1 on cards, 6.16:1 on the page. Was #6e7887, which measured 3.82:1
+     on cards and so failed AA for the body copy and tag labels it was used
+     for. Verified against --color-paper and --color-paper-2 below. */
+  --color-faint: #8a94a3;
   --color-rule: #262e3a;
   --color-rule-dk: #333d4c;
   --color-accent: #caff00;

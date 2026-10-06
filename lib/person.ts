@@ -193,6 +193,21 @@ export interface RecordRow {
   location: string
   /** Marks a position still held; the ledger renders these with the live tint. */
   current?: boolean
+  /**
+   * ISO start and end, for structured data only — the ledger still renders
+   * `years`. The review found the search queries reaching this site are
+   * verification searches ("godwill barasa 2023 supervisor software developer",
+   * "godwill barasa 2021 full-time bachelor's degree") landing at positions
+   * 7-16, because the dated history existed only as visual text. A date a
+   * crawler can read is the whole point of these two fields.
+   *
+   * Year precision, because the year is what the record establishes. Writing
+   * 2025-01 would assert a January start nobody confirmed. Omitted entirely
+   * where the start year is not established — an invented date is a
+   * machine-readable false claim, which is worse than an absent one.
+   */
+  start?: string
+  end?: string
 }
 
 /**
@@ -201,12 +216,12 @@ export interface RecordRow {
  * earlier site published. Nothing here is inferred.
  */
 export const record: RecordRow[] = [
-  { years: '2025 — now', org: 'Piedmont Global', role: 'Senior Engineer, Web Platform', location: 'Fairfax, VA · Remote', current: true },
+  { years: '2025 — now', org: 'Piedmont Global', role: 'Senior Engineer, Web Platform', location: 'Fairfax, VA · Remote', current: true, start: '2025' },
   { years: 'Current', org: 'Lock & Mercer', role: 'Founder · Technology', location: 'Nairobi, KE', current: true },
-  { years: '2024 — 2025', org: 'Ogilvy', role: 'Senior Front End Engineer', location: 'Cape Town, ZA · Remote' },
-  { years: '2021 — 2024', org: 'Belva Digital', role: 'Fullstack Engineer', location: 'Nairobi, KE' },
-  { years: '2019 — 2021', org: 'Legibra', role: 'Mobile Engineer', location: 'Nairobi, KE' },
-  { years: '2018', org: 'Procter & Gamble', role: 'Web Engineer, Intern', location: 'Nairobi, KE' },
+  { years: '2024 — 2025', org: 'Ogilvy', role: 'Senior Front End Engineer', location: 'Cape Town, ZA · Remote', start: '2024', end: '2025' },
+  { years: '2021 — 2024', org: 'Belva Digital', role: 'Fullstack Engineer', location: 'Nairobi, KE', start: '2021', end: '2024' },
+  { years: '2019 — 2021', org: 'Legibra', role: 'Mobile Engineer', location: 'Nairobi, KE', start: '2019', end: '2021' },
+  { years: '2018', org: 'Procter & Gamble', role: 'Web Engineer, Intern', location: 'Nairobi, KE', start: '2018', end: '2018' },
 ]
 
 export interface Photograph {

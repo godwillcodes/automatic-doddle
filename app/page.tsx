@@ -266,7 +266,10 @@ export default async function Home() {
               </div>
 
               <h1 className="co-namemark mb-6">
-                <span className="ln">Godwill</span>
+                {/* The space is load-bearing: the spans are blocks, so
+                    without it the H1's text content reads "GodwillBarasa" —
+                    the exact string a crawler takes as the person's name. */}
+                <span className="ln">Godwill</span>{' '}
                 <span className="ln">Barasa</span>
               </h1>
 
@@ -410,7 +413,11 @@ export default async function Home() {
           <SectionHead
             number="02"
             title="Writing"
-            note="Two publications, two treatments. Solid cards are mine. Dashed cards are studio notes that live on Lock & Mercer."
+            /* Says "six of nineteen" out loud. The filter buttons count the
+               cards they show, while the stat above and the link below count
+               everything published — all correct, and read together as a
+               contradiction until the section admits it is a selection. */
+            note={`A selection — six of ${posts.length} here. Solid cards are mine. Dashed cards are studio notes that live on Lock & Mercer.`}
           />
           <WritingSection posts={featured} total={posts.length} />
         </section>
