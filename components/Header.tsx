@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useId, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
@@ -15,6 +15,14 @@ import { GitHubIcon, InstagramIcon, LinkedInIcon, YouTubeIcon } from '@/componen
  * are operated from here, live — a second hand ticking in EAT says so
  * without a word of copy. It renders as placeholders on the server and fills
  * in after hydration, so the markup never disagrees with itself.
+ *
+ * On a phone the rail is gone, and with it the name and the identity links.
+ * The topbar used to answer that by letting five nav links wrap under a
+ * clock: 174px of a 812px screen, pinned to the top, with no site name on
+ * it. It is now one 56px row — name left, menu button right — and the nav,
+ * clock and identity links live in a panel the button opens. Desktop is
+ * unchanged: the panel container is `display: contents` there, so its
+ * children lay out in the bar exactly as before.
  */
 
 const NAV = [
@@ -69,11 +77,24 @@ function NairobiClock() {
 
 export default function Header() {
   const pathname = usePathname()
+  const [open, setOpen] = useState(false)
+  const menuId = useId()
 
   const isActive = (href: string) => {
     if (href.startsWith('/#')) return false
     return pathname === href || pathname.startsWith(`${href}/`)
   }
+
+  // A route change closes the panel. Same-page anchors (/#operating) do not
+  // change the pathname, so each link also closes it on click.
+  useEffect(() => setOpen(false), [pathname])
+
+  useEffect(() => {
+    if (!open) return
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false)
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [open])
 
   return (
     <>
@@ -99,18 +120,49 @@ export default function Header() {
 
       <header className="co-topbar co-page no-print">
         <div className="co-topbar-in co-inner">
-        <nav className="meta" aria-label="Primary">
-          {NAV.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              aria-current={isActive(item.href) ? 'page' : undefined}
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
-        <NairobiClock />
+          {/* Phone only: the rail that carries the name is hidden below 860px. */}
+          <Link className="co-topbar-brand" href="/">
+            {site.name}
+          </Link>
+
+          <button
+            type="button"
+            className="co-menu-btn"
+            aria-expanded={open}
+            aria-controls={menuId}
+            aria-label={open ? 'Close menu' : 'Open menu'}
+            onClick={() => setOpen((v) => !v)}
+          >
+            <span className="co-menu-btn-bars" aria-hidden="true">
+              <i />
+              <i />
+            </span>
+            <span className="meta">Menu</span>
+          </button>
+
+          <div id={menuId} className={`co-menu${open ? ' is-open' : ''}`}>
+            <nav className="meta" aria-label="Primary">
+              {NAV.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  aria-current={isActive(item.href) ? 'page' : undefined}
+                  onClick={() => setOpen(false)}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </nav>
+            <NairobiClock />
+            {/* Phone only: these are on the rail everywhere else. */}
+            <div className="co-menu-social" aria-label="Profiles">
+              {RAIL_SOCIAL.map((s) => (
+                <a key={s.label} href={s.href} aria-label={s.label} rel="me noopener" target="_blank">
+                  {s.icon}
+                </a>
+              ))}
+            </div>
+          </div>
         </div>
       </header>
     </>

@@ -517,6 +517,138 @@ details[open] .disc-mark {
   justify-content: space-between;
   gap: 20px;
 }
+
+/*
+ * The menu container. On desktop it does not exist as a box: `contents`
+ * makes the nav and the clock direct flex items of .co-topbar-in, which is
+ * the layout the bar has always had. Below 860px — where the rail and the
+ * site name disappear — it becomes the panel behind the menu button.
+ */
+.co-menu {
+  display: contents;
+}
+.co-topbar-brand,
+.co-menu-btn,
+.co-menu-social {
+  display: none;
+}
+
+@media (max-width: 860px) {
+  .co-topbar {
+    /* One row, 56px. This was 174px of an 812px screen — a fifth of the
+       phone pinned to the top, and no name on it. */
+    min-height: 56px;
+  }
+  .co-topbar-brand {
+    display: block;
+    font-family: var(--font-site-sans);
+    font-stretch: 112%;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-stone);
+    white-space: nowrap;
+  }
+  .co-menu-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    /* 44px of target, per the accessibility floor. Negative margin keeps the
+       visual edge where the padding would otherwise push it. */
+    min-height: 44px;
+    padding: 0 10px;
+    margin-right: -10px;
+    background: none;
+    border: 0;
+    color: var(--color-stone);
+    cursor: pointer;
+  }
+  .co-menu-btn .meta {
+    color: inherit;
+  }
+  .co-menu-btn-bars {
+    position: relative;
+    width: 18px;
+    height: 12px;
+    display: block;
+  }
+  .co-menu-btn-bars i {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: currentColor;
+    transition: transform 0.24s var(--ease-editorial);
+  }
+  .co-menu-btn-bars i:first-child { top: 0; }
+  .co-menu-btn-bars i:last-child { bottom: 0; }
+  .co-menu-btn[aria-expanded='true'] .co-menu-btn-bars i:first-child {
+    transform: translateY(5px) rotate(45deg);
+  }
+  .co-menu-btn[aria-expanded='true'] .co-menu-btn-bars i:last-child {
+    transform: translateY(-5px) rotate(-45deg);
+  }
+
+  .co-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    gap: 0;
+    padding: 8px clamp(20px, 4vw, 56px) 20px;
+    background: rgba(14, 17, 22, 0.96);
+    backdrop-filter: blur(14px);
+    border-bottom: var(--rule-w) solid var(--color-rule);
+  }
+  .co-menu.is-open {
+    display: flex;
+  }
+  .co-topbar nav {
+    flex-direction: column;
+    gap: 0;
+  }
+  .co-topbar nav a {
+    /* Full-width rows, 44px tall. */
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 4px;
+    border-radius: 0;
+    border-bottom: var(--rule-w) solid var(--color-rule);
+  }
+  .co-topbar nav a:hover {
+    background: none;
+  }
+  .co-menu .co-clock {
+    padding: 14px 4px 0;
+  }
+  .co-menu-social {
+    display: flex;
+    gap: 2px;
+    margin-top: 10px;
+    margin-left: -9px;
+  }
+  .co-menu-social a {
+    width: 44px;
+    height: 44px;
+    display: grid;
+    place-items: center;
+    color: var(--color-faint);
+    border-radius: 3px;
+  }
+  .co-menu-social a:hover {
+    color: var(--color-accent);
+  }
+  .co-menu-social svg {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+    display: block;
+  }
+}
 .co-section {
   padding-block: clamp(64px, 8vw, 108px);
   border-top: var(--rule-w) solid var(--color-rule);
@@ -1100,18 +1232,6 @@ details[open] .disc-mark {
   color: var(--color-faint);
 }
 
-/* Small screens: the nav takes the full first row and spreads; the clock
-   drops to its own line rather than squeezing the nav into a column. */
-@media (max-width: 560px) {
-  .co-topbar {
-    flex-wrap: wrap;
-    padding-block: 10px;
-  }
-  .co-topbar nav {
-    width: 100%;
-    justify-content: space-between;
-  }
-}
 
 /* Clock digits: tabular and tight. The .meta tracking that suits labels
    stretches a running time into something that reads slow. */
