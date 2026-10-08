@@ -63,6 +63,7 @@ function personNode(withImages: boolean): Node {
         roleName: r.role,
         startDate: r.start,
         ...(r.end ? { endDate: r.end } : {}),
+        ...(r.description ? { description: r.description } : {}),
         worksFor:
           r.org === employer.shortName
             ? {

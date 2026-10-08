@@ -219,7 +219,7 @@ export const faqs: Faq[] = [
   {
     question: 'Has Godwill Barasa led an engineering team?',
     answer:
-      'Yes. In 2023 Godwill Barasa became team lead at Belva Digital in Nairobi, leading and supervising a team of four software engineers alongside his work as a Fullstack Engineer. He led the team until he left Belva Digital in 2024 to join Ogilvy as a Senior Front End Engineer.',
+      'Yes. In 2023 Godwill Barasa became Team Lead at Belva Digital in Nairobi, leading and supervising a team of four software engineers while continuing to work hands-on as a Fullstack Engineer. He coordinated the engineering work, reviewed code, mentored the engineers, guided technical and architecture decisions, and owned delivery from requirements to production. He led the team until he left Belva Digital in 2024 to join Ogilvy as a Senior Front End Engineer.',
   },
   {
     question: 'How did Godwill Barasa start in software?',
@@ -282,6 +282,8 @@ export interface RecordRow {
    */
   start?: string
   end?: string
+  /** One-line account of the role, for the schema's EmployeeRole only. */
+  description?: string
 }
 
 /**
@@ -297,7 +299,7 @@ export const record: RecordRow[] = [
   // team of four software engineers. Its own row so the schema carries a
   // dated Team Lead role, which is what the "2023 supervisor / team lead"
   // verification searches are asking for.
-  { years: '2023 — 2024', org: 'Belva Digital', role: 'Team Lead, 4 software engineers', location: 'Nairobi, KE', start: '2023', end: '2024' },
+  { years: '2023 — 2024', org: 'Belva Digital', role: 'Team Lead, 4 software engineers', location: 'Nairobi, KE', start: '2023', end: '2024', description: 'Led and supervised a software engineering team of four while remaining hands-on as a Fullstack Engineer: technical coordination, code review, mentoring, technical and architecture decisions, and delivery ownership.' },
   { years: '2021 — 2024', org: 'Belva Digital', role: 'Fullstack Engineer', location: 'Nairobi, KE', start: '2021', end: '2024' },
   { years: '2019 — 2021', org: 'Legibra', role: 'Mobile Engineer', location: 'Nairobi, KE', start: '2019', end: '2021' },
   { years: '2018', org: 'Procter & Gamble', role: 'Web Engineer, Intern', location: 'Nairobi, KE', start: '2018', end: '2018' },

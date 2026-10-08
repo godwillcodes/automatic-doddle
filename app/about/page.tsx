@@ -203,10 +203,17 @@ export default function AboutPage() {
                 ({education.institutionShort}), completed in {education.year}.
               </p>
               <p>
+                In 2023 his role at Belva Digital in Nairobi grew from fullstack
+                engineering into technical leadership. As Team Lead he was responsible
+                for a team of four software engineers while still building and shipping
+                software himself: he coordinated the engineering work, reviewed code,
+                guided technical and architecture decisions, mentored the engineers, and
+                carried projects from requirements through delivery. He led the team
+                until he left for Ogilvy in 2024.
+              </p>
+              <p>
                 His earlier work was at Ogilvy, Belva Digital, Legibra and
-                Procter&nbsp;&amp;&nbsp;Gamble, set out with dates below. At Belva
-                Digital he moved from engineer to lead: from 2023 he led a team of four
-                software engineers in Nairobi, until he left for Ogilvy in 2024. He works in{' '}
+                Procter&nbsp;&amp;&nbsp;Gamble, set out with dates below. He works in{' '}
                 {[...identity.stack.slice(0, -1)].join(', ')} and{' '}
                 {identity.stack[identity.stack.length - 1]}.
               </p>
