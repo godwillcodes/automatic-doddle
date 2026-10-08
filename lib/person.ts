@@ -214,7 +214,12 @@ export const faqs: Faq[] = [
   {
     question: "What is Godwill Barasa's work history?",
     answer:
-      'Web Engineer Intern at Procter & Gamble, Nairobi (2018). Mobile Engineer at Legibra, Nairobi (2019 to 2021). Fullstack Engineer at Belva Digital, Nairobi (2021 to 2024). Senior Front End Engineer at Ogilvy, remote with Cape Town (2024 to 2025). Senior Engineer, Web Platform at Piedmont Global (2025 to now). He also founded Lock & Mercer, where he runs technology.',
+      'Web Engineer Intern at Procter & Gamble, Nairobi (2018). Mobile Engineer at Legibra, Nairobi (2019 to 2021). Fullstack Engineer at Belva Digital, Nairobi (2021 to 2024), leading a team of four software engineers from 2023. Senior Front End Engineer at Ogilvy, remote with Cape Town (2024 to 2025). Senior Engineer, Web Platform at Piedmont Global (2025 to now). He also founded Lock & Mercer, where he runs technology.',
+  },
+  {
+    question: 'Has Godwill Barasa led an engineering team?',
+    answer:
+      'Yes. In 2023 Godwill Barasa became team lead at Belva Digital in Nairobi, leading and supervising a team of four software engineers alongside his work as a Fullstack Engineer. He led the team until he left Belva Digital in 2024 to join Ogilvy as a Senior Front End Engineer.',
   },
   {
     question: 'How did Godwill Barasa start in software?',
@@ -281,13 +286,18 @@ export interface RecordRow {
 
 /**
  * The employment record, oldest work at the bottom. Confirmed row by row by
- * the person himself on 10 Sept 2026, and consistent with the history his
+ * the person himself on 10 Sept 2026 (the Belva team lead row on 8 Oct), and consistent with the history his
  * earlier site published. Nothing here is inferred.
  */
 export const record: RecordRow[] = [
   { years: '2025 — now', org: 'Piedmont Global', role: 'Senior Engineer, Web Platform', location: 'Fairfax, VA · Remote', current: true, start: '2025' },
   { years: 'Current', org: 'Lock & Mercer', role: 'Founder · Technology', location: 'Nairobi, KE', current: true },
   { years: '2024 — 2025', org: 'Ogilvy', role: 'Senior Front End Engineer', location: 'Cape Town, ZA · Remote', start: '2024', end: '2025' },
+  // Added 8 Oct 2026 from the person himself: in 2023 he took on leading a
+  // team of four software engineers. Its own row so the schema carries a
+  // dated Team Lead role, which is what the "2023 supervisor / team lead"
+  // verification searches are asking for.
+  { years: '2023 — 2024', org: 'Belva Digital', role: 'Team Lead, 4 software engineers', location: 'Nairobi, KE', start: '2023', end: '2024' },
   { years: '2021 — 2024', org: 'Belva Digital', role: 'Fullstack Engineer', location: 'Nairobi, KE', start: '2021', end: '2024' },
   { years: '2019 — 2021', org: 'Legibra', role: 'Mobile Engineer', location: 'Nairobi, KE', start: '2019', end: '2021' },
   { years: '2018', org: 'Procter & Gamble', role: 'Web Engineer, Intern', location: 'Nairobi, KE', start: '2018', end: '2018' },

@@ -204,7 +204,9 @@ export default function AboutPage() {
               </p>
               <p>
                 His earlier work was at Ogilvy, Belva Digital, Legibra and
-                Procter&nbsp;&amp;&nbsp;Gamble, set out with dates below. He works in{' '}
+                Procter&nbsp;&amp;&nbsp;Gamble, set out with dates below. At Belva
+                Digital he moved from engineer to lead: from 2023 he led a team of four
+                software engineers in Nairobi, until he left for Ogilvy in 2024. He works in{' '}
                 {[...identity.stack.slice(0, -1)].join(', ')} and{' '}
                 {identity.stack[identity.stack.length - 1]}.
               </p>
