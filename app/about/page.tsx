@@ -4,7 +4,15 @@ import type { Metadata } from 'next'
 
 import Reveal from '@/components/Reveal'
 import StructuredData from '@/components/StructuredData'
-import { identity, platforms, primaryPhotograph, profiles, record } from '@/lib/person'
+import {
+  beginnings,
+  education,
+  identity,
+  platforms,
+  primaryPhotograph,
+  profiles,
+  record,
+} from '@/lib/person'
 import { aboutGraph } from '@/lib/seo/graph'
 import { absoluteUrl, employer, lockAndMercer, site } from '@/lib/site'
 
@@ -23,9 +31,9 @@ import { absoluteUrl, employer, lockAndMercer, site } from '@/lib/site'
  *
  * Every fact here comes from lib/person.ts, whose header sets the rule this
  * page inherits: nothing that is not on the verified list. No years of
- * experience, no client counts, no traffic figures, no education, no awards.
- * The review asked for an education line; there is no sourced education fact
- * to write, so the page carries none rather than an invented one.
+ * experience, no client counts, no traffic figures, no awards. The review
+ * asked for an education line; the person supplied it on 8 Oct 2026, and it
+ * is written here from `education` alongside how the work started.
  */
 
 // Under 160 characters, so it is shown rather than cut. Name, title, city,
@@ -180,6 +188,19 @@ export default function AboutPage() {
                   Lock&nbsp;&amp;&nbsp;Mercer
                 </a>
                 .
+              </p>
+              <p>
+                The work started before the record does. He began as a domain
+                reseller, and built websites for{' '}
+                {beginnings.earlySites.slice(0, -1).join(', ')}, and{' '}
+                {beginnings.earlySites[beginnings.earlySites.length - 1]}. Reselling led
+                to an internship, the internship to a confirmed position, and the record
+                below runs on from there. He holds a {education.degree} (
+                {education.degreeShort}) from{' '}
+                <a href={education.institutionUrl} rel="noopener" target="_blank">
+                  {education.institution}
+                </a>{' '}
+                ({education.institutionShort}), completed in {education.year}.
               </p>
               <p>
                 His earlier work was at Ogilvy, Belva Digital, Legibra and

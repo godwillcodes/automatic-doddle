@@ -1,8 +1,9 @@
 /**
  * The verified record for the person site. Every section reads from here.
  * Nothing may be added that is not on the verified-facts list: no years of
- * experience, no client counts, no traffic or revenue figures, no education,
- * no awards. If a number cannot be sourced, it is not here.
+ * experience, no client counts, no traffic or revenue figures, no awards.
+ * If a number cannot be sourced, it is not here. Education was on that list
+ * until the person supplied it himself on 8 Oct 2026; see `education`.
  */
 import { lockAndMercer } from './site'
 
@@ -20,6 +21,34 @@ export const identity = {
     'Web performance and infrastructure cost',
     'Technical SEO',
     'Trust and verification systems',
+  ],
+} as const
+
+/**
+ * The degree, as the person gave it on 8 Oct 2026. Search Console shows
+ * verification searches asking for exactly this ("godwill barasa 2021
+ * full-time bachelor's degree"), and with nothing on the site to answer them
+ * an AI summary fills the gap itself.
+ */
+export const education = {
+  institution: 'Jomo Kenyatta University of Agriculture and Technology',
+  institutionShort: 'JKUAT',
+  institutionUrl: 'https://www.jkuat.ac.ke',
+  degree: 'Bachelor of Business Information Technology',
+  degreeShort: 'BBIT',
+  year: '2022',
+} as const
+
+/**
+ * How the work started, before the dated record. Deliberately ageless: the
+ * person asked for the path, not the age he was on it. The early sites are
+ * named by kind and place, plus the one company he named.
+ */
+export const beginnings = {
+  earlySites: [
+    'his school',
+    'churches and local organisations around Kakamega town',
+    'Double Shutter Limited',
   ],
 } as const
 
@@ -178,6 +207,11 @@ export const faqs: Faq[] = [
   {
     question: 'Where is Godwill Barasa based?',
     answer: 'Godwill Barasa is based in Nairobi, Kenya.',
+  },
+  {
+    question: 'Where did Godwill Barasa study?',
+    answer:
+      'Godwill Barasa holds a Bachelor of Business Information Technology (BBIT) from Jomo Kenyatta University of Agriculture and Technology (JKUAT), completed in 2022.',
   },
   {
     question: 'What has Godwill Barasa built?',

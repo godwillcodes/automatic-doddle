@@ -1,4 +1,4 @@
-import { photographs, primaryPhotograph, record, type Faq } from '@/lib/person'
+import { education, photographs, primaryPhotograph, record, type Faq } from '@/lib/person'
 import { aboutDates, absoluteUrl, employer, lockAndMercer, site, siteUrl } from '@/lib/site'
 
 /**
@@ -78,6 +78,26 @@ function personNode(withImages: boolean): Node {
               }
             : { '@type': 'Organization', name: r.org },
       })),
+    // The degree, stated both ways Google reads education: the institution
+    // as alumniOf, and the degree itself as a credential it recognised.
+    alumniOf: {
+      '@type': 'CollegeOrUniversity',
+      name: education.institution,
+      alternateName: education.institutionShort,
+      url: education.institutionUrl,
+    },
+    hasCredential: {
+      '@type': 'EducationalOccupationalCredential',
+      name: `${education.degree} (${education.degreeShort})`,
+      credentialCategory: 'degree',
+      educationalLevel: 'Bachelor',
+      dateCreated: education.year,
+      recognizedBy: {
+        '@type': 'CollegeOrUniversity',
+        name: education.institution,
+        url: education.institutionUrl,
+      },
+    },
     // The standing title, which is what hasOccupation is for.
     hasOccupation: { '@type': 'Occupation', name: site.author.jobTitle },
     // The studio is something he founded, which is the accurate relation and
