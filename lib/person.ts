@@ -239,29 +239,36 @@ export interface Photograph {
  * describes a different photograph is worse than none: it teaches a crawler
  * the wrong thing about the person.
  *
- * `godwill-barasa-portrait.jpg` is first because it is the clearest view of
- * his face, and it is the one asserted as the Person entity's image.
+ * `godwill-barasa-studio-portrait.jpg` is first: it is the chosen main
+ * image, and the one asserted as the Person entity's image.
+ * Captions name the setting rather than a city, because the locations of
+ * these frames are not on record.
  */
 export const photographs: Photograph[] = [
   {
-    src: '/photographs/godwill-barasa-portrait.jpg',
-    alt: 'Godwill Barasa seated in an armchair in a blue-lit interior in Nairobi',
-    caption: 'Nairobi',
+    src: '/photographs/godwill-barasa-studio-portrait.jpg',
+    alt: 'Studio portrait of Godwill Barasa in dark sunglasses and a grey hoodie against a plain grey backdrop',
+    caption: 'Studio',
   },
   {
-    src: '/photographs/godwill-barasa-techsgiving-nairobi.jpg',
-    alt: 'Godwill Barasa at the Techsgiving technology event in Nairobi, standing in front of a sponsor backdrop',
-    caption: 'Techsgiving, Nairobi',
+    src: '/photographs/godwill-barasa-white-jacket.jpg',
+    alt: 'Godwill Barasa in round glasses and a white denim jacket, headphones around his neck, arms folded against a concrete wall',
+    caption: 'Concrete wall',
   },
   {
-    src: '/photographs/godwill-barasa-nairobi.jpg',
-    alt: 'Godwill Barasa beside a white grand piano in a mirrored, blue-lit room',
-    caption: 'Nairobi',
+    src: '/photographs/godwill-barasa-denim-jacket.jpg',
+    alt: 'Godwill Barasa smiling in sunglasses and a denim jacket, seated outdoors on a lawn under a blue sky',
+    caption: 'On the lawn',
   },
   {
-    src: '/photographs/godwill-barasa-nairobi-hotel-lobby.jpg',
-    alt: 'Godwill Barasa standing in a Nairobi hotel lobby beside a decorated Christmas tree',
-    caption: 'Nairobi',
+    src: '/photographs/godwill-barasa-crouching-by-car.jpg',
+    alt: 'Godwill Barasa in a teal football shirt, crouching beside a black car in a paved parking bay',
+    caption: 'Parking bay',
+  },
+  {
+    src: '/photographs/godwill-barasa-leather-jacket.jpg',
+    alt: 'Godwill Barasa laughing in a black cap, sunglasses and leather jacket, seated on a lawn with trees behind',
+    caption: 'Hillside',
   },
 ]
 

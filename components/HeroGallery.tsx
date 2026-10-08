@@ -20,7 +20,7 @@ export default function HeroGallery() {
   return (
     <div className="rule-t py-6">
       <ul
-        className="scrollbar-hide -mx-6 flex gap-3 overflow-x-auto px-6 sm:-mx-8 sm:px-8 lg:mx-0 lg:grid lg:grid-cols-4 lg:overflow-visible lg:px-0"
+        className="scrollbar-hide -mx-6 flex gap-3 overflow-x-auto px-6 sm:-mx-8 sm:px-8 lg:mx-0 lg:grid lg:grid-cols-5 lg:overflow-visible lg:px-0"
         aria-label="Photographs"
       >
         {photographs.map((photo, index) => (
@@ -31,7 +31,7 @@ export default function HeroGallery() {
                   src={photo.src}
                   alt={photo.alt}
                   fill
-                  sizes="(min-width: 1024px) 23vw, 160px"
+                  sizes="(min-width: 1024px) 18vw, 160px"
                   priority={index === 0}
                   loading={index === 0 ? undefined : 'lazy'}
                   className="object-cover grayscale-[1] contrast-[1.06] brightness-[0.98] transition-[filter] duration-500 ease-[var(--ease-editorial)] group-hover:grayscale-0"
