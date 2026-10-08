@@ -5,7 +5,7 @@
  * If a number cannot be sourced, it is not here. Education was on that list
  * until the person supplied it himself on 8 Oct 2026; see `education`.
  */
-import { lockAndMercer } from './site'
+import { employer, lockAndMercer, site } from './site'
 
 export const identity = {
   name: 'Godwill Barasa',
@@ -192,31 +192,66 @@ export interface Faq {
   answer: string
 }
 
-/** Each answer must make sense quoted on its own with no page around it. */
+/**
+ * Each answer must make sense quoted on its own with no page around it, and
+ * should carry at least one checkable fact: a name, a place or a year.
+ *
+ * The set is shaped by what Search Console shows people (and AI research
+ * tools) actually asking: the name plus a year, a title, a degree, or how he
+ * started. Five thin answers left most of those with nothing to land on.
+ * Titles, the employer and the degree are read from their constants so an
+ * answer cannot drift from the rest of the site.
+ */
 export const faqs: Faq[] = [
   {
     question: 'Who is Godwill Barasa?',
-    answer:
-      'Godwill Barasa is a software engineer based in Nairobi, Kenya. He founded Lock & Mercer, a venture studio, and runs its technology.',
+    answer: `Godwill Barasa is a ${site.author.jobTitle.toLowerCase()} based in Nairobi, Kenya. Since 2025 he has been Senior Engineer, Web Platform at ${employer.name} in ${employer.locality}, Virginia, working remotely. He is also the founder of Lock & Mercer, a Nairobi venture studio where he runs technology, and holds a ${education.degreeShort} from ${education.institutionShort} (${education.year}).`,
   },
   {
-    question: 'What does Godwill Barasa do?',
-    answer:
-      'He builds and operates web platforms in Kenya: product engineering, editorial platforms, broadcast web systems, site migrations, web performance, technical SEO, and trust and verification systems. He works in React, Next.js, Laravel, WordPress, TypeScript, Sanity and Vercel.',
+    question: 'Where does Godwill Barasa work?',
+    answer: `Godwill Barasa is Senior Engineer, Web Platform at ${employer.name}, based in ${employer.locality}, Virginia, a role he has held since 2025 and works remotely from Nairobi. Before that he was a Senior Front End Engineer at Ogilvy (2024 to 2025), working remotely with its Cape Town office.`,
   },
   {
-    question: 'Where is Godwill Barasa based?',
-    answer: 'Godwill Barasa is based in Nairobi, Kenya.',
+    question: "What is Godwill Barasa's work history?",
+    answer:
+      'Web Engineer Intern at Procter & Gamble, Nairobi (2018). Mobile Engineer at Legibra, Nairobi (2019 to 2021). Fullstack Engineer at Belva Digital, Nairobi (2021 to 2024). Senior Front End Engineer at Ogilvy, remote with Cape Town (2024 to 2025). Senior Engineer, Web Platform at Piedmont Global (2025 to now). He also founded Lock & Mercer, where he runs technology.',
+  },
+  {
+    question: 'How did Godwill Barasa start in software?',
+    answer:
+      'Godwill Barasa started as a domain reseller and built websites for his school, for churches and organisations in Kakamega town, and for Double Shutter Limited. His first engineering role was a web engineering internship at Procter & Gamble in Nairobi in 2018.',
   },
   {
     question: 'Where did Godwill Barasa study?',
+    answer: `Godwill Barasa holds a ${education.degree} (${education.degreeShort}) from ${education.institution} (${education.institutionShort}), completed in ${education.year} while he was working as a Fullstack Engineer at Belva Digital in Nairobi.`,
+  },
+  {
+    question: 'What is Lock & Mercer?',
     answer:
-      'Godwill Barasa holds a Bachelor of Business Information Technology (BBIT) from Jomo Kenyatta University of Agriculture and Technology (JKUAT), completed in 2022.',
+      'Lock & Mercer is a venture studio in Nairobi, Kenya, founded by Godwill Barasa, who runs its technology. It owns and operates SpaceYako, a property platform for Kenya, and builds and runs web platforms for Kenyan publishers, broadcasters and organisations, including Business Report, Khendo FM and COFEK.',
   },
   {
     question: 'What has Godwill Barasa built?',
     answer:
       'He built and operates SpaceYako, a property platform for Kenya; rebuilt Business Report, an independent Kenyan business publication, as a server-rendered newsroom; migrated Khendo FM, a radio station in Western Kenya and the North Rift, off WordPress; and rebuilt cofek.africa for the Consumers Federation of Kenya.',
+  },
+  {
+    question: 'What does Godwill Barasa write about?',
+    answer:
+      'Godwill Barasa writes about M-Pesa and the Safaricom Daraja API in production: STK Push, callbacks that never arrive, B2C payouts, refunds and reversals, idempotency and reconciliation, and going live. He also writes about running platforms after launch, from caching a newsroom traffic spike to monitoring that misses real failures.',
+  },
+  {
+    question: 'What technologies does Godwill Barasa use?',
+    answer: `Godwill Barasa works in ${identity.stack.slice(0, -1).join(', ')} and ${identity.stack[identity.stack.length - 1]}, with Node.js on the server. His specialist area is M-Pesa Daraja API integration and payment reconciliation for Kenyan platforms.`,
+  },
+  {
+    question: 'Where is Godwill Barasa based?',
+    answer:
+      'Godwill Barasa is based in Nairobi, Kenya, on East Africa Time (UTC+3). He works remotely for a US employer and builds platforms for Kenyan organisations through Lock & Mercer.',
+  },
+  {
+    question: 'How can I contact Godwill Barasa?',
+    answer: `Through the contact page at godwillbarasa.com/contact. He publishes as ${site.author.alternateName[0]} on GitHub and LinkedIn, and studio work runs through Lock & Mercer at lockandmercer.com.`,
   },
 ]
 
