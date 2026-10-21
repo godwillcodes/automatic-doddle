@@ -430,3 +430,117 @@ export function contactGraph(title: string, description: string) {
 /** Serialised safely: JSON.stringify can emit `</script>` and close the tag. */
 export const serialize = (data: unknown) =>
   JSON.stringify(data).replace(/</g, '\\u003c')
+
+/* ---------- M-Pesa pillar and reference ---------------------------------- */
+
+/**
+ * Every graph on this site is self-contained: a node referenced by @id has to
+ * be defined in the same @graph, which is what scripts/seo-audit.mjs enforces.
+ * These three builders exist so the M-Pesa pages follow that rule rather than
+ * pointing at the person and website nodes defined on other pages.
+ */
+
+export function mpesaPillarGraph(
+  title: string,
+  description: string,
+  items: { url: string; name: string }[]
+) {
+  const page = pageNode('CollectionPage', '/mpesa', title, description, {
+    about: {
+      '@type': 'Thing',
+      name: 'M-Pesa Daraja API',
+      description:
+        'Safaricom’s payments API for M-Pesa, used to collect and disburse mobile money in Kenya.',
+    },
+    mainEntity: {
+      '@type': 'ItemList',
+      itemListElement: items.map((item, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        url: item.url,
+        name: item.name,
+      })),
+    },
+  })
+
+  return graph([
+    personNode(false),
+    websiteNode(),
+    page,
+    breadcrumbs([{ name: 'M-Pesa', path: '/mpesa' }]),
+  ])
+}
+
+/**
+ * The code reference is a Dataset rather than an Article, which is the honest
+ * description: a maintained table whose value is being correct and citable.
+ */
+export function codeReferenceGraph(
+  title: string,
+  description: string,
+  modified: string,
+  codes: { code: string; meaning: string }[]
+) {
+  const url = absoluteUrl('/mpesa/result-codes')
+  const page = pageNode('WebPage', '/mpesa/result-codes', title, description, {
+    mainEntity: { '@id': `${url}#dataset` },
+  })
+
+  return graph([
+    personNode(false),
+    websiteNode(),
+    page,
+    breadcrumbs([
+      { name: 'M-Pesa', path: '/mpesa' },
+      { name: 'Result codes', path: '/mpesa/result-codes' },
+    ]),
+    {
+      '@type': 'Dataset',
+      '@id': `${url}#dataset`,
+      url,
+      name: title,
+      description,
+      dateModified: modified,
+      isAccessibleForFree: true,
+      inLanguage: 'en',
+      creator: personRef,
+      isPartOf: websiteRef,
+      variableMeasured: codes.map((c) => ({
+        '@type': 'PropertyValue',
+        name: c.code,
+        description: c.meaning,
+      })),
+    },
+  ])
+}
+
+export function darajaThreeGraph(title: string, description: string, modified: string) {
+  const url = absoluteUrl('/mpesa/daraja-3')
+  const page = pageNode('WebPage', '/mpesa/daraja-3', title, description, {
+    mainEntity: { '@id': `${url}#article` },
+  })
+
+  return graph([
+    personNode(false),
+    websiteNode(),
+    page,
+    breadcrumbs([
+      { name: 'M-Pesa', path: '/mpesa' },
+      { name: 'Daraja 3.0', path: '/mpesa/daraja-3' },
+    ]),
+    {
+      '@type': 'Article',
+      '@id': `${url}#article`,
+      url,
+      headline: title,
+      description,
+      datePublished: modified,
+      dateModified: modified,
+      inLanguage: 'en',
+      author: personRef,
+      publisher: personRef,
+      isPartOf: websiteRef,
+      about: { '@type': 'Thing', name: 'Safaricom Daraja 3.0' },
+    },
+  ])
+}

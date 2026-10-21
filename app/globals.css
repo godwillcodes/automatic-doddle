@@ -1354,3 +1354,132 @@ details[open] .disc-mark {
 .co-about-profiles .arw {
   margin-left: 6px;
 }
+
+/* ---------- M-Pesa pillar and reference ---------------------------------- */
+
+/**
+ * Three pages share this: the pillar, the code reference and the Daraja 3.0
+ * note. They are dense, read top to bottom, and carry no imagery — so the
+ * structure is carried by rules and by the mono label face the rest of the
+ * site already uses for metadata.
+ */
+.co-pillar { padding-block: clamp(56px, 8vw, 104px) clamp(72px, 10vw, 128px); }
+
+.co-pillar-head { max-width: 62ch; }
+.co-pillar-head h1 { margin: 14px 0 0; }
+.co-pillar-lede {
+  margin: 22px 0 0;
+  font-size: clamp(17px, 1.1vw + 14px, 21px);
+  line-height: 1.5;
+  color: var(--color-ink);
+}
+.co-pillar-sub { margin: 16px 0 0; color: var(--color-stone); font-size: 16px; line-height: 1.6; }
+
+.co-stage { margin-top: clamp(48px, 6vw, 80px); }
+.co-stage-head {
+  border-top: var(--rule-w) solid var(--color-rule-dk);
+  padding-top: 16px;
+  max-width: 62ch;
+}
+.co-stage-head h2 { margin: 0 0 8px; }
+
+.co-stage-list { list-style: none; margin: 20px 0 0; padding: 0; display: grid; gap: 0; }
+.co-stage-list > li { border-top: var(--rule-w) solid var(--color-rule); }
+.co-stage-list > li:first-child { border-top: 0; }
+.co-stage-list a {
+  display: grid;
+  gap: 8px;
+  padding-block: 20px;
+  text-decoration: none;
+  max-width: 72ch;
+}
+.co-stage-title {
+  font-size: clamp(17px, 1vw + 14px, 20px);
+  line-height: 1.3;
+  color: var(--color-ink);
+  transition: color 140ms var(--ease-editorial);
+}
+.co-stage-list a:hover .co-stage-title,
+.co-stage-list a:focus-visible .co-stage-title { color: var(--color-accent); }
+/* .co-detail carries a top rule for card use; inside a row it would double up. */
+.co-stage-list .co-detail { border-top: 0; padding-top: 0; }
+
+/* A bordered aside for scope statements and sourcing notes. */
+.co-scope {
+  margin-top: clamp(40px, 5vw, 64px);
+  border-top: 2px solid var(--color-accent);
+  border-bottom: var(--rule-w) solid var(--color-rule);
+  padding-block: 20px;
+  max-width: 72ch;
+}
+.co-scope h2 { margin: 0 0 12px; }
+.co-scope p { margin: 0 0 10px; font-size: 16px; line-height: 1.6; }
+.co-scope p:last-child { margin-bottom: 0; }
+
+.co-plain-list { margin: 18px 0 0; padding-left: 20px; max-width: 72ch; }
+.co-plain-list li { margin-bottom: 12px; line-height: 1.6; }
+
+/* ---------- the code reference ------------------------------------------ */
+
+.co-codefilter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: clamp(40px, 5vw, 64px);
+  padding-bottom: 14px;
+  border-bottom: var(--rule-w) solid var(--color-rule-dk);
+}
+.co-codefilter input {
+  flex: 1 1 240px;
+  min-width: 0;
+  background: var(--color-paper-2);
+  border: var(--rule-w) solid var(--color-rule-dk);
+  color: var(--color-ink);
+  padding: 10px 12px;
+  font: inherit;
+  font-size: 15px;
+  border-radius: 2px;
+}
+.co-codefilter input:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+.co-codecount { white-space: nowrap; }
+
+.co-codelist { list-style: none; margin: 0; padding: 0; }
+.co-code {
+  border-bottom: var(--rule-w) solid var(--color-rule);
+  padding-block: 24px;
+  max-width: 76ch;
+  /* Clears the sticky header when a deep link lands on a row. */
+  scroll-margin-top: 96px;
+}
+.co-code-head { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.co-code-num {
+  font-family: var(--font-site-mono);
+  font-size: 19px;
+  color: var(--color-accent);
+  background: none;
+  padding: 0;
+}
+.co-pill {
+  font-family: var(--font-site-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 3px 7px;
+  border: var(--rule-w) solid var(--color-rule-dk);
+  color: var(--color-faint);
+  border-radius: 2px;
+}
+.co-pill.retry { color: var(--color-accent-lo); border-color: var(--color-accent-lo); }
+.co-code-anchor { margin-left: auto; text-decoration: none; opacity: 0; }
+.co-code:hover .co-code-anchor,
+.co-code-anchor:focus-visible { opacity: 1; }
+.co-code-meaning { margin: 12px 0 0; font-size: 17px; line-height: 1.35; }
+
+.co-code-body { margin: 14px 0 0; display: grid; gap: 4px 16px; }
+.co-code-body dt { margin-top: 10px; }
+.co-code-body dd { margin: 0; font-size: 15.5px; line-height: 1.6; color: var(--color-stone); }
+@media (min-width: 700px) {
+  .co-code-body { grid-template-columns: 11rem minmax(0, 1fr); align-items: baseline; }
+  .co-code-body dt { margin-top: 0; }
+}

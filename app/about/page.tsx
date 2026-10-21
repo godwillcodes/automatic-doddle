@@ -93,7 +93,10 @@ export default function AboutPage() {
     <div className="bg-paper">
       <StructuredData graph={aboutGraph(`About ${site.name}`, DESCRIPTION)} />
 
-      <main className="co-wrap">
+      {/* div, not main: app/layout.tsx already renders
+          <main id="main-content">, and a nested second one is invalid HTML
+          and gives assistive tech two role=main landmarks. */}
+      <div className="co-wrap">
         {/* ---------- the statement ---------- */}
         <header className="co-about-head">
           <Reveal>
@@ -275,7 +278,7 @@ export default function AboutPage() {
             </p>
           </Reveal>
         </section>
-      </main>
+      </div>
     </div>
   )
 }

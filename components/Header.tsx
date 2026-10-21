@@ -31,6 +31,10 @@ const NAV = [
   { label: 'About', href: '/about' },
   { label: 'Operating', href: '/#operating' },
   { label: 'Writing', href: '/blog' },
+  // A real URL, not a hash: the pillar is a page that should be crawled and
+  // rank, and it is the one thing on this site a client searching for M-Pesa
+  // help is actually looking for.
+  { label: 'M-Pesa', href: '/mpesa' },
   { label: 'Record', href: '/#record' },
   { label: 'Contact', href: '/contact' },
 ]

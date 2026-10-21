@@ -91,6 +91,13 @@ export async function GET() {
       loc: absoluteUrl('/contact'),
       lastmod: staticModified,
     },
+    /*
+     * The M-Pesa pillar and its reference pages. Their content lives in code,
+     * so they take the hand-maintained date like / and /contact do.
+     */
+    { loc: absoluteUrl('/mpesa'), lastmod: staticModified },
+    { loc: absoluteUrl('/mpesa/result-codes'), lastmod: staticModified },
+    { loc: absoluteUrl('/mpesa/daraja-3'), lastmod: staticModified },
     ...posts.map((post) => ({
       loc: absoluteUrl(`/blog/${post.slug}`),
       lastmod: new Date(post.updatedAt ?? post.publishedAt).toISOString(),

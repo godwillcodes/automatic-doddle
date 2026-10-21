@@ -64,6 +64,11 @@ export default function Footer() {
               </a>
             </li>
             <li>
+              <a href="/mpesa">
+                M-Pesa <span className="co-handle">in production</span>
+              </a>
+            </li>
+            <li>
               <a href="https://www.lockandmercer.com/notes" rel="noopener" target="_blank">
                 Lock &amp; Mercer notes <span className="co-handle">studio</span>
               </a>

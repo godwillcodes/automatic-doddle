@@ -7,6 +7,7 @@ import ReadingProgress from './ReadingProgress'
 import ShareButtons from './ShareButtons'
 import NewsletterCTA from './NewsletterCTA'
 import TableOfContents from './article/TableOfContents'
+import { PILLAR_SLUGS } from '@/lib/mpesa-pillar'
 
 interface Heading {
   id: string
@@ -56,6 +57,24 @@ export default function BlogPostLayout({
               ← Field notes
             </Link>
             <p className="meta">
+              {/*
+                * Posts in the M-Pesa pillar link up to their parent.
+                *
+                * Nine posts covered this subject with no hub, so they competed
+                * with each other for the same queries instead of accumulating
+                * weight together. The link makes the parent-child relationship
+                * real for a reader and legible to a crawler, and it goes in the
+                * header rather than the footer because that is where someone
+                * who landed from search decides whether this site has more.
+                */}
+              {PILLAR_SLUGS.includes(post.slug) ? (
+                <>
+                  <Link href="/mpesa" className="meta-ink">
+                    M-Pesa in production
+                  </Link>
+                  <span aria-hidden="true"> · </span>
+                </>
+              ) : null}
               {post.category.title}
               <span aria-hidden="true"> · </span>
               {post.readingTime} min read
