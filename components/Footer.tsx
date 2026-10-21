@@ -23,7 +23,17 @@ export default function Footer() {
 
       <div className="co-foot-cols">
         <div className="co-foot-col">
-          <h4 className="meta mb-3.5">Code</h4>
+          {/*
+            * h2, not h4.
+            *
+            * These are the footer's own column labels and they render on every
+            * page, so when a page's last content heading was an h1 or h2 the
+            * outline jumped two levels — which is what a screen reader reports
+            * as a missing section. They are styled by `.meta`, not by the tag,
+            * so the level is free to be correct: siblings of the page's content
+            * sections rather than children of whatever happened to come last.
+            */}
+          <h2 className="meta mb-3.5">Code</h2>
           <ul>
             <li>
               <a href="https://github.com/godwillcodes" rel="me noopener" target="_blank">
@@ -32,7 +42,7 @@ export default function Footer() {
               </a>
             </li>
             <li>
-              <a href="https://dev.to/godwillb" rel="me noopener" target="_blank">
+              <a href="https://dev.to/realgodwillbarasa" rel="me noopener" target="_blank">
                 {DevIcon}
                 DEV <span className="co-handle">@godwillb</span>
               </a>
@@ -41,7 +51,7 @@ export default function Footer() {
         </div>
 
         <div className="co-foot-col">
-          <h4 className="meta mb-3.5">Writing</h4>
+          <h2 className="meta mb-3.5">Writing</h2>
           <ul>
             <li>
               <a href="/about">
@@ -67,7 +77,7 @@ export default function Footer() {
         </div>
 
         <div className="co-foot-col">
-          <h4 className="meta mb-3.5">In person</h4>
+          <h2 className="meta mb-3.5">In person</h2>
           <ul>
             <li>
               <a
@@ -103,7 +113,7 @@ export default function Footer() {
         </div>
 
         <div className="co-foot-col">
-          <h4 className="meta mb-3.5">Ventures</h4>
+          <h2 className="meta mb-3.5">Ventures</h2>
           <ul>
             <li>
               <a href={lockAndMercer.teamProfile} rel="me noopener" target="_blank">

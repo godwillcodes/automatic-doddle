@@ -1,6 +1,6 @@
 import { photographs, primaryPhotograph } from '@/lib/person'
 import { getAllPosts } from '@/lib/sanity/queries'
-import { aboutDates, absoluteUrl } from '@/lib/site'
+import { aboutDates, absoluteUrl, staticPageDates } from '@/lib/site'
 
 /**
  * The sitemap, emitted by hand rather than through MetadataRoute.Sitemap.
@@ -12,19 +12,20 @@ import { aboutDates, absoluteUrl } from '@/lib/site'
  * extension element has to come last, and the generator gives no way to
  * control that ordering, so the document is built here instead.
  *
- * Baked at build time. `lastmod` on the pages whose content lives in code is
- * the deploy timestamp, which is genuinely when they last changed; letting it
- * regenerate hourly would move the date without the content moving with it.
+ * Baked at build time.
+ *
+ * `changefreq` and `priority` are deliberately ABSENT. Google has said
+ * publicly that it ignores both, and emitting values it ignores on every URL
+ * is noise that invites the file to be trusted less, not more. `lastmod` is
+ * the only hint here that Google acts on, which is exactly why it has to be
+ * true: pages whose copy lives in code take `staticPageDates`, bumped by hand,
+ * rather than the deploy timestamp they used to carry.
  */
 export const dynamic = 'force-static'
-
-const BUILT_AT = new Date().toISOString()
 
 interface Entry {
   loc: string
   lastmod: string
-  changefreq: 'weekly' | 'monthly'
-  priority: string
   images?: string[]
 }
 
@@ -44,57 +45,55 @@ function urlNode(entry: Entry): string {
     )
     .join('')
 
-  // Order matters: loc, lastmod, changefreq, priority, then extensions.
+  // Order matters: loc, lastmod, then extensions.
   return `  <url>
     <loc>${escapeXml(entry.loc)}</loc>
-    <lastmod>${entry.lastmod}</lastmod>
-    <changefreq>${entry.changefreq}</changefreq>
-    <priority>${entry.priority}</priority>${images}
+    <lastmod>${entry.lastmod}</lastmod>${images}
   </url>`
 }
 
 export async function GET() {
   const posts = await getAllPosts()
 
+  const staticModified = new Date(staticPageDates.modified).toISOString()
+
   const newestPost = posts[0]?.publishedAt
     ? new Date(posts[0].publishedAt).toISOString()
-    : BUILT_AT
+    : staticModified
+
+  /**
+   * The home page lists the writing and the record, so it genuinely changes
+   * when either does. Take whichever moved last rather than claiming a date
+   * neither of them supports.
+   */
+  const homeModified = [newestPost, new Date(aboutDates.modified).toISOString(), staticModified]
+    .sort()
+    .at(-1) as string
 
   const entries: Entry[] = [
     {
       loc: absoluteUrl('/'),
-      lastmod: BUILT_AT,
-      changefreq: 'weekly',
-      priority: '1.0',
+      lastmod: homeModified,
       images: photographs.map((photo) => absoluteUrl(photo.src)),
     },
     {
-      // The canonical biography. Ranked above /contact and below /blog: it is
-      // the page the verification searches want, and it changes when the
-      // record does rather than on a schedule.
+      // The canonical biography, and the page the verification searches want.
+      // Its date comes from the record rather than from a build.
       loc: absoluteUrl('/about'),
       lastmod: aboutDates.modified,
-      changefreq: 'monthly',
-      priority: '0.9',
       images: [absoluteUrl(primaryPhotograph.src)],
     },
     {
       loc: absoluteUrl('/blog'),
       lastmod: newestPost,
-      changefreq: 'weekly',
-      priority: '0.9',
     },
     {
       loc: absoluteUrl('/contact'),
-      lastmod: BUILT_AT,
-      changefreq: 'monthly',
-      priority: '0.6',
+      lastmod: staticModified,
     },
     ...posts.map((post) => ({
       loc: absoluteUrl(`/blog/${post.slug}`),
       lastmod: new Date(post.updatedAt ?? post.publishedAt).toISOString(),
-      changefreq: 'monthly' as const,
-      priority: post.featured ? '0.9' : '0.8',
     })),
   ]
 

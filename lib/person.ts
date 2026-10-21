@@ -184,7 +184,7 @@ export const profiles = [
   { label: 'GitHub', href: 'https://github.com/godwillcodes', me: false },
   { label: 'LinkedIn', href: 'https://www.linkedin.com/in/godwillcodes/', me: false },
   { label: 'Medium', href: 'https://iamgodwillb.medium.com/', me: false },
-  { label: 'DEV', href: 'https://dev.to/godwillb', me: false },
+  { label: 'DEV', href: 'https://dev.to/realgodwillbarasa', me: false },
 ] as const
 
 export interface Faq {

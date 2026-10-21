@@ -97,7 +97,9 @@ export const site = {
       'https://github.com/godwillcodes',
       'https://www.linkedin.com/in/godwillcodes/',
       'https://iamgodwillb.medium.com/',
-      'https://dev.to/godwillb',
+      /* The handle moved from godwillb; the old URL 301s, and sameAs should
+         name the live profile rather than a redirect to it. */
+      'https://dev.to/realgodwillbarasa',
       'https://www.instagram.com/realgodwillbarasa/',
       'https://www.youtube.com/@realgodwillbarasa',
     ],
@@ -111,6 +113,19 @@ export const site = {
  * time. Bump it when the prose or the record changes — not on every deploy.
  */
 export const aboutDates = { created: '2026-10-06', modified: '2026-10-06' } as const
+
+/**
+ * When the hand-written copy on / and /contact last actually changed.
+ *
+ * These two pages have no CMS record behind them, so the sitemap used to stamp
+ * them with the build time. That meant every deploy — a dependency bump, a
+ * typo fix anywhere else — told search engines the homepage had new content.
+ * A lastmod that moves without the content moving is worse than no lastmod,
+ * because Google learns to discount the whole file.
+ *
+ * Bump this by hand when the copy on those pages changes, and only then.
+ */
+export const staticPageDates = { modified: '2026-10-21' } as const
 
 /** Absolute URL for a site-relative path. Always use this for metadata. */
 export function absoluteUrl(path = '/'): string {

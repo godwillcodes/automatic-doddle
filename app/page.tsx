@@ -311,11 +311,21 @@ export default async function Home() {
 
             <Reveal>
               <div className="co-telemetry">
+                {/*
+                  * This row used to read "All systems nominal" beside a pulsing
+                  * dot. Nothing measured it — it was a hardcoded string. On a
+                  * site whose whole argument is "I build them, then I run
+                  * them", an uptime claim with no monitor behind it is the one
+                  * thing a sceptical reader would check and the worst one to
+                  * be caught on.
+                  *
+                  * Replaced with a fact that is true without instrumentation
+                  * and more useful to someone deciding whether to call. Put the
+                  * status back the day there is a real health check behind it.
+                  */}
                 <div className="co-tel-top meta">
-                  <span>Status</span>
-                  <span className="co-tel-live">
-                    <span className="co-dot" aria-hidden="true" /> All systems nominal
-                  </span>
+                  <span>Based</span>
+                  <span>Nairobi · EAT (UTC+3)</span>
                 </div>
                 <div className="co-portrait">
                   <Image
